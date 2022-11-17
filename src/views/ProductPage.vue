@@ -4,20 +4,18 @@
             <TopBar></TopBar>
             <div class="table-box">
                 <div class="product-nav">
-                    <router-link to="/productTable" class="nav-link" active-class="active">
+                    <div class="nav-item" :class="{ 'active' : listStatus }"  @click="selectItem('list')">
                         <h4>Product Lists</h4>
-                    </router-link>
-                    <router-link to="{ name: 'createProduct' }" class="nav-link" active-class="active">
-                        <h4>Create New Product</h4>
-                    </router-link>
-                    <!-- <router-link to="" class="nav-link" active-class="active">
-                        <h4>Product's Detail</h4>
-                    </router-link>
-                    <router-link to="" class="nav-link" active-class="active">
-                        <h4>Update Product</h4>
-                    </router-link> -->
+                    </div>
+                    <!-- <div class="nav-item" :class="{ 'active' : createStatus }"  >
+                       <h4>Create New Product</h4>
+                    </div> -->
+                    <div class="nav-item" :class="{ 'active' : categoryStatus }" @click="selectItem('category')" >
+                       <h4>Category</h4>
+                    </div>
                 </div>
-                <router-view></router-view>
+                <ProductTable  v-show="listStatus"></ProductTable>
+                <CategoryTable v-show="categoryStatus"></CategoryTable>
             </div>
         </div>
     </div>
@@ -26,12 +24,36 @@
 <script>
     import { mapGetters } from "vuex";
     import TopBar from "../components/TopBar.vue";
+    import ProductTable from "../components/branches/ProductTable.vue";
+    import CategoryTable from "../components/branches/CategoryTable.vue";
     export default {
         name : 'ProductPage',
-        components : { TopBar },
+        data () {
+            return {
+                listStatus : true,
+                categoryStatus : false
+            }
+        },
+        components : { TopBar, ProductTable, CategoryTable },
         computed: {
             ...mapGetters(["getToggleStatus"])
         },
+        methods: {
+            selectItem (item){
+                this.listStatus = false;
+                this.categoryStatus = false;
+
+                if(item == 'list'){
+                    this.listStatus = true;
+                    return;
+                }
+
+                if(item == 'category'){
+                    this.categoryStatus = true;
+                    return;
+                }
+            }
+        }
     }
 </script>
 
@@ -67,34 +89,55 @@
     align-items: center;
     margin: 10px 0;
     padding: 10px 0 0 0;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid #4fb9af;
 }
-.product-nav .nav-link{
+.product-nav .nav-item{
     margin: 0 10px;
     text-decoration: none;
+    cursor: pointer;
     color: #000;
 }
-.product-nav .nav-link.active{
-    border-width: 2px;
-    border-color: #000;
+.active{
+    position: relative;
+    border: 2px solid #4fb9af;
     border-style: solid solid none solid;
 }
-.product-nav .nav-link h4{
-    position: relative;
-    padding: 5px 20px;
-}
-.product-nav .nav-link h4::before{
+.active::before{
     content: " ";
     position: absolute;
     left: 0;
-    bottom: 0px;
+    bottom: -3px;
     width: 100%;
     height: 6px;
-    background: transparent;
-}
-.product-nav .nav-link.active h4::before{
-    bottom: -3px;
     background: #fff;
+}
+.product-nav .nav-item h4{
+    padding: 5px 20px;
+}
+
+/* make it responsive */
+@media (max-width: 991px) {
+
+}
+@media (max-width : 768px) {
+
+}
+@media (max-width : 650px) {
+    .product-nav .nav-item h4{
+        font-size: 0.8rem;
+        padding: 5px 6px;
+    }
+}
+@media (max-width : 400px) {
+    .main {
+        position:fixed;
+        top:0;
+        left:0;
+        width: 100%;
+    } 
+    .product-nav .nav-item{
+        margin: 0 5px;
+    }
 }
 
 </style>

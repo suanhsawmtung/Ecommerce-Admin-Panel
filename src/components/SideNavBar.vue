@@ -74,6 +74,7 @@
             ...mapActions(["toggle"]),
         },
         mounted () {
+            this.toggle(true);
             window.addEventListener("resize",this.toggle);
         }
     }

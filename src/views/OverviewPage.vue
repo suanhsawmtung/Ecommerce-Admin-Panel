@@ -53,21 +53,21 @@
         computed: {
             ...mapGetters(["getToggleStatus"]),
         },
-        setup(){
-            const beforeEnter = (el) => {
-                el.style.opacity = 0;
-                el.style.transform = "scale(0)"
-            }
+        // setup(){
+        //     const beforeEnter = (el) => {
+        //         el.style.opacity = 0;
+        //         el.style.transform = "scale(0)"
+        //     }
 
-            const enter = (el) => {
-                el.style.opacity = 1;
-                el.style.transform = "scale(1)";
-                // transition-duration : 0.5;
-                // transition-delay : 0.4;
-            }
+        //     const enter = (el) => {
+        //         el.style.opacity = 1;
+        //         el.style.transform = "scale(1)";
+        //         transition-duration : 0.5;
+        //         transition-delay : 0.4;
+        //     }
 
-            return { beforeEnter,enter }
-        }
+        //     return { beforeEnter,enter }
+        // }
     }
  </script>
  

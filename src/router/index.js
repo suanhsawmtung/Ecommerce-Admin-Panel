@@ -34,14 +34,14 @@ const routes = [{
         path: "/productTable",
         name: "productTable",
         component: () =>
-            import ("../views/branches/ProductTable.vue")
+            import ("../components/branches/ProductTable.vue")
     },
-    {
-        path: "/createProuct",
-        name: "createProuct",
-        component: () =>
-            import ("../views/branches/createProduct.vue")
-    }
+    // {
+    //     path: "/createProuct",
+    //     name: "createProuct",
+    //     component: () =>
+    //         import ("../views/branches/createProduct.vue")
+    // }
 ]
 
 const router = createRouter({

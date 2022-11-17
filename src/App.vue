@@ -10,14 +10,14 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
+  // import { mapGetters } from "vuex";
   import SideBar from "./components/SideNavBar.vue";
 
   export default {
     components: {SideBar},
-    computed: {
-        ...mapGetters(["getToggleStatus"]),
-    },
+    // computed: {
+    //     ...mapGetters(["getToggleStatus"]),
+    // },
   }
 
 </script>
