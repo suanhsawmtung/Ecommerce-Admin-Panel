@@ -30,18 +30,6 @@ const routes = [{
         component: () =>
             import ('../views/SettingPage.vue')
     },
-    {
-        path: "/productTable",
-        name: "productTable",
-        component: () =>
-            import ("../components/branches/ProductTable.vue")
-    },
-    // {
-    //     path: "/createProuct",
-    //     name: "createProuct",
-    //     component: () =>
-    //         import ("../views/branches/createProduct.vue")
-    // }
 ]
 
 const router = createRouter({

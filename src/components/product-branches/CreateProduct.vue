@@ -44,7 +44,7 @@
 
 <script>
     export default {
-        name : "createProduct",
+        name : "CreateProduct",
         data () {
             return {
                 product: {

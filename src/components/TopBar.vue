@@ -7,8 +7,15 @@
           <div class="searchBox">
             <input type="text" class="search" placeholder="Search here">
           </div>
-          <div class="imgBox">
-            <img src="../assets/logo.png" alt="" class="img">
+          <div class="iconBox">
+              <div class="notification">
+                <i class="fa-regular fa-bell"></i>
+                <span>22</span>
+              </div>
+              <div class="msg-noti">
+                <i class="fa-regular fa-comment"></i>
+                <span>5</span>
+              </div>
           </div>
       </div>
     </transition>
@@ -70,14 +77,40 @@
       left:60px;
       color:#5a5456;
     }
-    .imgBox{
-      width:80px;
+    .iconBox{
+      width:150px;
       height:60px;
-      object-fit: cover;
+      display:flex;
+      padding: 0 15px;
     }
-    .imgBox .img{
-      width: 80%;
+    .iconBox .notification,
+    .iconBox .msg-noti{
+      width: 50%;
       height: 100%;
+      padding: 10px;
+      position: relative;
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .iconBox .notification i,
+    .iconBox .msg-noti i{
+     font-size: 1.5rem;
+    }
+    .iconBox .notification span,
+    .iconBox .msg-noti span{
+      min-width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      background: teal;
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      border-radius: 3px;
+      color: #fff;
+      font-size: 0.8rem;
     }
   
     /* top animation */
@@ -97,10 +130,10 @@
       }
     }
     @media (max-width: 768px) {
-      .imgBox{
+      /* .imgBox{
         width:60px;
         height:40px;
-      }
+      } */
     }
     @media (max-width: 660px) {
       .search{

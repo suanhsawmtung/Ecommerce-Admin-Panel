@@ -10,14 +10,22 @@
 </template>
 
 <script>
-  // import { mapGetters } from "vuex";
+  import { mapActions } from "vuex";
+  import { mapGetters } from "vuex";
+  // import { mapMutations } from "vuex";
   import SideBar from "./components/SideNavBar.vue";
 
   export default {
     components: {SideBar},
-    // computed: {
-    //     ...mapGetters(["getToggleStatus"]),
-    // },
+    computed: {
+        ...mapGetters(["getProducts"])
+    },
+    methods: {
+        ...mapActions(["allProducts"]),
+    },
+    created () {
+      this.allProducts();
+    },
   }
 
 </script>

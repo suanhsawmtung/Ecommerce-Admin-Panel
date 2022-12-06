@@ -68,10 +68,10 @@
     export default {
         name : 'SideNavBar',
         computed: {
-            ...mapGetters(["getToggleStatus"]),
+            ...mapGetters(["getToggleStatus", "getProducts"]),
         },
         methods: {
-            ...mapActions(["toggle"]),
+            ...mapActions(["toggle", "allProducts"]),
         },
         mounted () {
             this.toggle(true);

@@ -1,21 +1,36 @@
 <template>
-      <div class="product">
+      <div class="branch-parent">
+        <div v-show="modalStatus" class="modal-parent-box">
+            <ProductModal :chosenModal='chosenModal' :index="index" @close="modalToggle(null)"></ProductModal>
+        </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <div class="table-box">
-                <div class="product-nav">
-                    <div class="nav-item" :class="{ 'active' : listStatus }"  @click="selectItem('list')">
+                <div class="branch-nav">
+                    <div class="nav-item" :class="{ 'active' : productStatus }"  @click="selectItem('product')">
                         <h4>Product Lists</h4>
                     </div>
-                    <!-- <div class="nav-item" :class="{ 'active' : createStatus }"  >
-                       <h4>Create New Product</h4>
-                    </div> -->
                     <div class="nav-item" :class="{ 'active' : categoryStatus }" @click="selectItem('category')" >
                        <h4>Category</h4>
                     </div>
                 </div>
-                <ProductTable  v-show="listStatus"></ProductTable>
-                <CategoryTable v-show="categoryStatus"></CategoryTable>
+                <div v-show="productStatus">
+                    <div class="btn-box">
+                        <button @click="showProductBranches('productTable')" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button @click="showProductBranches('createProduct')" v-show="tableStatus">Create New Product</button>
+                    </div>
+                    <ProductTable @showProductBranch="showProductBranches" @toggle="modalToggle" v-show="tableStatus"></ProductTable>
+                    <CreateProduct v-show="createStatus"></CreateProduct>
+                    <ProductDetail v-show="detailStatus"></ProductDetail>
+                    <UpdateProduct v-show="updateStatus"></UpdateProduct>
+                </div>
+                <div v-show="categoryStatus">
+                    <div class="btn-box">
+                        <button @click="showCategoryBranches('categoryTable')" v-show="!categoryTableStatus"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button @click="modalToggle('createCategory')" v-show="categoryTableStatus">Create New Category</button>
+                    </div>
+                    <CategoryTable v-show="categoryTableStatus" @modal="modalToggle"></CategoryTable>
+                </div>
             </div>
         </div>
     </div>
@@ -24,27 +39,43 @@
 <script>
     import { mapGetters } from "vuex";
     import TopBar from "../components/TopBar.vue";
-    import ProductTable from "../components/branches/ProductTable.vue";
-    import CategoryTable from "../components/branches/CategoryTable.vue";
+    import ProductTable from "../components/product-branches/ProductTable.vue";
+    import CategoryTable from "../components/product-branches/CategoryTable.vue";
+    import CreateProduct from "../components/product-branches/CreateProduct.vue";
+    import ProductDetail from "../components/product-branches/ProductDetail.vue";
+    import UpdateProduct from "../components/product-branches/UpdateProduct.vue";
+    import ProductModal from "../components/product-branches/ProductModals.vue";
     export default {
         name : 'ProductPage',
         data () {
             return {
-                listStatus : true,
-                categoryStatus : false
+                productStatus : true,
+                categoryStatus : false,
+                
+                tableStatus: true,
+                createStatus: false,
+                detailStatus: false,
+                updateStatus: false,
+
+                categoryTableStatus: true,
+                categoryProductStatus: false,
+
+                modalStatus: false,
+                chosenModal: null,
+                index: null,
             }
         },
-        components : { TopBar, ProductTable, CategoryTable },
+        components : { TopBar, ProductTable, CategoryTable, CreateProduct, ProductDetail, UpdateProduct, ProductModal },
         computed: {
             ...mapGetters(["getToggleStatus"])
         },
         methods: {
             selectItem (item){
-                this.listStatus = false;
+                this.productStatus = false;
                 this.categoryStatus = false;
 
-                if(item == 'list'){
-                    this.listStatus = true;
+                if(item == 'product'){
+                    this.productStatus = true;
                     return;
                 }
 
@@ -52,13 +83,73 @@
                     this.categoryStatus = true;
                     return;
                 }
-            }
+            },
+            showProductBranches (status) {
+                this.tableStatus = false;
+                this.createStatus = false;
+                this.detailStatus = false;
+                this.updateStatus = false;
+
+                switch (status) {
+                  case "productTable":
+                    this.tableStatus = true;
+                    break;
+                  case "createProduct":
+                    this.createStatus = true;
+                    break;
+                  case "productDetail":
+                    this.detailStatus = true;
+                    break;
+                  case "productUpdate":
+                    this.updateStatus = true; 
+                    break;
+                }
+            },
+            showCategoryBranches (status) {
+                this.categoryProductStatus = false;
+                this.categoryTableStatus = false;
+
+                switch (status) {
+                  case "categoryTable":
+                    this.categoryTableStatus = true;
+                    break;
+                  case "categoryProduct":
+                    this.categoryProductStatus = true;
+                    break;
+                }
+            },
+            modalToggle(m, index){
+              this.chosenModal = null;
+              this.popoverStatus = false;
+
+              if(m=="createCategory"){
+                this.chosenModal= "createCategory";
+                this.index= index;
+              }
+
+              if(m=="deleteProduct"){
+                this.chosenModal= "deleteProduct";
+                this.index= index;
+              }
+
+              if(m=="editCategory"){
+                this.chosenModal= "editCategory";
+                this.index= index;
+              }
+
+              if(m=="deleteCategory"){
+                this.chosenModal= "deleteCategory";
+                this.index= index;
+              }
+
+              this.modalStatus = !this.modalStatus;
+            },
         }
     }
 </script>
 
 <style scoped>
-.product{
+.branch-parent{
     position: relative;
     top: 0;
     left: 0;
@@ -79,11 +170,12 @@
 }
 .table-box{
     width: 95%;
+    height: 85%;
     margin: 30px auto 0 auto;
     box-shadow: 1px 1px 4px 2px #000;
     padding: 20px 15px;
 }
-.product-nav{
+.branch-nav{
     position: relative;
     display: flex;
     align-items: center;
@@ -91,7 +183,7 @@
     padding: 10px 0 0 0;
     border-bottom: 2px solid #4fb9af;
 }
-.product-nav .nav-item{
+.branch-nav .nav-item{
     margin: 0 10px;
     text-decoration: none;
     cursor: pointer;
@@ -111,21 +203,54 @@
     height: 6px;
     background: #fff;
 }
-.product-nav .nav-item h4{
+.branch-nav .nav-item h4{
     padding: 5px 20px;
 }
+
+.btn-box{
+    width: 100%;
+    padding: 10px 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.btn-box button{
+    padding: 8px 15px;
+    color: #fff;
+    background: teal;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.btn-box button:active{
+    transform: scale(0.93);
+    background: #4fb9af;
+}
+
 
 /* make it responsive */
 @media (max-width: 991px) {
 
 }
 @media (max-width : 768px) {
-
+    .btn-box{
+        padding: 7px 4px;
+    }
+    .btn-box button{
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
 }
 @media (max-width : 650px) {
-    .product-nav .nav-item h4{
+    .branch-nav .nav-item h4{
         font-size: 0.8rem;
         padding: 5px 6px;
+    }
+    .btn-box button{
+        padding: 5px 8px;
+        font-size: 0.6rem;
     }
 }
 @media (max-width : 400px) {
@@ -135,7 +260,7 @@
         left:0;
         width: 100%;
     } 
-    .product-nav .nav-item{
+    .branch-nav .nav-item{
         margin: 0 5px;
     }
 }

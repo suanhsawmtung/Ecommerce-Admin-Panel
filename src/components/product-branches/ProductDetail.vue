@@ -1,12 +1,12 @@
 <template>
     <div class="detail">
         <h1>Rolex expensive watch</h1>
-        <div class="fact-box">
+        <div class="fact-box box-one">
             <span>Category - Watches</span>
             <span>Created_at - Aug 21, 1999 at 7:00 AM</span>
             <span>Updated_at - Oct 22, 1998 at 10:00 AM</span>
         </div>
-        <div class="fact-box">
+        <div class="fact-box box-two">
             <span>30000 Ks</span>
             <span><i class="fa-regular fa-eye"></i> - 200</span>
             <span><i class="fa-regular fa-heart"></i> - 50</span>
@@ -50,9 +50,6 @@
         pointer-events: none;
         transition: 0.5s;
     }
-    /* .detail .fact-box span:hover{
-        box-shadow: 0 0 0 2px #000;
-    } */
     .detail .box-three{
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -78,5 +75,79 @@
     .detail .box-three .descripton-box h3{
         color: teal;
         margin-bottom: 10px;
+    }
+    /* make it response */
+    @media (max-width: 1110px) {
+        .box-one{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .detail .box-one span{
+            width: 300px;
+            margin: 5px 10px;
+        }
+    }
+    @media (max-width: 991px) {
+        .detail{
+            width: 80%;
+            margin: 0 auto;
+            padding: 5px 15px;
+        }
+        .detail .box-one span{
+            width: 95%;
+            margin: 5px 10px;
+        }
+        .detail .box-two{
+            width: 95%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+            gap: 12px;
+        }
+        .detail .box-two span{
+            width: 100%;
+            text-align: center;
+        }
+        .detail .box-three{
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 8px 12px ;
+        }
+    }
+    @media (max-width: 680px) {
+        .detail{
+            width: 100%;
+            padding: 5px 0;
+        }
+    }
+    @media (max-width: 620px) {
+        .detail h1{
+           font-size: 1.5rem;
+           margin-bottom: 6px;
+        }
+        .detail .fact-box{
+            margin-bottom: 6px;
+        }
+        .detail .fact-box span{
+            font-size: 1rem;
+            padding: 6px 8px;
+        }
+        .detail .box-three{
+            gap: 6px;
+        }
+        .detail .box-three .descripton-box{
+            border: 1px solid teal;
+            padding: 8px;
+        }
+        .detail .box-three .descripton-box h3{
+            margin-bottom: 6px;
+            font-size: 1.2rem;
+        }
+        .detail .box-three .descripton-box p{
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+        }
     }
 </style>
