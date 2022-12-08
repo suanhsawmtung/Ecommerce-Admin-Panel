@@ -1,7 +1,7 @@
 <template>
       <div class="branch-parent">
         <div v-show="modalStatus" class="modal-parent-box">
-            <ProductModal :chosenModal='chosenModal' :index="index" @close="modalToggle(null)"></ProductModal>
+            <ProductModal :chosenModal='chosenModal' :id=idForModal @close="modalToggle(null)"></ProductModal>
         </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
@@ -16,20 +16,21 @@
                 </div>
                 <div v-show="productStatus">
                     <div class="btn-box">
-                        <button @click="showProductBranches('productTable')" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                        <button @click="showProductBranches('createProduct')" v-show="tableStatus">Create New Product</button>
+                        <button @click="showProductBranches('productTable', null)" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
                     </div>
                     <ProductTable @showProductBranch="showProductBranches" @toggle="modalToggle" v-show="tableStatus"></ProductTable>
                     <CreateProduct v-show="createStatus"></CreateProduct>
-                    <ProductDetail v-show="detailStatus"></ProductDetail>
-                    <UpdateProduct v-show="updateStatus"></UpdateProduct>
+                    <ProductDetail v-show="detailStatus" :id= idForPage></ProductDetail>
+                    <UpdateProduct v-show="updateStatus" :id= idForPage></UpdateProduct>
                 </div>
                 <div v-show="categoryStatus">
                     <div class="btn-box">
-                        <button @click="showCategoryBranches('categoryTable')" v-show="!categoryTableStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                        <button @click="modalToggle('createCategory')" v-show="categoryTableStatus">Create New Category</button>
+                        <button @click="showCategoryBranches('categoryTable', null)" v-show="!categoryTableStatus"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button @click="modalToggle('createCategory', null)" v-show="categoryTableStatus">Create New Category</button>
                     </div>
-                    <CategoryTable v-show="categoryTableStatus" @modal="modalToggle"></CategoryTable>
+                    <CategoryTable v-show="categoryTableStatus" @modal="modalToggle" @showCategoryBranches="showCategoryBranches"></CategoryTable>
+                    <ProductsOfEachCategory :category="categoryName" @showChosenProductBranch="showChosenProductBranch" @toggle="modalToggle" v-show="categoryProductStatus"></ProductsOfEachCategory>
                 </div>
             </div>
         </div>
@@ -45,6 +46,8 @@
     import ProductDetail from "../components/product-branches/ProductDetail.vue";
     import UpdateProduct from "../components/product-branches/UpdateProduct.vue";
     import ProductModal from "../components/product-branches/ProductModals.vue";
+    import ProductsOfEachCategory from "../components/product-branches/ProductsOfEachCategory.vue";
+
     export default {
         name : 'ProductPage',
         data () {
@@ -62,10 +65,12 @@
 
                 modalStatus: false,
                 chosenModal: null,
-                index: null,
+                iWdForModal: null,
+                idForPage: null,
+                categoryName: "",
             }
         },
-        components : { TopBar, ProductTable, CategoryTable, CreateProduct, ProductDetail, UpdateProduct, ProductModal },
+        components : { TopBar, ProductTable, CategoryTable, CreateProduct, ProductDetail, UpdateProduct, ProductModal, ProductsOfEachCategory },
         computed: {
             ...mapGetters(["getToggleStatus"])
         },
@@ -84,7 +89,7 @@
                     return;
                 }
             },
-            showProductBranches (status) {
+            showProductBranches (status, id) {
                 this.tableStatus = false;
                 this.createStatus = false;
                 this.detailStatus = false;
@@ -93,19 +98,23 @@
                 switch (status) {
                   case "productTable":
                     this.tableStatus = true;
+                    this.idForPage = id;
                     break;
                   case "createProduct":
                     this.createStatus = true;
+                    this.idForPage = id;
                     break;
                   case "productDetail":
                     this.detailStatus = true;
+                    this.idForPage = id;
                     break;
                   case "productUpdate":
                     this.updateStatus = true; 
+                    this.idForPage = id;
                     break;
                 }
             },
-            showCategoryBranches (status) {
+            showCategoryBranches (status, category) {
                 this.categoryProductStatus = false;
                 this.categoryTableStatus = false;
 
@@ -115,35 +124,40 @@
                     break;
                   case "categoryProduct":
                     this.categoryProductStatus = true;
+                    this.categoryName = category;
                     break;
                 }
             },
-            modalToggle(m, index){
+            modalToggle(m, id){
               this.chosenModal = null;
               this.popoverStatus = false;
 
               if(m=="createCategory"){
                 this.chosenModal= "createCategory";
-                this.index= index;
+                this.idForModal= id;
               }
 
               if(m=="deleteProduct"){
                 this.chosenModal= "deleteProduct";
-                this.index= index;
+                this.idForModal= id;
               }
 
               if(m=="editCategory"){
                 this.chosenModal= "editCategory";
-                this.index= index;
+                this.idForModal= id;
               }
 
               if(m=="deleteCategory"){
                 this.chosenModal= "deleteCategory";
-                this.index= index;
+                this.idForModal= id;
               }
 
               this.modalStatus = !this.modalStatus;
             },
+            showChosenProductBranch(status, id){
+                this.selectItem("product");
+                this.showProductBranches (status, id);
+            }
         }
     }
 </script>

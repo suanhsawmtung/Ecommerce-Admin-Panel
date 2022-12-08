@@ -1,22 +1,24 @@
 <template>
     <div class="detail">
-        <h1>Rolex expensive watch</h1>
+        <h2>{{ product.title }}</h2>
         <div class="fact-box box-one">
-            <span>Category - Watches</span>
+            <span>Category - {{ product.category }}</span>
             <span>Created_at - Aug 21, 1999 at 7:00 AM</span>
             <span>Updated_at - Oct 22, 1998 at 10:00 AM</span>
         </div>
         <div class="fact-box box-two">
-            <span>30000 Ks</span>
+            <span>{{ product.price }} Ks</span>
             <span><i class="fa-regular fa-eye"></i> - 200</span>
             <span><i class="fa-regular fa-heart"></i> - 50</span>
             <span><i class="fa-regular fa-message"></i> - 20</span>
         </div>
         <div class="box-three">
-            <div class="img-box"></div>
+            <div class="img-box">
+                <img :src="product.image" alt="">
+            </div>
             <div class="descripton-box">
                 <h3>Description</h3>
-                <p> Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                <p>{{ product.description }}</p>
             </div>
         </div>
     </div>
@@ -25,6 +27,26 @@
 <script>
     export default {
         name: "ProductDetail.vue",
+        data () {
+            return {
+                product: {},
+            }
+        },
+        props: ["id"],
+        methods: {
+            setProductData(i){
+                if(i != null){
+                    let chosenProduct = this.$store.getters.getProducts.filter(product => {
+                        return product.id === i;
+                    });
+
+                    this.product = chosenProduct[0];
+                }
+            }
+        },
+        updated () {
+            this.setProductData(this.id);
+        }
     }
 </script>
 
@@ -33,7 +55,7 @@
         width: 100%;
         padding: 5px 15px;
     }
-    .detail h1{
+    .detail h2{
         color: teal;
         margin-bottom: 12px;
     }
@@ -56,13 +78,12 @@
         gap: 10px;
     }
     .detail .box-three .img-box{
-        border-radius: 10px;
-        overflow: hidden;
+        height: 250px;
     }
-    .detail .box-three .img-box .img{
+    .detail .box-three .img-box img{
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
         transition: 200ms;
     }
     .detail .box-three .img-box .img:hover{
@@ -71,6 +92,7 @@
     .detail .box-three .descripton-box{
         border: 2px solid teal;
         padding: 10px;
+        height: 250px;
     }
     .detail .box-three .descripton-box h3{
         color: teal;
@@ -123,7 +145,7 @@
         }
     }
     @media (max-width: 620px) {
-        .detail h1{
+        .detail h2{
            font-size: 1.5rem;
            margin-bottom: 6px;
         }

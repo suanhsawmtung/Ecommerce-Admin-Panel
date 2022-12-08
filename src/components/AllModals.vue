@@ -1,9 +1,13 @@
 <template>
-    <div class="backdrop" name="backdrop" @click.self="$emit('close')">
-        <div class="modal" name="modal">
-            <slot></slot>
+    <transition name="modal-animation">
+        <div class="backdrop" @click.self="$emit('close')">
+            <transition name="modal-animation-inner">
+                <div class="modal" name="modal">
+                    <slot></slot>
+                </div>
+            </transition>
         </div>
-    </div>
+    </transition>
  </template>
  
  <script>
@@ -31,26 +35,26 @@
     color: #000;
     border-radius: 10px;
  }
-.backdrop-enter-from,
-.backdrop-leave-to{
+.modal-animation-enter-from,
+.modal-animation-leave-to{
     opacity: 0;
 }
-.backdrop-enter-active,
-.backdrop-leave-active{
+.modal-animation-enter-active,
+.modal-animation-leave-active{
     transition: all 0.3s ease;
 }
 
-.modal-enter-from{
+.modal-animation-inner-enter-from{
     opacity: 0;
     transform: scale(0.8);
 }
-.modal-leave-to{
+.modal-animation-inner-leave-to{
     transform: scale(0.8);
 }
-.modal-enter-active{
+.modal-animation-inner-enter-active{
     transition: all 0.3s ease 0.15s;
 }
-.modal-leave-active{
+.modal-animation-inner-leave-active{
     transition: all 0.3s ease ;
 }
 

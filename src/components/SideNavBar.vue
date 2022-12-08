@@ -4,8 +4,8 @@
             <div class="title">
                 <div class="icon"><i class="fa-brands fa-vuejs"></i></div>
                 <div class="text-title">Brand Name</div>
-                <div class="toggle"  @click="toggle(getToggleStatus)">
-                    <i class="fa-solid fa-bars"></i>
+                <div class="toggle" @click="toggle(getToggleStatus)">
+                    <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
             <ul>
@@ -122,8 +122,9 @@
    }
    .sideBar .toggle{
         position: absolute;
-        top: -60px;
-        right: 0px;
+        top: 0px;
+        right: 10px;
+        display: none;
         width: 60px;
         height:60px;
         line-height: 60px;
@@ -218,8 +219,7 @@
             width:100%;
         }
         .sideBar .toggle{
-            top: 0px;
-            right: 10px;
+            display: block;
           }
 
     }

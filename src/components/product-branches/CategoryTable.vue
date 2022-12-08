@@ -7,7 +7,7 @@
                     <td class="control crl" >
                         <button @click="showPopover(index)" title="more"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                         <div class="popover" v-show="(popoverStatus == index)">
-                            <span>Show {{category}} products</span>
+                            <span @click="showCategoryProductPage(category)">Show {{category}} products</span>
                             <span @click="showModal('editCategory', index)">Edit Category</span>
                             <span @click="showModal('deleteCategory', index)">Delete Category</span>
                         </div>
@@ -33,8 +33,12 @@ import { mapGetters } from 'vuex';
             ...mapGetters(["getCategories"]),
        },
        methods: {
-            showModal (status, index) {
-                this.$emit("modal",status, index);
+            showCategoryProductPage(category){
+                this.$emit('showCategoryBranches', 'categoryProduct', category);
+                this.popoverStatus = null;
+            },
+            showModal (status, id) {
+                this.$emit("modal",status, id);
                 this.popoverStatus = null;
             },
             showPopover (index){

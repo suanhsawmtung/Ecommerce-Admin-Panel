@@ -1,7 +1,7 @@
 <template>
     <transition name="top" appear>
       <div class="topBar" >
-          <div class="toggle"  @click="toggle(getToggleStatus)" >
+          <div class="toggle" @click="toggle(getToggleStatus)" >
               <i class="fa-solid fa-bars"></i>
           </div>
           <div class="searchBox">
@@ -125,15 +125,8 @@
     /* now, make it responsive */
     @media (max-width: 991px) {
       .topBar .toggle{
-        position: absolute;
-        top : -60px;
+        display: none;
       }
-    }
-    @media (max-width: 768px) {
-      /* .imgBox{
-        width:60px;
-        height:40px;
-      } */
     }
     @media (max-width: 660px) {
       .search{
@@ -150,8 +143,7 @@
     }
     @media (max-width : 390px) {
       .topBar .toggle{
-        position: relative;
-        top : 0;
+        display: block;
       }
     }
    </style>

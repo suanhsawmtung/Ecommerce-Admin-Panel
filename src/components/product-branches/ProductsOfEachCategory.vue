@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr  v-for="(product,index) in getProducts" :key="index">
+                <tr  v-for="(product,index) in products" :key="index">
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
                     <td class="category" >{{product.category}}</td>
@@ -25,9 +25,9 @@
                     <td class="review rv" > .</td>
                     <td class="updated" >.</td>
                     <td class="control btns" >
-                        <button @click="showProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <button @click="showChosenProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
                         <button @click="$emit('toggle', 'deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                        <button @click="showProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
+                        <button @click="showChosenProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -38,15 +38,29 @@
  <script>
     import { mapGetters } from "vuex";
     export default {
-        name: "ProductTable",
+        name: "ProductsOfEachCategory",
+        data () {
+            return {
+                products: [],
+            }
+        },
+        props: [ "category" ],
         computed: {
             ...mapGetters(["getProducts"]),
         },
         methods: {
-            showProductBranch (status, id) {
-               this.$emit("showProductBranch", status, id); 
+            showChosenProductBranch (status, id) {
+               this.$emit("showChosenProductBranch", status, id); 
             },
+            showProducts(category){
+                this.products = this.getProducts.filter(product => {
+                    return product.category === category;
+                });
+            }
         },
+        updated () {
+            this.showProducts(this.category);
+        }
     }
  </script>
  

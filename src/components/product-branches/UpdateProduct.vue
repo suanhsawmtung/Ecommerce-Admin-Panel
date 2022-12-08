@@ -5,15 +5,14 @@
             <div class="form-body">
                 <div class="item item1">
                     <label for="name">Product Name</label>
-                    <input type="text" class="inputField" id="name" v-model="product.name" placeholder = "'Enter product name'" />
+                    <input type="text" class="inputField" id="name" v-model="product.name"  />
                 </div>
                 
                 <div class="item item2">
                     <label for="category">Product Category</label>
                     <select class="inputField" id="category" v-model="product.category">
                         <!-- <option disable value="" class="opt">Choose category</option> -->
-                        <option class="opt" value="watch">Watches</option>
-                        <option class="opt" value="clothes">Clothes</option>
+                        <option class="opt" v-for="(category, index) in getCategories" :key="index" >{{ category }}</option>
                     </select>
                 </div>
                 
@@ -43,6 +42,7 @@
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
     export default {
         name : "UpdateProduct",
         data () {
@@ -56,11 +56,31 @@
                 }
             }
         },
+        props: ["id"],
+        computed: {
+            ...mapGetters([ "getProducts", "getCategories" ]),
+        },
         methods: {
             selectImage (event) {
                 this.product.image = event.target.files;
+            },
+            setProductData(i){
+                if(i != null){
+                    let chosenProduct = this.getProducts.filter(product => {
+                        return product.id === i;
+                    });
+
+                    this.product.name = chosenProduct[0].title;
+                    this.product.category = chosenProduct[0].category;
+                    this.product.price = chosenProduct[0].price;
+                    this.product.description = chosenProduct[0].description;
+                }
             }
+        },
+        updated () {
+            this.setProductData(this.id);
         }
+
     }
 </script>
 
