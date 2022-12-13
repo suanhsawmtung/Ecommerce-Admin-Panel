@@ -5,41 +5,45 @@
             <transition-group tag="ul" name="cards" appear class="card-container" @before-enter="beforeEnter" @enter="enter">
                 <li class="card">
                     <div class="number">
-                        <h1>1,023</h1>
-                        <small>Daily Views</small>
+                        <h2>50</h2>
+                        <p>Customer Counts</p>
                     </div>
                     <div class="icon">
-                        <i class="fa-solid fa-eye"></i>
+                        <i class="fa-solid fa-users"></i>
                     </div>
                 </li>
                 <li class="card">
                     <div class="number">
-                        <h1>80</h1>
-                        <small>Sales</small>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="number">
-                        <h1>223</h1>
-                        <small>Messages</small>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-comments"></i>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="number">
-                        <h1>$2,023</h1>
-                        <small>Earnings</small>
+                        <h2>25,000 Ks</h2>
+                        <p>Today's Income</p>
                     </div>
                     <div class="icon">
                         <i class="fa-solid fa-dollar-sign"></i>
                     </div>
                 </li>
+                <li class="card">
+                    <div class="number">
+                        <h2>2,423,000 Ks</h2>
+                        <p>Total Revenue</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-sack-dollar"></i>
+                    </div>
+                </li>
+                <li class="card">
+                    <div class="number">
+                        <h2>204</h2>
+                        <p>Pending Orders</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa-solid fa-cart-arrow-down"></i>
+                    </div>
+                </li>
             </transition-group>
+            <div class="chart-container">
+                <SaleChart></SaleChart>
+                <ProductChart></ProductChart>
+            </div>
         </div>
     </div>
  </template>
@@ -47,9 +51,11 @@
  <script>
     import { mapGetters } from "vuex";
     import TopBar from "../components/TopBar.vue";
+    import SaleChart from "../components/overview-branches/SaleChart.vue";
+    import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
     export default {
         name : 'OverviewPage',
-        components: {TopBar},
+        components: {TopBar, SaleChart, ProductChart},
         computed: {
             ...mapGetters(["getToggleStatus"]),
         },
@@ -105,7 +111,7 @@
         align-items: center;
         width:1fr;
         height: 100px;
-        padding: 5px 20px;
+        padding: 5px 15px;
         border-radius: 20px;
         box-shadow: 1px 1px 5px 0.2px #000;
     }
@@ -113,8 +119,17 @@
         color:#fff;
         background-color: teal;
     }
+    .card-container .card .number h2{
+        margin-bottom: 15px;
+    }
     .card-container .card .icon{
         font-size:2.5rem
+    }
+    .chart-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        padding: 0 15px;
     }
 
     /* overView transition */
@@ -128,10 +143,53 @@
 
 
     /* now, make it responsive */
+    @media (max-width : 1330px) {
+        .chart-container{
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+    }
+    @media (max-width : 1280px) {
+        .card-container .card .icon{
+            font-size:1.8rem
+        }
+        .card-container .card{
+            padding: 5px 10px;
+        }
+        .card-container .card .number h2{
+            font-size: 1.2rem
+        }
+    }
     @media (max-width : 810px) {
         .card-container{
             grid-template-columns: repeat(2,1fr);
             padding: 0px 20px;
+        }
+        .card-container .card .icon{
+            font-size:2rem
+        }
+        .card-container .card{
+            padding: 5px 15px;
+        }
+        .card-container .card .number h2{
+            font-size: 1.8rem
+        }
+    }
+    @media (max-width : 560px) {
+        .card-container .card .icon{
+            font-size:1.5rem
+        }
+        .card-container .card{
+            padding: 5px 10px;
+        }
+        .card-container .card .number h2{
+            font-size: 1.2rem
+        }
+    }
+    @media (max-width : 515px) {
+        .chart-container{
+            margin: 0 auto;
+            padding: 0 8px;
         }
     }
     @media (max-width : 470px) {
@@ -145,6 +203,15 @@
             left:70px;
             width: calc(100% - 70px);
         } 
+        .card-container .card .icon{
+            font-size:2rem
+        }
+        .card-container .card{
+            padding: 5px 15px;
+        }
+        .card-container .card .number h2{
+            font-size: 1.8rem
+        }
     }
     @media (max-width : 400px) {
         .main {

@@ -10,9 +10,7 @@
 </template>
 
 <script>
-  import { mapActions } from "vuex";
-  import { mapGetters } from "vuex";
-  // import { mapMutations } from "vuex";
+  import { mapActions, mapGetters } from "vuex";
   import SideBar from "./components/SideNavBar.vue";
 
   export default {

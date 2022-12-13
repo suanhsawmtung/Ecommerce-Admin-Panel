@@ -10,6 +10,9 @@ export default {
     getters: {
         getProducts: state => state.products,
         getCategories: state => state.categories,
+        getTopSellerItems: state => state.products.filter(product => {
+            return product.rating.rate > 4.6;
+        }),
     },
 
     mutations: {
@@ -19,7 +22,7 @@ export default {
                 if (state.categories.includes(product.category)) {
                     return;
                 }
-                state.categories.unshift(product.category);
+                state.categories.push(product.category);
             });
 
         },
