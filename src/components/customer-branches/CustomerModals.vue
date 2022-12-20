@@ -3,7 +3,7 @@
       <div v-show="addAdminStatus" class="modal-box-one">
         <Modal @close="$emit('close')">
           <h4>Do you want to add him to admin list?</h4>
-          <button>Add</button>
+          <button >Add</button>
           <button @click="$emit('close')">Cancel</button>
         </Modal>
       </div>

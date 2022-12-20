@@ -3,7 +3,7 @@
        <div v-show="deleteProductStatus" class="modal-box-one">
          <Modal @close="$emit('close')">
            <h4>Do you really want to delete {{ productName }} permanantly?</h4>
-           <button>Delete</button>
+           <button  @click="deleteProduct(product.id)">Delete</button>
            <button @click="$emit('close')">Cancel</button>
          </Modal>
        </div>
@@ -95,6 +95,10 @@
                 this.categoryName = this.$store.getters.getCategories[this.id];
                 return;
              }
+          },
+          deleteProduct(id){
+            this.$store.dispatch("deleteProduct", id);
+            this.$emit('close');
           },
        },
        updated () {

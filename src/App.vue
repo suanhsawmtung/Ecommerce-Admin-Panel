@@ -10,19 +10,18 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from "vuex";
+  import { mapGetters } from "vuex";
   import SideBar from "./components/SideNavBar.vue";
 
   export default {
+    /*  https://vuejs.org/api/  */
     components: {SideBar},
     computed: {
         ...mapGetters(["getProducts"])
     },
-    methods: {
-        ...mapActions(["allProducts"]),
-    },
     created () {
-      this.allProducts();
+      this.$store.dispatch("allProducts");
+      this.$store.dispatch("allCustomers");
     },
   }
 

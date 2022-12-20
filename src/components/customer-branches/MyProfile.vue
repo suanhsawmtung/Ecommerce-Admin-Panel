@@ -2,21 +2,25 @@
     <div class="branch">
         <div class="branch-inner">
             <div class="info-box">
-                <h3><span>Name</span><span class="icon"><i class="fa-regular fa-user"></i></span><small>-</small><span>Kyaw Kyaw</span></h3>
-                <h3><span>Email</span><span class="icon"><i class="fa-regular fa-envelope"></i></span><small>-</small><span>kyawkyaw@gmail.com</span></h3>
-                <h3><span>Address</span><span class="icon"><i class="fa-regular fa-house"></i></span><small>-</small><span>Yangon</span></h3>
-                <h3><span>Joined at</span><span class="icon"><i class="fa-regular fa-calendar"></i></span><small>-</small><span>Oct 22, 1999</span></h3>
+                <h3><span>Name</span><span class="icon"><i class="fa-regular fa-user"></i></span><small>-</small><span>{{ getMyProfileData[0].username }}</span></h3>
+                <h3><span>Email</span><span class="icon"><i class="fa-regular fa-envelope"></i></span><small>-</small><span>{{ getMyProfileData[0].email }}</span></h3>
+                <h3><span>Address</span><span class="icon"><i class="fa-regular fa-house"></i></span><small>-</small><span>{{ getMyProfileData[0].address.address }}</span></h3>
+                <h3><span>Joined at</span><span class="icon"><i class="fa-regular fa-calendar"></i></span><small>-</small><span>{{ getMyProfileData[0].birthDate }}</span></h3>
             </div>
             <div class="img-box">
-                <!-- <img src="" alt=""> -->
+                <img :src="getMyProfileData[0].image" alt="">
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { mapGetters } from "vuex";
     export default {
        name: "MyProfile", 
+       computed: {
+            ...mapGetters([ "getMyProfileData" ]),
+       },
     }
 </script>
 
@@ -63,10 +67,13 @@
     }
     .img-box{
         padding: 30px 10px 0 10px;
-    }
-    /* .img-box img{
         object-fit: contain;
-    } */
+        text-align: center;
+    }
+    .img-box img{
+        width: 40%;
+        box-shadow: 1px 1px 3px 1px #303030;
+    }
 
     /* make it response */
     @media (max-width: 1225px) {
@@ -84,6 +91,14 @@
         }
         .info-box{
             text-align: start;
+        }
+        .img-box{
+            padding: 0;
+            object-fit: contain;
+            text-align: center;
+        }
+        .img-box img{
+            width: 50%;
         }
     }
     @media (max-width: 991px) {

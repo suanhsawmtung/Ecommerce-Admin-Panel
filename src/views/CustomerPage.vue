@@ -48,6 +48,7 @@
   import MyProfile from "../components/customer-branches/MyProfile.vue";
   import TopBar from "../components/TopBar.vue";
   import CustomerModal from "../components/customer-branches/CustomerModals.vue";
+  /* https://dummyjson.com/users  */
   export default {
       name : 'ProductPage',
       data () {
@@ -143,7 +144,7 @@
 
           this.modalStatus = !this.modalStatus;
         },
-      }
+      },
   }
 </script>
 

@@ -10,65 +10,59 @@
                 <th class="date" style="color: #fff;">Joined Date</th>
                 <th class="control btns" style="color: #fff;"></th>
             </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalOne()" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+            <tr v-for="(customer,index) in paginatedCustomers" :key="index">
+                <td class="photo" >
+                    <img :src="customer.image" alt="">
                 </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalOne()" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalOne()" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
+                <td class="name" >{{ customer.username }}</td>
+                <td class="email" >{{ customer.email }}</td>
+                <td class="address " >{{ customer.address.address }}</td>
+                <td class="date" >{{ customer.birthDate }}</td>
                 <td class="control btns" >
                     <button @click="showModalOne()" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
                     <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>
         </table>
+        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/5) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
  <script>
+    import Paginator from "../data-paginators/CustomerPaginator.vue";
+    import { mapGetters } from "vuex";
     export default {
         name: "ProductTable",
-
+        data () {
+            return {
+                currentPage: 1,
+                perPage: 5,
+                maxVisibleButton: 4,
+            }
+        },
+        components: { Paginator },
+        computed: {
+            ...mapGetters([ "getCustomers", "paginatedCustomers", "getCustomerCurrentPage" ]),
+        },
         methods: {
             showModalOne () {
                this.$emit("showModal", "addAdmin"); 
             },
             showModalTwo(){
                 this.$emit("showModal", "deleteAcc")
+            },
+            onCustomerPageChange(currentPage){
+                this.currentPage = currentPage;
+                let page = {
+                    currentPage: this.currentPage,
+                    perPage: this.perPage
+                }
+
+                this.$store.dispatch("customerPaginator", page)
             }
+        },
+        mounted () {
+            this.currentPage = this.getCustomerCurrentPage;
         }
     }
  </script>
@@ -97,7 +91,12 @@
         padding: 10px 7px;
     }
     .photo{
-        width: 15%;
+        width: 10%;
+        object-fit: contain;
+        text-align: center;
+    }
+    .photo img{
+        width: 50%;
     }
 
     .name{
@@ -107,7 +106,7 @@
         width: 20%;
     }
     .address{
-        width: 15%;
+        width: 20%;
     }
     .date{
         width: 15%;

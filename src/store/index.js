@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import Products from './modules/product'
+import Customers from "./modules/customer"
 
 export default createStore({
     state: {
@@ -7,6 +8,7 @@ export default createStore({
     },
     getters: {
         getToggleStatus: state => state.toggleStatus,
+        getPaginatorStatus: state => state.paginatorStatus,
     },
     mutations: {
         setToggleStatus: (state, changeStatus) => state.toggleStatus = changeStatus,
@@ -23,5 +25,5 @@ export default createStore({
 
         },
     },
-    modules: { Products }
+    modules: { Products, Customers }
 })

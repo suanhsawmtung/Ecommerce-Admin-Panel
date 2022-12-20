@@ -9,42 +9,14 @@
                 <th class="date" style="color: #fff;">Joined Date</th>
                 <th class="control btns" style="color: #fff;"></th>
             </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+            <tr v-for="(admin, index) in $store.getters.getAdmins" :key="index">
+                <td class="photo" >
+                    <img :src="admin.image" alt="">
                 </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
-                <td class="control btns" >
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="photo" >Photo</td>
-                <td class="name" >Name</td>
-                <td class="email" >Email</td>
-                <td class="address " >Address</td>
-                <td class="date" >Joined Date</td>
+                <td class="name" >{{ admin.username }}</td>
+                <td class="email" >{{ admin.email }}</td>
+                <td class="address " >{{ admin.address.address }}</td>
+                <td class="date" >{{ admin.birthDate }}</td>
                 <td class="control btns" >
                     <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
@@ -61,7 +33,7 @@
             showModalTwo(){
                 this.$emit("showModal", "deleteAcc")
             }
-        }
+        },
     }
  </script>
  
@@ -89,7 +61,12 @@
         padding: 10px 7px;
     }
     .photo{
-        width: 15%;
+        width: 10%;
+        object-fit: contain;
+        text-align: center;
+    }
+    .photo img{
+        width: 50%;
     }
 
     .name{
@@ -99,7 +76,7 @@
         width: 20%;
     }
     .address{
-        width: 15%;
+        width: 20%;
     }
     .date{
         width: 15%;

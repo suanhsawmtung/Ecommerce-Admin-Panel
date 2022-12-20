@@ -48,12 +48,13 @@
         data () {
             return {
                 product: {
-                    name : " ",
-                    category : " ",
-                    price : " ",
+                    name : null,
+                    category : null,
+                    price : null,
                     image : [],
-                    description : " "
-                }
+                    description : null
+                },
+                chosenProduct: {},
             }
         },
         props: ["id"],
@@ -70,12 +71,22 @@
                         return product.id === i;
                     });
 
-                    this.product.name = chosenProduct[0].title;
-                    this.product.category = chosenProduct[0].category;
-                    this.product.price = chosenProduct[0].price;
-                    this.product.description = chosenProduct[0].description;
+                    this.chosenProduct= chosenProduct[0];
+
+                    this.product.name = this.chosenProduct.title;
+                    this.product.category = this.chosenProduct.category;
+                    this.product.price = this.chosenProduct.price;
+                    this.product.description = this.chosenProduct.description;
                 }
-            }
+            },
+            // updateProductData (product) {
+            //     product.title = this.product.name;
+            //     product.category = this.product.category;
+            //     product.price = this.product.price;
+            //     product.description = this.product.description;
+
+            //     this.$store.dispatch("updateProduct", product);
+            // },
         },
         updated () {
             this.setProductData(this.id);

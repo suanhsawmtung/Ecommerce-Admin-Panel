@@ -65,7 +65,7 @@
 
                 modalStatus: false,
                 chosenModal: null,
-                iWdForModal: null,
+                idForModal: null,
                 idForPage: null,
                 categoryName: "",
             }
@@ -157,8 +157,8 @@
             showChosenProductBranch(status, id){
                 this.selectItem("product");
                 this.showProductBranches (status, id);
-            }
-        }
+            },
+        },
     }
 </script>
 

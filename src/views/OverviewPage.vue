@@ -3,40 +3,13 @@
         <div class="main" :class="{'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <transition-group tag="ul" name="cards" appear class="card-container" @before-enter="beforeEnter" @enter="enter">
-                <li class="card">
+                <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index">
                     <div class="number">
-                        <h2>50</h2>
-                        <p>Customer Counts</p>
+                        <h2>{{ info.value }}</h2>
+                        <p>{{ info.title }}</p>
                     </div>
                     <div class="icon">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="number">
-                        <h2>25,000 Ks</h2>
-                        <p>Today's Income</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-dollar-sign"></i>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="number">
-                        <h2>2,423,000 Ks</h2>
-                        <p>Total Revenue</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-sack-dollar"></i>
-                    </div>
-                </li>
-                <li class="card">
-                    <div class="number">
-                        <h2>204</h2>
-                        <p>Pending Orders</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fa-solid fa-cart-arrow-down"></i>
+                        <i :class="info.icon"></i>
                     </div>
                 </li>
             </transition-group>
@@ -50,6 +23,8 @@
  
  <script>
     import { mapGetters } from "vuex";
+    import gsap from "gsap";
+    import { ref } from "vue";
     import TopBar from "../components/TopBar.vue";
     import SaleChart from "../components/overview-branches/SaleChart.vue";
     import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
@@ -59,21 +34,32 @@
         computed: {
             ...mapGetters(["getToggleStatus"]),
         },
-        // setup(){
-        //     const beforeEnter = (el) => {
-        //         el.style.opacity = 0;
-        //         el.style.transform = "scale(0)"
-        //     }
+        setup(){
+            const overviewInfo = ref([
+                {value: "50", title: "Customer Counts", icon: "fa-solid fa-users"},
+                {value: "25,000 Ks", title: "Today's Income", icon: "fa-solid fa-dollar-sign"},
+                {value: "2,423,000 Ks", title: "Total Revenue", icon: "fa-solid fa-sack-dollar"},
+                {value: "204", title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
+            ]) 
 
-        //     const enter = (el) => {
-        //         el.style.opacity = 1;
-        //         el.style.transform = "scale(1)";
-        //         transition-duration : 0.5;
-        //         transition-delay : 0.4;
-        //     }
+            const beforeEnter = (el) => {
+                el.style.opacity = 0;
+                el.style.transform = "scale(0)"
+            }
 
-        //     return { beforeEnter,enter }
-        // }
+            const enter = (el, done) => {
+                gsap.to(el, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.8,
+                    onComplete: done,
+                    delay: el.dataset.index * 0.2,
+
+                })
+            }
+
+            return { beforeEnter, enter, overviewInfo }
+        }
     }
  </script>
  

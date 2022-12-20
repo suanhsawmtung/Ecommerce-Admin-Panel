@@ -114,13 +114,13 @@
         padding: 5px;
         color: #777777;
     }
-    .count{
+    /* .count{
         width: 20%;
         text-align: center;
         overflow: hidden;
         padding: 5px;
         color: #777777;
-    }
+    } */
 
 
     /* now, make it responsive */

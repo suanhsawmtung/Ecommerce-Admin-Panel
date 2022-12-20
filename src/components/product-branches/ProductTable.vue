@@ -15,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr  v-for="(product,index) in getProducts" :key="index">
+                <tr  v-for="(product,index) in paginatedProducts" :key="index">
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
                     <td class="category" >{{product.category}}</td>
@@ -32,21 +32,42 @@
                 </tr>
             </tbody>
         </table>
+        <Paginator v-show="getProducts.length > perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
  <script>
     import { mapGetters } from "vuex";
+    import Paginator from "../data-paginators/ProductPaginator.vue";
     export default {
         name: "ProductTable",
+        data () {
+            return {
+                currentPage: 1,
+                perPage: 4,
+                maxVisibleButton: 3,
+            }
+        },
+        components: { Paginator },
         computed: {
-            ...mapGetters(["getProducts"]),
+            ...mapGetters(["getProducts", "paginatedProducts", "getProductCurrentPage"]),
         },
         methods: {
             showProductBranch (status, id) {
                this.$emit("showProductBranch", status, id); 
             },
+            onProductPageChange(currentPage){
+                this.currentPage = currentPage;
+                let page = {
+                    currentPage: this.currentPage,
+                    perPage: this.perPage
+                }
+                this.$store.dispatch("productPaginator", page);
+            }
         },
+        mounted () {
+            this.currentPage=this.getProductCurrentPage;
+        }
     }
  </script>
  
