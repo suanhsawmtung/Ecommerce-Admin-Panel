@@ -3,13 +3,13 @@
         <div class="table-box" >
             <table>
                 <tr v-for="(category, index) in getCategories" :key="index">
-                    <td class="category" >{{ category }}</td>
+                    <td class="category" >{{ category.title }}</td>
                     <td class="control crl" >
                         <button @click="showPopover(index)" title="more"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                         <div class="popover" v-show="(popoverStatus == index)">
-                            <span @click="showCategoryProductPage(category)">Show {{category}} products</span>
-                            <span @click="showModal('editCategory', index)">Edit Category</span>
-                            <span @click="showModal('deleteCategory', index)">Delete Category</span>
+                            <span @click="showCategoryProductPage(category.title)">Show {{category.title}} products</span>
+                            <span @click="showModal('editCategory', category.id)">Edit Category</span>
+                            <span @click="showModal('deleteCategory', category.id)">Delete Category</span>
                         </div>
                     </td>
                 </tr>
@@ -26,7 +26,6 @@ import { mapGetters } from 'vuex';
        data () {
         return {
             popoverStatus: null,
-            categories: [],
         }
        },
        computed: {
@@ -34,8 +33,8 @@ import { mapGetters } from 'vuex';
        },
        methods: {
             showCategoryProductPage(category){
-                this.$emit('showCategoryBranches', 'categoryProduct', category);
                 this.popoverStatus = null;
+                this.$emit('showCategoryBranches', 'categoryProduct', category);
             },
             showModal (status, id) {
                 this.$emit("modal",status, id);

@@ -2,7 +2,7 @@
     <div class="detail">
         <h2>{{ product.title }}</h2>
         <div class="fact-box box-one">
-            <span>Category - {{ product.category }}</span>
+            <span>Category - {{ product.category_title }}</span>
             <span>Created_at - Aug 21, 1999 at 7:00 AM</span>
             <span>Updated_at - Oct 22, 1998 at 10:00 AM</span>
         </div>

@@ -11,12 +11,12 @@
             <div class="table">
                 <table>
                     <tbody>
-                        <tr v-for="(product, index) in getTopSellerItems" :key="index">
-                            <td class="title"><small>{{ product.title }}</small></td>
+                        <!-- <tr v-for="(product, index) in getTopSellerItems" :key="index">
+                            <td class="title"><small>{{ product }}</small></td>
                             <td class="image">
                                 <img :src="product.image" alt="">
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -30,14 +30,42 @@
 
     export default {
         name: "TopSaleProduct",
+        data () {
+            return {
+                topSellerItems: [],
+            }
+        },
         computed: {
-            ...mapGetters(["getProducts", "getCategories", "getTopSellerItems"]),
+            ...mapGetters(["getProducts", "getCategories"]),
+            categories ()  {
+                let categories = [];
+                this.getCategories.forEach(category => {
+                    categories.push(category.title);
+                });
+                return categories;
+            },
+            
+        },
+        methods: {
+            setTopSellerItems() {
+                let productsSortedByCount = this.getProducts.sort(function(a, b){
+                    return a.count - b.count;
+                });
+
+                for (let i = 0; i < 6; i++) {
+                    this.topSellerItems.push(productsSortedByCount[i])
+                }
+            },
+        },
+        created () {
+            this.setTopSellerItems();
         },
         mounted () {
+            console.log(this.topSellerItems);
             const ctx = document.getElementById('categoryChart');
 
             const data = {
-              labels: this.getCategories,
+              labels: this.categories,
               datasets: [{
                 label: 'Total Count',
                 data: [173, 58, 37, 109],

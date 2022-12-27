@@ -18,7 +18,7 @@
                 <tr  v-for="(product,index) in products" :key="index">
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
-                    <td class="category" >{{product.category}}</td>
+                    <td class="category" >{{product.category_title}}</td>
                     <td class="price p" >{{product.price}}</td>
                     <td class="view vc" >{{product.count}}</td>
                     <td class="react re" >{{product.rate}}</td>
@@ -26,7 +26,7 @@
                     <td class="updated" >.</td>
                     <td class="control btns" >
                         <button @click="showChosenProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                        <button @click="$emit('toggle', 'deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                        <button @click="deleteProductOfChosenCategory(product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                         <button @click="showChosenProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
                     </td>
                 </tr>
@@ -54,9 +54,12 @@
             },
             showProducts(category){
                 this.products = this.getProducts.filter(product => {
-                    return product.category === category;
+                    return product.category_title === category;
                 });
-            }
+            },
+            deleteProductOfChosenCategory(id){
+                this.$emit('toggle', 'deleteProduct', id);
+            }, 
         },
         updated () {
             this.showProducts(this.category);

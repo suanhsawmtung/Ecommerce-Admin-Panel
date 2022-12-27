@@ -21,6 +21,7 @@
     },
     created () {
       this.$store.dispatch("allProducts");
+      this.$store.dispatch("allCategories");
       this.$store.dispatch("allCustomers");
     },
   }

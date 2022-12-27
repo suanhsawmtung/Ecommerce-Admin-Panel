@@ -18,12 +18,12 @@
                 <tr  v-for="(product,index) in paginatedProducts" :key="index">
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
-                    <td class="category" >{{product.category}}</td>
+                    <td class="category" >{{product.category_title}}</td>
                     <td class="price p" >{{product.price}}</td>
                     <td class="view vc" >{{product.count}}</td>
                     <td class="react re" >{{product.rate}}</td>
                     <td class="review rv" > .</td>
-                    <td class="updated" >.</td>
+                    <td class="updated" >{{ product.updatedAt }}</td>
                     <td class="control btns" >
                         <button @click="showProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
                         <button @click="$emit('toggle', 'deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>

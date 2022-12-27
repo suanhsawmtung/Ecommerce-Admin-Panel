@@ -2,23 +2,23 @@
     <div class="createProduct">
         <div class="form">
             <h4 class="title">Update Product</h4>
-            <div class="form-body">
+            <form class="form-body">
                 <div class="item item1">
                     <label for="name">Product Name</label>
-                    <input type="text" class="inputField" id="name" v-model="product.name"  />
+                    <input type="text" class="inputField" id="name" v-model="chosenProduct.title"   />
                 </div>
                 
                 <div class="item item2">
                     <label for="category">Product Category</label>
-                    <select class="inputField" id="category" v-model="product.category">
+                    <select class="inputField" id="category" >
                         <!-- <option disable value="" class="opt">Choose category</option> -->
-                        <option class="opt" v-for="(category, index) in getCategories" :key="index" >{{ category }}</option>
+                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id" :selected="category.id === product.category">{{ category.title }}</option>
                     </select>
                 </div>
                 
                 <div class="item item3">
                     <label for="price">Product Price</label>
-                    <input type="number" class="inputField" id="price" v-model="product.price" placeholder="Enter product price" >
+                    <input type="number" class="inputField" id="price" v-model="chosenProduct.price"  placeholder="Enter product price" >
                 </div>
 
                 
@@ -29,13 +29,13 @@
 
                 <div class="item item5">
                     <label for="description">Product Description</label>
-                    <textarea class="inputField" id="description" cols="30" rows="10" v-model="product.description" placeholder="Enter product description" ></textarea>
+                    <textarea class="inputField" id="description" cols="30" rows="10" placeholder="Enter product description" v-model="chosenProduct.description"></textarea>
                 </div>
 
                 <div class="item6">
                      <button type="submit" class="btn">Update</button>
                 </div>
-            </div>
+            </form>
         </div>
         
     </div>
@@ -51,8 +51,8 @@
                     name : null,
                     category : null,
                     price : null,
-                    image : [],
-                    description : null
+                    image : null,
+                    description : null,
                 },
                 chosenProduct: {},
             }
@@ -63,7 +63,7 @@
         },
         methods: {
             selectImage (event) {
-                this.product.image = event.target.files;
+                this.product.image = event.target.files[0];
             },
             setProductData(i){
                 if(i != null){
@@ -73,10 +73,6 @@
 
                     this.chosenProduct= chosenProduct[0];
 
-                    this.product.name = this.chosenProduct.title;
-                    this.product.category = this.chosenProduct.category;
-                    this.product.price = this.chosenProduct.price;
-                    this.product.description = this.chosenProduct.description;
                 }
             },
             // updateProductData (product) {

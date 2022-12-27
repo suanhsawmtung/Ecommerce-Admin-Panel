@@ -11,7 +11,7 @@
        <div v-show="deleteCategoryStatus" class="modal-box-two">
          <Modal @close="$emit('close')">
            <h4>Do you really want to delete {{ categoryName }} category permanantly?</h4>
-           <button>Delete</button>
+           <button @click="deleteCategory(category.id)">Delete</button>
            <button @click="$emit('close')">Cancel</button>
          </Modal>
        </div>
@@ -21,7 +21,7 @@
             <div class="modal-box-three-inner">
                <label for="categoryName">Create New Category</label>
                <input type="text" id="categoryName" placeholder="Enter category name..." v-model="categoryName">
-               <button class="createBtn">Create</button>
+               <button @click="createCategory(categoryName)" class="createBtn">Create</button>
             </div>
          </Modal>
        </div>
@@ -31,7 +31,7 @@
             <div class="modal-box-three-inner">
                <label for="categoryName">Edit Category</label>
                <input type="text" id="categoryName" placeholder="Enter category name..." v-model="categoryName">
-               <button class="createBtn">Update</button>
+               <button @click="updateCategory(category.id, categoryName)" class="createBtn">Update</button>
             </div>
          </Modal>
        </div>
@@ -50,6 +50,7 @@
              deleteCategoryStatus: false,
  
              categoryName: "",
+             category: {},
              productName: "",
              product: {},
 
@@ -85,21 +86,52 @@
              }
  
              if(x==="editCategory"){
-                this.editCategoryStatus=true;
-                this.categoryName = this.$store.getters.getCategories[this.id];
+               this.editCategoryStatus= true;
+               let chosenCategory = this.$store.getters.getCategories.filter(category => {
+                  return category.id === this.id;
+               });
+               this.category = chosenCategory[0];              
+               this.categoryName = chosenCategory[0].title;
                 return;
              }
 
              if(x==="deleteCategory"){
                 this.deleteCategoryStatus=true;
-                this.categoryName = this.$store.getters.getCategories[this.id];
+                let chosenCategory = this.$store.getters.getCategories.filter(category => {
+                  return category.id === this.id;
+                });
+                this.category = chosenCategory[0];
+                this.categoryName = chosenCategory[0].title;
                 return;
              }
           },
           deleteProduct(id){
             this.$store.dispatch("deleteProduct", id);
-            this.$emit('close');
+            this.$emit('previousPage', "categoryTable");
           },
+          deleteCategory(id){
+            if(!this.$store.getters.getProducts.some(product => product.category_id === id)){
+               this.$store.dispatch("deleteCategory", id);
+               this.$emit("close");
+               return;
+            }
+            this.$emit("close");
+          },
+          createCategory(categoryTitle){
+            let newCategory = {
+               "title": categoryTitle
+            }
+            this.$store.dispatch("createCategory", newCategory);
+            this.$emit("close");
+          },
+          updateCategory(categoryId, categoryTitle){
+            let newCategory = {
+               "id": categoryId,
+               "title": categoryTitle
+            }
+            this.$store.dispatch("updateCategory", newCategory);
+            this.$emit("close");
+          }
        },
        updated () {
           this.selectModal(this.chosenModal, this.id );

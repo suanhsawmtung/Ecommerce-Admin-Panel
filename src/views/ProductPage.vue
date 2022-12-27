@@ -1,7 +1,7 @@
 <template>
       <div class="branch-parent">
         <div v-show="modalStatus" class="modal-parent-box">
-            <ProductModal :chosenModal='chosenModal' :id=idForModal @close="modalToggle(null)"></ProductModal>
+            <ProductModal :chosenModal='chosenModal' :id=idForModal @close="modalToggle(null)" @previousPage="showPreviousPage"></ProductModal>
         </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
@@ -20,7 +20,7 @@
                         <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
                     </div>
                     <ProductTable @showProductBranch="showProductBranches" @toggle="modalToggle" v-show="tableStatus"></ProductTable>
-                    <CreateProduct v-show="createStatus"></CreateProduct>
+                    <CreateProduct v-show="createStatus" @previousPage="showPreviousPage"></CreateProduct>
                     <ProductDetail v-show="detailStatus" :id= idForPage></ProductDetail>
                     <UpdateProduct v-show="updateStatus" :id= idForPage></UpdateProduct>
                 </div>
@@ -158,6 +158,15 @@
                 this.selectItem("product");
                 this.showProductBranches (status, id);
             },
+            showPreviousPage(status){
+                if(status === "categoryTable"){
+                    this.showCategoryBranches("categoryTable", null);
+                }
+                if(status=== "productTable"){
+                    this.showProductBranches("productTable", null);
+                }
+                this.modalToggle(null, null);
+            }
         },
     }
 </script>
