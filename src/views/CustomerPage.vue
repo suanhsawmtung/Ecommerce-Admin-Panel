@@ -1,7 +1,7 @@
 <template>
     <div class="branch-parent">
       <div v-show="modalStatus" class="modal-parent-box">
-        <CustomerModal :chosenModal=this.chosenModal @close="modalToggle(null)"></CustomerModal>
+        <CustomerModal :chosenModal="chosenModal" :id=idForModal @close="modalToggle(null)"></CustomerModal>
       </div>
       <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
           <TopBar></TopBar>
@@ -32,7 +32,7 @@
               <div v-show="profileStatus">
                   <div class="btn-box">
                       <button @click="showProfileBranches('myProfile')" v-show="!myProfileStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                      <button @click="modalToggle('editProfile')" v-show="myProfileStatus">Edit Profile</button>
+                      <button @click="modalToggle('editProfile', null)" v-show="myProfileStatus">Edit Profile</button>
                   </div>
                   <MyProfile v-show="myProfileStatus"></MyProfile>
               </div>
@@ -48,7 +48,7 @@
   import MyProfile from "../components/customer-branches/MyProfile.vue";
   import TopBar from "../components/TopBar.vue";
   import CustomerModal from "../components/customer-branches/CustomerModals.vue";
-  /* https://dummyjson.com/users  */
+
   export default {
       name : 'ProductPage',
       data () {
@@ -69,6 +69,7 @@
 
               modalStatus: false,
               chosenModal: null,
+              idForModal: null,
           }
       },
       components : { TopBar, CustomerTable, AdminTable, MyProfile, CustomerModal },
@@ -109,37 +110,28 @@
                 break;
             }
         },
-        showCategoryBranches (status) {
-            this.categoryProductStatus = false;
-            this.categoryTableStatus = false;
-
-            switch (status) {
-              case "categoryTable":
-                this.categoryTableStatus = true;
-                break;
-              case "categoryProduct":
-                this.categoryProductStatus = true;
-                break;
-              case "createCategory":
-                this.categoryTableStatus = true;
-                this.createCategoryStatus = !this.createCategoryStatus;
-                this.newCategory = " ";
-                break;
-            }
-        },
-        modalToggle(m){
+        modalToggle(m, id){
           this.chosenModal = null;
+          this.idForModal= null;
 
           if(m=="addAdmin"){
             this.chosenModal= "addAdmin";
+            this.idForModal= id;
+          }
+
+          if(m=="removeAdmin"){
+            this.chosenModal= "removeAdmin";
+            this.idForModal= id;
           }
 
           if(m=="deleteAcc"){
             this.chosenModal= "deleteAcc";
+            this.idForModal= id;
           }
 
           if(m=="editProfile"){
             this.chosenModal= "editProfile";
+            this.idForModal= id;
           }
 
           this.modalStatus = !this.modalStatus;

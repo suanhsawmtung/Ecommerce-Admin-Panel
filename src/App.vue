@@ -14,7 +14,6 @@
   import SideBar from "./components/SideNavBar.vue";
 
   export default {
-    /*  https://vuejs.org/api/  */
     components: {SideBar},
     computed: {
         ...mapGetters(["getProducts"])

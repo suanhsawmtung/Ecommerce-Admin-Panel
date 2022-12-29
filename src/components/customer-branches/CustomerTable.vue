@@ -14,13 +14,13 @@
                 <td class="photo" >
                     <img :src="customer.image" alt="">
                 </td>
-                <td class="name" >{{ customer.username }}</td>
+                <td class="name" >{{ customer.name }}</td>
                 <td class="email" >{{ customer.email }}</td>
-                <td class="address " >{{ customer.address.address }}</td>
-                <td class="date" >{{ customer.birthDate }}</td>
+                <td class="address " >{{ customer.address }}</td>
+                <td class="date" >{{ customer.createdAt }}</td>
                 <td class="control btns" >
-                    <button @click="showModalOne()" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="showModalOne(customer.id)" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
+                    <button @click="showModalTwo(customer.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>
         </table>
@@ -45,11 +45,11 @@
             ...mapGetters([ "getCustomers", "paginatedCustomers", "getCustomerCurrentPage" ]),
         },
         methods: {
-            showModalOne () {
-               this.$emit("showModal", "addAdmin"); 
+            showModalOne (id) {
+               this.$emit("showModal", "addAdmin", id); 
             },
-            showModalTwo(){
-                this.$emit("showModal", "deleteAcc")
+            showModalTwo(id){
+                this.$emit("showModal", "deleteAcc", id)
             },
             onCustomerPageChange(currentPage){
                 this.currentPage = currentPage;

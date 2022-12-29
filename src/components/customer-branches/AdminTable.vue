@@ -13,12 +13,12 @@
                 <td class="photo" >
                     <img :src="admin.image" alt="">
                 </td>
-                <td class="name" >{{ admin.username }}</td>
+                <td class="name" >{{ admin.name }}</td>
                 <td class="email" >{{ admin.email }}</td>
-                <td class="address " >{{ admin.address.address }}</td>
-                <td class="date" >{{ admin.birthDate }}</td>
+                <td class="address " >{{ admin.address }}</td>
+                <td class="date" >{{ admin.createdAt }}</td>
                 <td class="control btns" >
-                    <button @click="showModalTwo()" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="showModalTwo(admin.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>
         </table>
@@ -30,8 +30,8 @@
         name: "AdminTable",
 
         methods: {
-            showModalTwo(){
-                this.$emit("showModal", "deleteAcc")
+            showModalTwo(id){
+                this.$emit("showModal", "removeAdmin", id)
             }
         },
     }

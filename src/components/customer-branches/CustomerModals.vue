@@ -2,8 +2,16 @@
    <div>
       <div v-show="addAdminStatus" class="modal-box-one">
         <Modal @close="$emit('close')">
-          <h4>Do you want to add him to admin list?</h4>
-          <button >Add</button>
+          <h4>Do you want to add {{ userData.name }} to admin list?</h4>
+          <button @click="changeRole(id, 'admin')">Add</button>
+          <button @click="$emit('close')">Cancel</button>
+        </Modal>
+      </div>
+
+      <div v-show="removeAdminStatus" class="modal-box-one">
+        <Modal @close="$emit('close')">
+          <h4>Do you want to remove {{ userData.name }} from admin list?</h4>
+          <button @click="changeRole(id, 'customer')">Remove</button>
           <button @click="$emit('close')">Cancel</button>
         </Modal>
       </div>
@@ -11,7 +19,7 @@
       <div v-show="deleteAccountStatus" class="modal-box-two">
         <Modal @close="$emit('close')">
           <h4>Do you really want to delete this account permanantly?</h4>
-          <button>Delete</button>
+          <button @click="deleteUserAccount(id)">Delete</button>
           <button @click="$emit('close')">Cancel</button>
         </Modal>
       </div>
@@ -40,26 +48,45 @@
       data () {
          return {
             addAdminStatus: false,
+            removeAdminStatus: false,
             deleteAccountStatus: false,
             editProfileStatus: false,
 
-            userData: {
-               name: "kyaw kyaw",
-               address: "Yangon",
-               image: null
-            }
+            userData: {}
          }
       },
       components: { Modal },
-      props: [ "chosenModal" ],
+      props: [ "chosenModal", "id" ],
       methods: {
          selectModal () {
             this.addAdminStatus= false;
+            this.removeAdminStatus= false;
             this.deleteAccountStatus= false;
             this.editProfileStatus= false;
-            
+
             if(this.chosenModal==="addAdmin"){
+               if(this.id !== null){
+                  let chosenUser = this.$store.getters.getCustomers.filter(user=>{
+                     return user.id === this.id;
+                  });
+
+                  this.userData = chosenUser[0];
+               }
+            
                this.addAdminStatus=true;
+               return;
+            }
+
+            if(this.chosenModal==="removeAdmin"){
+               if(this.id !== null){
+                  let chosenUser = this.$store.getters.getAdmins.filter(user=>{
+                     return user.id === this.id;
+                  });
+
+                  this.userData = chosenUser[0];
+                }
+            
+               this.removeAdminStatus=true;
                return;
             }
 
@@ -75,6 +102,18 @@
          },
          selectUserImage(event){
             this.userData.image = event.target.files;
+         },
+         changeRole(id, newRole){
+            let newRoleData = {
+               "id": id,
+               "newRole": newRole
+            };
+            this.$store.dispatch("changeUserRole", newRoleData);
+            this.$emit("close");
+         },
+         deleteUserAccount(id){
+            this.$store.dispatch("deleteUser", id)
+            this.$emit("close");
          }
       },
       updated () {
