@@ -1,5 +1,5 @@
  <template>
-    <transition name="side" appear>
+    <transition name="side" :appear="this.$route.name !== 'auth'">
         <div class="sideBar" :class="{'toggleWidth':getToggleStatus}">
             <div class="title">
                 <div class="icon"><i class="fa-brands fa-vuejs"></i></div>
@@ -10,7 +10,7 @@
             </div>
             <ul>
                 <li>
-                    <router-link to="/" active-class="active" class="side-btn">
+                    <router-link to="/overview" active-class="active" class="side-btn">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-house-chimney"></i></div>
                             <div class="text-title">Overview</div>
@@ -50,12 +50,12 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="#" class="side-btn">
+                    <div class="side-btn" @click="logout()">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
                             <div class="text-title">Sign Out</div>
                         </div>
-                    </router-link>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -64,18 +64,25 @@
  
  <script>
     import { mapGetters, mapActions } from "vuex";
+    import setAuthHeader from "../utils/setAuthHeader";
     export default {
         name : 'SideNavBar',
         computed: {
-            ...mapGetters(["getToggleStatus", "getProducts"]),
+            ...mapGetters(["getToggleStatus", "getProducts" ]),
         },
         methods: {
             ...mapActions(["toggle", "allProducts"]),
+            logout(){
+                setAuthHeader(sessionStorage.getItem("TOKEN")); 
+                this.$store.dispatch("logout").then(() => {
+                    this.$router.push({ path: '/' });
+                });
+            }
         },
         mounted () {
             this.toggle(true);
             window.addEventListener("resize",this.toggle);
-        }
+        },
     }
  </script>
  
@@ -205,7 +212,10 @@
         transform: translateX(-250px);
     }
     .side-enter-active{
-        transition: transform 0.2s ease-in;
+        transition: transform 0.3s ease-in;
+    }
+    .side-leave-to{
+        opacity: 0;
     }
 
     /* now, make it responsive */

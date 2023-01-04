@@ -27,9 +27,10 @@
            }
         },
         mounted () {
-            const ctx = document.getElementById('myChart');
 
             this.setLabelsForChart();
+            const ctx = document.getElementById('myChart');
+            console.log(this.monthsForChartLabel);
 
             const labels = this.monthsForChartLabel;
             const data = {

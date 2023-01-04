@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SideBar></SideBar>
+    <SideBar v-show="this.$route.path !== '/' "></SideBar>
     <router-view v-slot = "{ Component }">
       <transition name="route" mode="out-in" >
         <component :is="Component"></component>
@@ -10,19 +10,27 @@
 </template>
 
 <script>
-  import { mapGetters } from "vuex";
   import SideBar from "./components/SideNavBar.vue";
+  // import setAuthHeader from  "./utils/setAuthHeader";
 
   export default {
     components: {SideBar},
-    computed: {
-        ...mapGetters(["getProducts"])
+    methods: {
+      getAllDatas(){
+          this.$store.dispatch("allProducts");
+          this.$store.dispatch("allCategories");
+          this.$store.dispatch("allCustomers");
+      },
     },
-    created () {
-      this.$store.dispatch("allProducts");
-      this.$store.dispatch("allCategories");
-      this.$store.dispatch("allCustomers");
-    },
+    // mounted () {
+    //   if(sessionStorage.length !== 0){
+    //     setAuthHeader(sessionStorage.getItem("Token"));
+    //     this.getAllDatas();
+    //     if(this.$route.name === 'auth'){
+    //       this.$router.push({ path: '/overview' });
+    //     }
+    //   }
+    // }
   }
 
 </script>

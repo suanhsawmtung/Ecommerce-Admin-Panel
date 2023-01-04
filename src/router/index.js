@@ -3,6 +3,12 @@ import OverviewPage from '../views/OverviewPage.vue'
 
 const routes = [{
         path: '/',
+        name: 'auth',
+        component: () =>
+            import ('../views/AuthPage.vue')
+    },
+    {
+        path: '/overview',
         name: 'overview',
         component: OverviewPage
     },
@@ -29,12 +35,18 @@ const routes = [{
         name: 'setting',
         component: () =>
             import ('../views/SettingPage.vue')
-    },
+    }
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
+})
+
+router.beforeEach(async(to) => {
+    if (sessionStorage.length === 0 && to.name !== 'auth') {
+        return { name: 'auth' }
+    }
 })
 
 export default router
