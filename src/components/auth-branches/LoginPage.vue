@@ -7,11 +7,13 @@
             <div class="input-box">
                 <label for="email">Email</label>
                 <input type="email" name="email" placeholder="Enter email..." v-model="user.email">
+                <small style="color: red" v-show="validation.emailStatus">User email is required.</small>
             </div>
 
             <div class="input-box">
                 <label for="name">Password</label>
                 <input type="password" name="password" placeholder="Enter password..." v-model="user.password">
+                <small style="color: red" v-show="validation.passwordStatus">Password is required.</small>
             </div>
 
             <!-- <div>
@@ -39,6 +41,10 @@
                 user: {
                     email: "",
                     password: ""
+                },
+                validation: {
+                    emailStatus: false,
+                    passwordStatus: false
                 }
             }
         },
@@ -47,6 +53,11 @@
                 this.$emit("changeForm", status);
             },
             login(){
+                if(this.user.email==="" || this.user.password ===""){
+                    this.loginValidation();
+                    return;
+                }
+
                 this.$store.dispatch("login", this.user).then(()=>{
                     setAuthHeader(sessionStorage.getItem("TOKEN")); 
                 }).then(() => {
@@ -54,8 +65,18 @@
                 }).catch(error=>{
                     console.log(error);
                 });
+            },
+            loginValidation(){
+                this.validation.emailStatus = false;
+                this.validation.passwordStatus= false;
+
+                if(this.user.email === ""){
+                    this.validation.emailStatus = true;
+                }else{
+                    this.validation.passwordStatus = true;
+                }
             }
-        }
+        },
     }
 </script>
 
@@ -93,6 +114,7 @@
     .form-body .input-box input{
         padding: 8px ;
         text-decoration: none;
+        /* border: 1.5px solid #ff0000; */
         border: 1.5px solid #4fb9af;
         border-radius: 8px;
     }

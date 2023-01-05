@@ -7,26 +7,35 @@
             <div class="input-box">
                 <label for="name">Name</label>
                 <input type="text" name="name" placeholder="Enter username..." v-model="user.name">
+                <small style="color: red" v-show="validation.nameStatus">User name is required.</small>
+                <small style="color: red" v-show="validation.nameCountStatus">User name require at least 5 chracters.</small>
             </div>
 
             <div class="input-box">
                 <label for="email">Email</label>
                 <input type="email" name="email" placeholder="Enter email..." v-model="user.email">
+                <small style="color: red" v-show="validation.emailStatus">User email is required.</small>
+                <small></small>
             </div>
 
             <div class="input-box">
                 <label for="name">Password</label>
                 <input type="password" name="password" placeholder="Enter password..." v-model="user.password">
+                <small style="color: red" v-show="validation.passwordStatus">Password is required.</small>
+                <small style="color: red" v-show="validation.passwordCountStatus">Password require at least 7 chracters.</small>
+                <small></small>
             </div>
 
             <div class="input-box">
                 <label for="name">Confirm Password</label>
                 <input type="password" name="confirm-password" placeholder="Confirm your password..." v-model="user.password_confirmation">
+                <small style="color: red" v-show="validation.password_confirmationStatus">Confirm password does not match.</small>
+                <small style="color: red" v-show="validation.confirmationCheckStatus">Password Confirmation is required.</small>
             </div>
 
-            <div>
+            <!-- <div>
                 <input type="checkbox" name="name"> <span>Remember me?</span>
-            </div>
+            </div> -->
 
             <div class="input-box">
                 <button type="button" class="btn" @click="register()">Register</button>
@@ -52,6 +61,16 @@
                     role: "admin",
                     password: "",
                     password_confirmation: ""
+                },
+                validation: {
+                    nameStatus: false,
+                    nameCountStatus: false,
+                    emailStatus: false,
+                    passwordStatus: false,
+                    passwordCountStatus: false,
+                    confirmationCheckStatus: false,
+                    password_confirmationStatus: false,
+                    validationSuccessStatus: false
                 }
             }
         },
@@ -60,18 +79,60 @@
                 this.$emit("changeForm", status);
             },
             register(){
-                this.$store.dispatch("register", this.user).then(()=>{
-                    setAuthHeader(this.$store.getters.getToken);
-                    this.$emit("success");
-                    // console.log(this.$store.getters.getToken);
-                })
-                .catch(error=>{
-                    console.log(error);
-                });
-
-                // console.log(this.user);
+                this.clearValidationMessage();
+                this.registerValidation();
+                if(this.validation.validationSuccessStatus === true){
+                    this.$store.dispatch("register", this.user).then(()=>{
+                        setAuthHeader(this.$store.getters.getToken);
+                        this.$emit("success");
+                    })
+                    .catch(error=>{
+                        console.log(error);
+                    });
+                }
+            },
+            registerValidation(){
+                if(this.user.name === ""){
+                    this.validation.nameStatus = true;
+                    return;
+                }
+                if(this.user.name.length < 5){
+                    this.validation.nameCountStatus = true;
+                    return;
+                }
+                if(this.user.email === ""){
+                    this.validation.emailStatus = true;
+                    return;
+                }
+                if(this.user.password === ""){
+                    this.validation.passwordStatus = true;
+                    return;
+                }
+                if(this.user.password.length < 7){
+                    this.validation.passwordCountStatus = true;
+                    return;
+                }
+                if(this.user.password_confirmation === ""){
+                    this.validation.confirmationCheckStatus = true;
+                    return;
+                }
+                if(this.user.password !== this.user.password_confirmation){
+                    this.validation.password_confirmationStatus = true;
+                    return;
+                }
+                this.validation.validationSuccessStatus = true;
+            },
+            clearValidationMessage(){
+                this.validation.nameStatus = false;
+                this.validation.nameCountStatus = false;
+                this.validation.emailStatus = false;
+                this.validation.passwordStatus = false;
+                this.validation.passwordCountStatus = false;
+                this.validation.confirmationCheckStatus = false;
+                this.validation.password_confirmationStatus = false;
+                this.validation.validationSuccessStatus = false;
             }
-        }
+        },
     }
 </script>
 
