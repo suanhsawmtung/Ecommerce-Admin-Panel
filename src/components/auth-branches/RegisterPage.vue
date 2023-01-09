@@ -50,7 +50,6 @@
 </template>
 
 <script>
-    import setAuthHeader from "../../utils/setAuthHeader";
     export default {
         name: 'RegisterPage',
         data () {
@@ -83,11 +82,10 @@
                 this.registerValidation();
                 if(this.validation.validationSuccessStatus === true){
                     this.$store.dispatch("register", this.user).then(()=>{
-                        setAuthHeader(this.$store.getters.getToken);
                         this.$emit("success");
                     })
                     .catch(error=>{
-                        console.log(error);
+                        this.$emit("error", error);
                     });
                 }
             },
@@ -206,5 +204,20 @@
     }
     .span-box span:active{
         color: teal;
+    }
+
+    /* now, make it responsive */
+    @media (max-width: 440px){
+        .form{
+            width: 350px;
+            padding: 12px;
+            border-radius: 10px;
+        }
+    }
+    @media (max-width: 350px){
+        .form{
+            width: 300px;
+            padding: 10px;
+        }
     }
 </style>

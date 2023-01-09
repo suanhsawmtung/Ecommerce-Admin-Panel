@@ -1,7 +1,12 @@
 <template>
     <div class="branch-parent">
+        <transition name="error">
+            <div class="error-box" v-show="credentialsErrorStatus">
+                <h3>{{ errorMessage }}</h3>
+            </div>
+        </transition>
         <transition name="auth">
-            <RegisterPage v-show="registerStatus" @changeForm="changeForm" @success="showOverviewPage"></RegisterPage>
+            <RegisterPage v-show="registerStatus" @changeForm="changeForm" @success="showOverviewPage" @error="showErrorMessage"></RegisterPage>
         </transition>
         <transition name="auth" appear >
             <LoginPage v-show="loginStatus" @changeForm="changeForm"  @success="showOverviewPage"></LoginPage>
@@ -12,6 +17,7 @@
 <script>
     import RegisterPage from "../components/auth-branches/RegisterPage.vue";
     import LoginPage from "../components/auth-branches/LoginPage.vue";
+    import setAuthHeader from "../utils/setAuthHeader";
     export default {
         name: 'AuthPage',
         components: {RegisterPage, LoginPage},
@@ -19,6 +25,8 @@
             return {
                 registerStatus: false,
                 loginStatus: true,
+                credentialsErrorStatus: false,
+                errorMessage: ""
             }
         },
         methods: {
@@ -37,8 +45,15 @@
                 }
             },
             showOverviewPage(){
-                this.getAllDatas();
-                this.$router.push({ path: '/overview' });
+                if(sessionStorage.getItem("TOKEN") !== null){
+                    setAuthHeader(sessionStorage.getItem("TOKEN")); 
+                    this.getAllDatas();
+                    this.$router.push({ path: '/overview' });
+                }else{
+                    this.errorMessage = this.$store.getters.getError;
+                    this.credentialsErrorStatus = true;
+                    setTimeout(() => this.credentialsErrorStatus = false, 3000);
+                }
             },
             getAllDatas(){
                 this.$store.dispatch("allProducts");
@@ -52,6 +67,11 @@
             showRegisterForm(){
                 this.registerStatus= true;
                 this.loginStatus= false;
+            },
+            showErrorMessage(error){
+                this.errorMessage = error.response.data.errors.email[0];
+                this.credentialsErrorStatus = true;
+                setTimeout(() => this.credentialsErrorStatus = false, 3000);
             }
         }
     }
@@ -62,10 +82,21 @@
         width: 100vw;
         height: 100vh;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         background: teal;
+    }
+
+    .error-box{
+        padding: 15px;
+        background: #cc2212;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .error-box h3{
+        color: #fff;
+        text-align: center;
     }
 
 
@@ -91,5 +122,35 @@
     }
     .auth-leave-active{
         transition: all 0.3s ease-out;
+    }
+
+    /* auth error animation */
+    .error-enter-from,
+    .error-leave-to{
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    .error-enter-to,
+    .error-leave-from{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+    .error-enter-active{
+        animation: wobble 0.5s ease;
+    }
+    .error-leave-active{
+        transition: all 0.3s ease;
+    }
+
+    @keyframes wobble{
+        0% { opacity: 0; transform: translateY(-50px) }
+        50% { opacity: 1; transform: translateY(0px) }
+        60% { transform: translateX(8px) }
+        70% { transform: translateX(-8px) }
+        80% { transform: translateX(6px) }
+        90% { transform: translateX(-6px) }
+        100% { transform: translateX(0px) }
     }
 </style>

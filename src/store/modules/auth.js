@@ -5,22 +5,31 @@ export default {
     state: {
         myData: null,
         token: null,
+        error: null
     },
     getters: {
         getMyData: state => state.myData,
         getToken: state => state.token,
+        getError: state => state.error,
     },
     mutations: {
         setMyData: (state, data) => {
+            if (data.message) {
+                state.error = data.message;
+                console.log(data);
+                return;
+            }
             state.myData = data.user;
             state.token = data.token;
             sessionStorage.setItem("TOKEN", data.token);
+            state.error = null;
+            console.log(data);
         },
         cleanMyData: state => {
             state.myData = {};
             state.token = null;
             sessionStorage.clear();
-        }
+        },
     },
     actions: {
         register: async({ commit }, userData) => {

@@ -33,7 +33,6 @@
 </template>
 
 <script>
-    import setAuthHeader from "../../utils/setAuthHeader";
     export default {
         name: 'LoginPage',
         data () {
@@ -58,10 +57,8 @@
                     return;
                 }
 
-                this.$store.dispatch("login", this.user).then(()=>{
-                    setAuthHeader(sessionStorage.getItem("TOKEN")); 
-                }).then(() => {
-                    this.$emit("success");
+                this.$store.dispatch("login", this.user).then(() => {
+                    this.$emit('success');
                 }).catch(error=>{
                     console.log(error);
                 });
@@ -151,5 +148,20 @@
     }
     .span-box span:active{
         color: teal;
+    }
+
+    /* now, make it responsive */
+    @media (max-width: 440px){
+        .form{
+            width: 350px;
+            padding: 12px;
+            border-radius: 10px;
+        }
+    }
+    @media (max-width: 350px){
+        .form{
+            width: 300px;
+            padding: 10px;
+        }
     }
 </style>
