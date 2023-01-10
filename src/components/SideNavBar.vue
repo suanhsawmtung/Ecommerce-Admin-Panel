@@ -18,6 +18,14 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="/category" active-class="active" class="side-btn">
+                        <div class="link-container">
+                            <div class="icon"><i class="fa-solid fa-message"></i></div>
+                            <div class="text-title">Category</div>
+                        </div>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="/product" active-class="active" class="side-btn">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-list-ul"></i></div>
@@ -28,16 +36,8 @@
                 <li>
                     <router-link to="/customer" active-class="active" class="side-btn">
                         <div class="link-container">
-                            <div class="icon"><i class="fa-solid fa-user"></i></div>
+                            <div class="icon"><i class="fa-solid fa-users"></i></div>
                             <div class="text-title">Customers</div>
-                        </div>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to="/message" active-class="active" class="side-btn">
-                        <div class="link-container">
-                            <div class="icon"><i class="fa-solid fa-message"></i></div>
-                            <div class="text-title">Message</div>
                         </div>
                     </router-link>
                 </li>
@@ -53,7 +53,7 @@
                     <div class="side-btn" @click="logout()">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
-                            <div class="text-title">Sign Out</div>
+                            <div class="text-title" style="cursor: pointer">Sign Out</div>
                         </div>
                     </div>
                 </li>

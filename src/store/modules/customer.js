@@ -31,7 +31,7 @@ export default {
                 return user.role === "admin";
             });
             state.myProfileData = data.filter(user => {
-                return user.id === 1;
+                return user.email === sessionStorage.getItem("EMAIL");
             });
         },
         removeUser: (state, removeId) => {

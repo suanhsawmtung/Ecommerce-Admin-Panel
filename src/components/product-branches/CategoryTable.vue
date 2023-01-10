@@ -29,7 +29,7 @@ import { mapGetters } from 'vuex';
         }
        },
        computed: {
-            ...mapGetters(["getCategories"]),
+            ...mapGetters("Products",["getCategories"]),
        },
        methods: {
             showCategoryProductPage(category){

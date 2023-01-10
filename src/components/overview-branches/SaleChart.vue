@@ -14,14 +14,20 @@
                 months: [
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ],
-                todayDate: null,
                 monthsForChartLabel: []
             }
         },
         methods: {
            setLabelsForChart (){
-                this.todayDate = new Date();
-                for(let i=this.todayDate.getMonth()-1; i > this.todayDate.getMonth()-7; i--){
+                let todayDate = new Date();
+                let loopingStart = todayDate.getMonth()-1;
+                let loopingStartPoint;
+                if(loopingStart < 0){
+                    loopingStartPoint = 12+loopingStart;
+                }else{
+                    loopingStartPoint = loopingStart;
+                }
+                for(let i=loopingStartPoint; i > loopingStartPoint-6; i--){
                     this.monthsForChartLabel.unshift(this.months[i]);
                 }
            }
@@ -30,7 +36,6 @@
 
             this.setLabelsForChart();
             const ctx = document.getElementById('myChart');
-            console.log(this.monthsForChartLabel);
 
             const labels = this.monthsForChartLabel;
             const data = {

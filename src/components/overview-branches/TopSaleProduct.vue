@@ -33,18 +33,11 @@
         data () {
             return {
                 topSellerItems: [],
+                topSaleCategories: []
             }
         },
         computed: {
-            ...mapGetters(["getProducts", "getCategories"]),
-            categories ()  {
-                let categories = [];
-                this.getCategories.forEach(category => {
-                    categories.push(category.title);
-                });
-                return categories;
-            },
-            
+            ...mapGetters('Products', ["getProducts", "getCategories"]),   
         },
         methods: {
             setTopSellerItems() {
@@ -56,16 +49,21 @@
                     this.topSellerItems.push(productsSortedByCount[i])
                 }
             },
+            setTopSaleCategories ()  {
+                this.getCategories.forEach(category => {
+                    this.topSaleCategories.push(category.title);
+                });
+            },
         },
         created () {
             this.setTopSellerItems();
+            this.setTopSaleCategories();
         },
         mounted () {
-            console.log(this.topSellerItems);
             const ctx = document.getElementById('categoryChart');
 
             const data = {
-              labels: this.categories,
+              labels: this.topSaleCategories,
               datasets: [{
                 label: 'Total Count',
                 data: [173, 58, 37, 109],

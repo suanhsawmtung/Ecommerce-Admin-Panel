@@ -37,7 +37,7 @@
  </template>
  
  <script>
-    import { mapGetters } from "vuex";
+    import { mapGetters, mapActions } from "vuex";
     import Paginator from "../data-paginators/ProductPaginator.vue";
     export default {
         name: "ProductTable",
@@ -50,9 +50,10 @@
         },
         components: { Paginator },
         computed: {
-            ...mapGetters(["getProducts", "paginatedProducts", "getProductCurrentPage"]),
+            ...mapGetters('Products', ["getProducts", "paginatedProducts", "getProductCurrentPage"]),
         },
         methods: {
+            ...mapActions('Products', ["productPaginator"]),
             showProductBranch (status, id) {
                this.$emit("showProductBranch", status, id); 
             },
@@ -62,7 +63,7 @@
                     currentPage: this.currentPage,
                     perPage: this.perPage
                 }
-                this.$store.dispatch("productPaginator", page);
+                this.productPaginator(page);
             }
         },
         mounted () {

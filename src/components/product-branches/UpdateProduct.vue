@@ -59,7 +59,7 @@
         },
         props: ["id"],
         computed: {
-            ...mapGetters([ "getProducts", "getCategories" ]),
+            ...mapGetters('Products', [ "getProducts", "getCategories" ]),
         },
         methods: {
             selectImage (event) {

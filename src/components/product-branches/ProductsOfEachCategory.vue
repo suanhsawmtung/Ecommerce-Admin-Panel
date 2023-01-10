@@ -46,7 +46,7 @@
         },
         props: [ "category" ],
         computed: {
-            ...mapGetters(["getProducts"]),
+            ...mapGetters('Products', ["getProducts"]),
         },
         methods: {
             showChosenProductBranch (status, id) {

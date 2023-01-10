@@ -72,7 +72,8 @@
         },
         components : { TopBar, ProductTable, CategoryTable, CreateProduct, ProductDetail, UpdateProduct, ProductModal, ProductsOfEachCategory },
         computed: {
-            ...mapGetters(["getToggleStatus"])
+            ...mapGetters( ["getToggleStatus"]),
+            ...mapGetters("Products", ["getCategories"])
         },
         methods: {
             selectItem (item){

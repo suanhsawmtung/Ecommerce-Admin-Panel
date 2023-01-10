@@ -18,6 +18,7 @@
     import RegisterPage from "../components/auth-branches/RegisterPage.vue";
     import LoginPage from "../components/auth-branches/LoginPage.vue";
     import setAuthHeader from "../utils/setAuthHeader";
+    import { mapActions } from "vuex";
     export default {
         name: 'AuthPage',
         components: {RegisterPage, LoginPage},
@@ -30,6 +31,7 @@
             }
         },
         methods: {
+            ...mapActions('Products', ['allProducts', 'allCategories']),
             changeForm (status) {
                 this.registerStatus= false;
                 this.loginStatus= false;
@@ -56,8 +58,8 @@
                 }
             },
             getAllDatas(){
-                this.$store.dispatch("allProducts");
-                this.$store.dispatch("allCategories");
+                this.allProducts();
+                this.allCategories();
                 this.$store.dispatch("allCustomers");
             },
             showLoginForm(){
@@ -95,7 +97,7 @@
         margin-bottom: 15px;
     }
     .error-box h3{
-        color: #fff;
+        color:  #fff;
         text-align: center;
     }
 

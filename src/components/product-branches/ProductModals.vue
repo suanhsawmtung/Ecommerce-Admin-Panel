@@ -40,6 +40,7 @@
  
  <script>
     import Modal from "../AllModals.vue";
+    import { mapGetters } from "vuex";
     export default {
        name: "ProductModals",
        data () {
@@ -59,6 +60,7 @@
        components: { Modal },
        props: [ "chosenModal", "id" ],
        methods: {
+         ...mapGetters("Products", ["deleteProduct", "deleteCategory", "createCategory", "updateCategory"]),
           selectModal (x, y) {
              this.deleteProductStatus= false;
              this.createCategoryStatus= false;
@@ -106,12 +108,12 @@
              }
           },
           deleteProduct(id){
-            this.$store.dispatch("deleteProduct", id);
+            this.deleteProduct(id);
             this.$emit('previousPage', "categoryTable");
           },
           deleteCategory(id){
             if(!this.$store.getters.getProducts.some(product => product.category_id === id)){
-               this.$store.dispatch("deleteCategory", id);
+               this.deleteCategory(id);
                this.$emit("close");
                return;
             }
@@ -121,7 +123,7 @@
             let newCategory = {
                "title": categoryTitle
             }
-            this.$store.dispatch("createCategory", newCategory);
+            this.createCategory(newCategory);
             this.$emit("close");
           },
           updateCategory(categoryId, categoryTitle){
@@ -129,7 +131,7 @@
                "id": categoryId,
                "title": categoryTitle
             }
-            this.$store.dispatch("updateCategory", newCategory);
+            this.updateCategory(newCategory);
             this.$emit("close");
           }
        },

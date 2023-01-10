@@ -16,14 +16,13 @@ export default {
         setMyData: (state, data) => {
             if (data.message) {
                 state.error = data.message;
-                console.log(data);
                 return;
             }
             state.myData = data.user;
             state.token = data.token;
             sessionStorage.setItem("TOKEN", data.token);
+            sessionStorage.setItem("EMAIL", data.user.email);
             state.error = null;
-            console.log(data);
         },
         cleanMyData: state => {
             state.myData = {};

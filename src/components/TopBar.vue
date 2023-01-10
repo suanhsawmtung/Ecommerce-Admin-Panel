@@ -4,7 +4,7 @@
           <div class="toggle" @click="toggle(getToggleStatus)" >
               <i class="fa-solid fa-bars"></i>
           </div>
-          <div class="searchBox">
+          <!-- <div class="searchBox">
             <input type="text" class="search" placeholder="Search here" v-model="searchKey">
             <table class="searchDataBox" v-show="searchKey.length!== 0">
               <tbody class="searchData">
@@ -16,15 +16,13 @@
                 </tr>
               </tbody>
             </table>
-          </div>
+          </div> -->
           <div class="iconBox">
-              <div class="notification">
-                <i class="fa-regular fa-bell"></i>
-                <span>22</span>
+              <div class="user-icon">
+                <i class="fa-regular fa-user"></i>
               </div>
-              <div class="msg-noti">
-                <i class="fa-regular fa-comment"></i>
-                <span>5</span>
+              <div class="user-name">
+                {{ $store.getters.getMyData.name }}
               </div>
           </div>
       </div>
@@ -32,8 +30,7 @@
    </template>
    
    <script>
-      import { mapGetters } from "vuex";
-      import { mapActions } from "vuex";
+      import { mapGetters, mapActions } from "vuex";
       export default {
           name : 'TopBar',
           data () {
@@ -46,10 +43,11 @@
              ...mapActions(["toggle"]),
           },
           computed: {
-            ...mapGetters(["getToggleStatus", "getProducts"]),
-            setSearchData(){
-                return this.searchData.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
-            }
+            ...mapGetters(["getToggleStatus"]),
+            ...mapGetters('Products', ["getProducts"]),
+            // setSearchData(){
+            //     return this.searchData.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
+            // }
           },
           mounted () {
             this.searchData = this.getProducts;
@@ -134,40 +132,28 @@
       width: 50%;
     }
     .iconBox{
-      width:150px;
+      width:220px;
       height:60px;
       display:flex;
+      justify-content:flex-end;
       padding: 0 15px;
     }
-    .iconBox .notification,
-    .iconBox .msg-noti{
-      width: 50%;
+    .iconBox .user-icon,
+    .iconBox .user-name{
       height: 100%;
-      padding: 10px;
+      margin-right: 15px;
+      padding: 10px 0;
       position: relative;
       display:flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
     }
-    .iconBox .notification i,
-    .iconBox .msg-noti i{
+    .iconBox .user-icon i,
+    .iconBox .user-name i{
      font-size: 1.5rem;
     }
-    .iconBox .notification span,
-    .iconBox .msg-noti span{
-      min-width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      background: teal;
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      border-radius: 3px;
-      color: #fff;
-      font-size: 0.8rem;
-    }
+
   
     /* top animation */
     .top-enter-from{
