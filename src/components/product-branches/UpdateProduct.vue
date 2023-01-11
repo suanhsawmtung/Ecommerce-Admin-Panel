@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import { mapGetters } from "vuex";
     export default {
         name : "UpdateProduct",
         data () {
@@ -59,7 +59,8 @@
         },
         props: ["id"],
         computed: {
-            ...mapGetters('Products', [ "getProducts", "getCategories" ]),
+            ...mapGetters("Products", [ "getProducts" ]),
+            ...mapGetters("Categories", [ "getCategories" ]),
         },
         methods: {
             selectImage (event) {

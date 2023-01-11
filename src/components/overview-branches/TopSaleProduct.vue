@@ -37,7 +37,8 @@
             }
         },
         computed: {
-            ...mapGetters('Products', ["getProducts", "getCategories"]),   
+            ...mapGetters("Products", ["getProducts"]),   
+            ...mapGetters("Categories", ["getCategories"]),   
         },
         methods: {
             setTopSellerItems() {

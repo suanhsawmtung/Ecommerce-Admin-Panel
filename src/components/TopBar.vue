@@ -44,7 +44,7 @@
           },
           computed: {
             ...mapGetters(["getToggleStatus"]),
-            ...mapGetters('Products', ["getProducts"]),
+            ...mapGetters("Products", ["getProducts"]),
             // setSearchData(){
             //     return this.searchData.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
             // }

@@ -26,13 +26,13 @@
                     <td class="updated" >{{ product.updatedAt }}</td>
                     <td class="control btns" >
                         <button @click="showProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                        <button @click="$emit('deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                        <button  title="delete"><i class="fa-regular fa-trash-can"></i></button>
                         <button @click="showProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <Paginator v-show="getProducts.length > perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <Paginator v-show="getProducts.length>perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
@@ -46,16 +46,14 @@
                 currentPage: 1,
                 perPage: 4,
                 maxVisibleButton: 3,
-                deleteProductStatus: false,
-                product: {}
             }
         },
         components: { Paginator },
         computed: {
-            ...mapGetters('Products', ["getProducts", "paginatedProducts", "getProductCurrentPage"]),
+            ...mapGetters("Products", ["getProducts", "paginatedProducts", "getProductCurrentPage"]),
         },
         methods: {
-            ...mapActions('Products', ["productPaginator"]),
+            ...mapActions("Products", ["productPaginator"]),
             showProductBranch (status, id) {
                this.$emit("showProductBranch", status, id); 
             },

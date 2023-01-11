@@ -55,28 +55,28 @@
             }
         },
         methods: {
-            selectImage (event) {
-                this.product.image = event.target.files[0];
-            },
-            createNewProduct(){
-                let formData = new FormData();
-                formData.append("title", this.product.title);
-                formData.append("category", this.product.category);
-                formData.append("price", this.product.price);
-                formData.append("image", this.product.image);
-                formData.append("description", this.product.description);
+            // selectImage (event) {
+            //     this.product.image = event.target.files[0];
+            // },
+            // createNewProduct(){
+            //     let formData = new FormData();
+            //     formData.append("title", this.product.title);
+            //     formData.append("category", this.product.category);
+            //     formData.append("price", this.product.price);
+            //     formData.append("image", this.product.image);
+            //     formData.append("description", this.product.description);
                 
-                this.$store.dispatch("createProduct", formData);
-                this.clearProductData();    
-                this.$emit("previousPage", "productTable");
-            },
-            clearProductData (){
-                this.product.title = "";
-                this.category= "";
-                this.price = "";
-                this.image= null;
-                this.description= "";
-            }
+            //     this.$store.dispatch("createProduct", formData);
+            //     this.clearProductData();    
+            //     this.$emit("previousPage", "productTable");
+            // },
+            // clearProductData (){
+            //     this.product.title = "";
+            //     this.category= "";
+            //     this.price = "";
+            //     this.image= null;
+            //     this.description= "";
+            // }
         },
     }
 </script>

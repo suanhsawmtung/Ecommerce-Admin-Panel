@@ -20,7 +20,7 @@
                 <li>
                     <router-link to="/category" active-class="active" class="side-btn">
                         <div class="link-container">
-                            <div class="icon"><i class="fa-solid fa-message"></i></div>
+                            <div class="icon"><i class="fa-solid fa-list-ul"></i></div>
                             <div class="text-title">Category</div>
                         </div>
                     </router-link>

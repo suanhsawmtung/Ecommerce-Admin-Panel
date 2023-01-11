@@ -31,7 +31,8 @@
             }
         },
         methods: {
-            ...mapActions('Products', ['allProducts', 'allCategories']),
+            ...mapActions("Products", ['allProducts']),
+            ...mapActions("Categories", ['allCategories']),
             changeForm (status) {
                 this.registerStatus= false;
                 this.loginStatus= false;

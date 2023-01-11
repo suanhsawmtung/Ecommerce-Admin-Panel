@@ -34,19 +34,19 @@
         },
         props: ["id"],
         methods: {
-            setProductData(i){
-                if(i != null){
-                    let chosenProduct = this.$store.getters.getProducts.filter(product => {
-                        return product.id === i;
-                    });
+            // setProductData(i){
+            //     if(i != null){
+            //         let chosenProduct = this.$store.getters.getProducts.filter(product => {
+            //             return product.id === i;
+            //         });
 
-                    this.product = chosenProduct[0];
-                }
-            }
+            //         this.product = chosenProduct[0];
+            //     }
+            // }
         },
-        updated () {
-            this.setProductData(this.id);
-        }
+        // updated () {
+        //     this.setProductData(this.id);
+        // }
     }
 </script>
 

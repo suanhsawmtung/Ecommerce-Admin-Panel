@@ -1,175 +1,113 @@
 <template>
-    <div  class="categoryTable">
-        <div class="table-box" >
-            <table>
-                <tr v-for="(category, index) in getCategories" :key="index">
-                    <td class="category" >{{ category.title }}</td>
-                    <td class="control crl" >
-                        <button @click="showPopover(index)" title="more"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                        <div class="popover" v-show="(popoverStatus == index)">
-                            <span @click="showCategoryProductPage(category.title)">Show {{category.title}} products</span>
-                            <span @click="showModal('editCategory', category.id)">Edit Category</span>
-                            <span @click="showModal('deleteCategory', category.id)">Delete Category</span>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+    <div class="branch-parent">
+        <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
+            <TopBar></TopBar>
+            <header>
+                <h1>Category</h1>
+                <button>Create Category</button>
+            </header>
+            <ul>
+                <li v-for="(category, index) in paginatedCategories" :key="index">
+                    <h3>{{ category.title }}</h3>
+                    <div class="btn-box">
+                        <button>Edit Category</button>
+                        <button>Delete Category</button>
+                    </div>
+                </li>
+            </ul>
+            <Paginator v-show="getCategories.length > perPage" @categoryPageChanged="onCategorytPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCategories.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import TopBar from "../components/TopBar.vue";
+import Paginator from "../components/data-paginators/CategoryPaginator.vue";
     export default {
        name : 'CategoryPage', 
-       props : [ "createCategoryStatus" ],
        data () {
         return {
-            popoverStatus: null,
+            currentPage: 1,
+            perPage: 3,
+            maxVisibleButton: 3,
         }
        },
+       components: { TopBar, Paginator },
        computed: {
-            ...mapGetters('Products', ["getCategories"]),
+            ...mapGetters(["getToggleStatus"]),
+            ...mapGetters("Categories", ["getCategories", "paginatedCategories", "getCategoryCurrentPage"]),
        },
        methods: {
-            showCategoryProductPage(category){
-                this.popoverStatus = null;
-                this.$emit('showCategoryBranches', 'categoryProduct', category);
-            },
-            showModal (status, id) {
-                this.$emit("modal",status, id);
-                this.popoverStatus = null;
-            },
-            showPopover (index){
-                if(this.popoverStatus==index){
-                    this.popoverStatus = null;
-                    return;
+            ...mapActions("Categories", ["categoryPaginator"]),
+            onCategorytPageChange(currentPage){
+                this.currentPage = currentPage;
+                let page = {
+                    currentPage: this.currentPage,
+                    perPage: this.perPage
                 }
-                this.popoverStatus = index;
+                this.categoryPaginator(page);
             },
        },
+       mounted () {
+            this.currentPage=this.getCategoryCurrentPage;
+        }
     }
 </script>
 
 <style scoped>
-    .categoryTable{
-        width: 100%;       
-    }
-    .modal{
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.7);
-        position : absolute;
+    .branch-parent{
+        position: relative;
         top: 0;
         left: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        width: 100vw;
+        height: 100vh;
     }
-    .modal-inner{
-        width: 400px;
-        padding: 10px;
-        border-radius: 10px;
-        box-shadow: 2px 1px 6px 0px #000;
-        display: flex;
-        flex-direction: column;
-        background: #fff;
-    }
-    .modal-inner .closeBtn{
-        align-self: flex-end;
-        border : none;
-        background: none;
-        font-size: 1rem;
-        color: #000;
-    }
-    .modal-inner .closeBtn:hover{
-        color: #4fb9af;
-    }
-    .btn-box{
-        width: 100%;
-        padding: 10px 5px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-    .btn-box button{
-        padding: 8px 15px;
-        color: #fff;
-        background: teal;
-        font-size: 0.8rem;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        transition: 0.5s;
-    }
-    .btn-box button:active{
-        transform: scale(0.93);
-        background: #4fb9af;
-    }
-    .table-box{
-        width: 100%;
-        columns: 1;
-    }
-    table{
-        width : 100%;
-    }
-    table tr{
-        width: 100%;
-    }
-    table tr:nth-child(odd){
-        background: #b3e0dc;
-    }
-    table tr:hover{
-        background: #4fb9af;
-    }
-    table tr td {
-        padding: 10px 7px;
-    }
-    .category{
-        width: 95%;
-        font-size: 1.3rem;
-    }
-    .control{
-        width : 5%;
-        text-align: center;
-        position: relative;
-    }
-    .control button{
-        width: 22px;
-        height: 22px;
-        line-height: 22px;
-        border-radius: 50%;
-        margin-right: 6px;
-        border: 1px solid #4fb9af;
-        background: #fff;
-        color: teal;
-        transition: 0.5s;
-    }
-    .control button:hover{
-        transform: scale(1.3);
-    }
-    .popover{
+    .main {
         position: absolute;
-        top: -20px;
-        left: -200px;
-        width: 200px;
-        padding: 5px;
-        background: #fff;
-        box-shadow: 0 0 0 0.1px #000;
-        border: 0;
+        top: 0;
+        left: 250px;
+        width: calc(100% - 250px);
+        height: 100%;
+        transition: 0.5s;
+    }
+    .toggleWidth{
+        left: 70px;
+        width: calc(100% - 70px);
+    }
+    ul, header{
+        margin: 30px auto;
+        padding: 0;
+        max-width: 600px;
+    }
+    header{
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
     }
-    .popover span{
-        color: #000;
-        font-size: 0.8rem;
-        margin: 5px 0;
-        cursor: pointer;
-        text-decoration: underline;
-        text-align: start;
+    ul li{
+        list-style-type: none;
+        background: #b3e0dc;
+        padding: 16px;
+        margin: 16px 0;
+        border-radius: 4px;
     }
-    .popover span:hover{
-        text-decoration: none;
+    ul li h3{
+        margin: 0 0 10px; 
+        text-transform: capitalize;
+    }
+    ul li .btn-box button,
+    header button{
+        margin: 0 10px 0 0;
+        padding: 8px;
+        border: none;
+        border-radius: 2px;
+        background: #4fb9af;
+        transition: 0.2s;
+    }
+    ul li .btn-box button:active,
+    header button:active{
+        transform: scale(0.9);
     }
 
     /* make it response */

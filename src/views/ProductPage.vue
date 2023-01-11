@@ -1,12 +1,5 @@
 <template>
     <div class="branch-parent">
-        <div v-show="deleteProductStatus" class="modal-box-one">
-             <Modal @close="modalToggle()">
-               <h4>Do you really want to delete {{ product.title }} permanantly?</h4>
-               <button  @click="productDeleting(product.id)">Delete</button>
-               <button @click="modalToggle()">Cancel</button>
-             </Modal>
-        </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <div class="table-box">
@@ -14,7 +7,7 @@
                     <button @click="showProductBranches('productTable', null)" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
                     <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
                 </div>
-                <ProductTable @showProductBranch="showProductBranches" @deleteProduct="showDeleteProductModal" v-show="tableStatus"></ProductTable>
+                <ProductTable @showProductBranch="showProductBranches"  v-show="tableStatus"></ProductTable>
                 <CreateProduct v-show="createStatus" @previousPage="showPreviousPage"></CreateProduct>
                 <ProductDetail v-show="detailStatus" :id= idForPage></ProductDetail>
                 <UpdateProduct v-show="updateStatus" :id= idForPage></UpdateProduct>
@@ -26,7 +19,7 @@
 <script>
     import { mapGetters, mapActions } from "vuex";
     import TopBar from "../components/TopBar.vue";
-    import Modal from ".././components/AllModals.vue";
+    // import Modal from ".././components/AllModals.vue";
     import ProductTable from "../components/product-branches/ProductTable.vue";
     // import CategoryTable from "../components/product-branches/CategoryTable.vue";
     import CreateProduct from "../components/product-branches/CreateProduct.vue";
@@ -48,14 +41,13 @@
                 chosenModal: null,
                 idForModal: null,
                 idForPage: null,
-                product: {},
-                deleteProductStatus: false,
             }
         },
-        components : { TopBar, ProductTable, CreateProduct, ProductDetail, UpdateProduct, Modal },
+        components : { TopBar, ProductTable, CreateProduct, ProductDetail, UpdateProduct },
         computed: {
             ...mapGetters( ["getToggleStatus"]),
-            ...mapGetters("Products", ["getCategories", "getProducts"])
+            ...mapGetters("Products", ["getProducts"]),
+            ...mapGetters("Categories", ["getCategories"]),
         },
         methods: {
             ...mapActions("Products", ["deleteProduct"]),
@@ -84,34 +76,7 @@
                     break;
                 }
             },
-            // showCategoryBranches (status, category) {
-            //     this.categoryProductStatus = false;
-            //     this.categoryTableStatus = false;
-
-            //     switch (status) {
-            //       case "categoryTable":
-            //         this.categoryTableStatus = true;
-            //         break;
-            //       case "categoryProduct":
-            //         this.categoryProductStatus = true;
-            //         this.categoryName = category;
-            //         break;
-            //     }
-            // },
-            showDeleteProductModal(id){
-                let product = this.getProducts.filter(product=>{
-                    return product.id === id;
-                });
-                this.product = product[0];
-                this.deleteProductStatus= true;
-            },
-            productDeleting(id){
-                this.deleteProduct(id);
-                this.modalToggle();
-            },
-            modalToggle(){
-                this.deleteProductStatus = ! this.deleteProductStatus;
-            },
+            
             showChosenProductBranch(status, id){
                 this.selectItem("product");
                 this.showProductBranches (status, id);

@@ -24,7 +24,7 @@
                 </td>
             </tr>
         </table>
-        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/5) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
