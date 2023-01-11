@@ -40,7 +40,7 @@
  
  <script>
     import Modal from "../AllModals.vue";
-    import { mapGetters } from "vuex";
+    import { mapActions, mapGetters } from "vuex";
     export default {
        name: "ProductModals",
        data () {
@@ -59,8 +59,11 @@
        },
        components: { Modal },
        props: [ "chosenModal", "id" ],
+       computed: {
+         ...mapGetters("Products", ["getProducts", "getCategories"]),
+       },
        methods: {
-         ...mapGetters("Products", ["deleteProduct", "deleteCategory", "createCategory", "updateCategory"]),
+         ...mapActions("Products", ["deleteProduct", "deleteCategory", "createCategory", "updateCategory"]),
           selectModal (x, y) {
              this.deleteProductStatus= false;
              this.createCategoryStatus= false;
@@ -68,7 +71,7 @@
              this.deleteCategoryStatus= false;
 
              if(y !== null){
-               let chosenProduct = this.$store.getters.getProducts.filter(product=>{
+               let chosenProduct = this.getProducts.filter(product=>{
                   return product.id === y;
                });
 
@@ -89,7 +92,7 @@
  
              if(x==="editCategory"){
                this.editCategoryStatus= true;
-               let chosenCategory = this.$store.getters.getCategories.filter(category => {
+               let chosenCategory = this.getCategories.filter(category => {
                   return category.id === this.id;
                });
                this.category = chosenCategory[0];              
@@ -99,7 +102,7 @@
 
              if(x==="deleteCategory"){
                 this.deleteCategoryStatus=true;
-                let chosenCategory = this.$store.getters.getCategories.filter(category => {
+                let chosenCategory = this.getCategories.filter(category => {
                   return category.id === this.id;
                 });
                 this.category = chosenCategory[0];
@@ -112,7 +115,7 @@
             this.$emit('previousPage', "categoryTable");
           },
           deleteCategory(id){
-            if(!this.$store.getters.getProducts.some(product => product.category_id === id)){
+            if(!this.getProducts.some(product => product.category_id === id)){
                this.deleteCategory(id);
                this.$emit("close");
                return;

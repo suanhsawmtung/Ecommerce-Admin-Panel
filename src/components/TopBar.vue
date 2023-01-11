@@ -4,9 +4,9 @@
           <div class="toggle" @click="toggle(getToggleStatus)" >
               <i class="fa-solid fa-bars"></i>
           </div>
-          <!-- <div class="searchBox">
-            <input type="text" class="search" placeholder="Search here" v-model="searchKey">
-            <table class="searchDataBox" v-show="searchKey.length!== 0">
+          <div class="searchBox">
+            <input type="text" class="search" placeholder="Search here">
+            <!-- <table class="searchDataBox" v-show="searchKey.length!== 0">
               <tbody class="searchData">
                 <tr v-for="(product, index) in setSearchData" :key="index">
                   <td class="title"><small>{{ product.title }}</small></td>
@@ -15,8 +15,8 @@
                   </td>
                 </tr>
               </tbody>
-            </table>
-          </div> -->
+            </table> -->
+          </div>
           <div class="iconBox">
               <div class="user-icon">
                 <i class="fa-regular fa-user"></i>
@@ -35,8 +35,8 @@
           name : 'TopBar',
           data () {
             return {
-              searchKey: "",
-              searchData: [],
+              // searchKey: "",
+              // searchData: [],
             }
           },
           methods: {
@@ -49,9 +49,9 @@
             //     return this.searchData.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
             // }
           },
-          mounted () {
-            this.searchData = this.getProducts;
-          }
+          // mounted () {
+          //   this.searchData = this.getProducts;
+          // }
   
       }
    </script>

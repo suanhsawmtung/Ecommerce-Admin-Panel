@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import OverviewPage from '../views/OverviewPage.vue'
-// import SettingPage from '../views/SettingPage.vue'
 
 const routes = [{
         path: '/',
@@ -13,12 +12,12 @@ const routes = [{
         name: 'overview',
         component: OverviewPage
     },
-    // {
-    //     path: '/category',
-    //     name: 'category',
-    //     component: () =>
-    //         import ('../views/CategoryPage.vue')
-    // },
+    {
+        path: '/category',
+        name: 'category',
+        component: () =>
+            import ('../views/CategoryPage.vue')
+    },
     {
         path: '/product',
         name: 'product',

@@ -14,7 +14,7 @@ export default {
 
     getters: {
         getProducts: state => state.products.reverse(),
-        paginatedProducts: state => state.products.slice(state.productPaginationPoints.start, state.productPaginationPoints.end),
+        paginatedProducts: state => state.products.reverse().slice(state.productPaginationPoints.start, state.productPaginationPoints.end),
         getCategories: state => state.categories.reverse(),
         getProductCurrentPage: state => {
             return state.productPaginationPoints.end / (state.productPaginationPoints.end - state.productPaginationPoints.start);
