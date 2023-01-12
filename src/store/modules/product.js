@@ -12,7 +12,7 @@ export default {
     },
 
     getters: {
-        getProducts: state => state.products.reverse(),
+        getProducts: state => state.products,
         paginatedProducts: state => state.products.slice(state.productPaginationPoints.start, state.productPaginationPoints.end),
         getProductCurrentPage: state => {
             return state.productPaginationPoints.end / (state.productPaginationPoints.end - state.productPaginationPoints.start);
@@ -20,7 +20,7 @@ export default {
     },
 
     mutations: {
-        setProducts: (state, products) => state.products = products,
+        setProducts: (state, products) => state.products = products.reverse(),
         removeProduct: (state, removeId) => {
             state.products = state.products.filter(product => {
                 return product.id != removeId;
@@ -58,5 +58,8 @@ export default {
             }
             commit("setProductPaginationPoints", points);
         },
+        changeCategoryTitleOfProduct: ({ commit }, allProducts) => {
+            commit("setProducts", allProducts);
+        }
     }
 }

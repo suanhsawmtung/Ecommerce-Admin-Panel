@@ -12,7 +12,7 @@ export default {
     },
 
     getters: {
-        getCategories: state => state.categories.reverse(),
+        getCategories: state => state.categories,
         paginatedCategories: state => state.categories.slice(state.categoryPaginationPoints.start, state.categoryPaginationPoints.end),
         getCategoryCurrentPage: state => {
             return state.categoryPaginationPoints.end / (state.categoryPaginationPoints.end - state.categoryPaginationPoints.start);
@@ -20,7 +20,7 @@ export default {
     },
 
     mutations: {
-        setCategories: (state, categories) => state.categories = categories,
+        setCategories: (state, categories) => state.categories = categories.reverse(),
         setCategoryPaginationPoints: (state, points) => {
             state.categoryPaginationPoints.start = points.start;
             state.categoryPaginationPoints.end = points.end;
@@ -37,12 +37,6 @@ export default {
                     category.title = updatedCategory.title;
                 }
             });
-
-            state.products.forEach(product => {
-                if (product.category_id === updatedCategory.id) {
-                    product.category_title = updatedCategory.title;
-                }
-            })
         },
     },
 
@@ -60,8 +54,7 @@ export default {
             commit("addNewCategory", data);
         },
         updateCategory: async({ commit }, newCategory) => {
-            let { data } = await axios.post(`
-            http: //localhost:8000/api/product/updateCategory/${newCategory.id}`, newCategory);
+            let { data } = await axios.post(`http://localhost:8000/api/product/updateCategory/${newCategory.id}`, newCategory);
             commit("updatedCategory", data);
         },
         categoryPaginator: ({ commit }, page) => {
@@ -72,6 +65,9 @@ export default {
                 end: end
             }
             commit("setCategoryPaginationPoints", points);
-        }
+        },
+        // originalCategory({ commit }, origin) {
+        //     commit("setOriginalCategoryValue", origin);
+        // }
     }
 }

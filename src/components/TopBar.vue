@@ -149,9 +149,11 @@
       align-items: center;
       cursor: pointer;
     }
-    .iconBox .user-icon i,
-    .iconBox .user-name i{
-     font-size: 1.5rem;
+    .iconBox .user-name{
+      text-transform: uppercase;
+    }
+    .iconBox .user-icon i{
+      font-size: 1.5rem;
     }
 
   
@@ -186,6 +188,9 @@
     @media (max-width : 390px) {
       .topBar .toggle{
         display: block;
+      }
+      .user-name{
+        font-size: 0.8rem;
       }
     }
    </style>

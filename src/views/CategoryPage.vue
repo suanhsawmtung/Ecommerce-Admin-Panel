@@ -1,57 +1,123 @@
 <template>
     <div class="branch-parent">
+        <div v-show="createCategoryStatus" class="create-modal">
+             <Modal @close="modalToggle('create')">
+                <label for="categoryName">Create New Category</label>
+                <input type="text" id="categoryName" placeholder="Enter category name..." v-model="categoryName">
+                <button @click="createNewCategory(categoryName)" >Create</button>
+                <button @click="modalToggle('create')">Cancel</button>
+             </Modal>
+        </div>
+        <div v-show="updateCategoryStatus" class="update-modal">
+             <Modal @close="modalToggle('update')">
+                <label for="categoryName">Update Category</label>
+                <input type="text" id="categoryName" :placeholder="category.title" v-model="categoryTitle">
+                <button @click="updateChosenCategory(category.id, categoryTitle)" >Update</button>
+                <button @click="modalToggle('update')">Cancel</button>
+             </Modal>
+        </div>
+        <div v-show="deleteCategoryStatus" class="delete-modal">
+             <Modal @close="modalToggle('delete')">
+               <h4>Do you really want to delete {{ category.title }} permanantly?</h4>
+               <button  @click="deleteChosenCategory(category.id)">Delete</button>
+               <button @click="modalToggle('delete')">Cancel</button>
+             </Modal>
+        </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
-            <header>
-                <h1>Category</h1>
-                <button>Create Category</button>
-            </header>
-            <ul>
-                <li v-for="(category, index) in paginatedCategories" :key="index">
-                    <h3>{{ category.title }}</h3>
-                    <div class="btn-box">
-                        <button>Edit Category</button>
-                        <button>Delete Category</button>
-                    </div>
-                </li>
-            </ul>
-            <Paginator v-show="getCategories.length > perPage" @categoryPageChanged="onCategorytPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCategories.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+            <CategoryList @showModal="showModal" />
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
-import TopBar from "../components/TopBar.vue";
-import Paginator from "../components/data-paginators/CategoryPaginator.vue";
+    import { mapGetters, mapActions } from 'vuex';
+    import TopBar from "../components/TopBar.vue";
+    import Modal from "../components/AllModals.vue";
+    import CategoryList from "../components/category-branches/CategoryList.vue";
+
     export default {
        name : 'CategoryPage', 
        data () {
         return {
-            currentPage: 1,
-            perPage: 3,
-            maxVisibleButton: 3,
+            createCategoryStatus: false,
+            updateCategoryStatus: false,
+            deleteCategoryStatus: false,
+
+            category: {},
+            categoryName: "",
+            categoryTitle: "",
         }
        },
-       components: { TopBar, Paginator },
+       components: { TopBar, CategoryList, Modal },
        computed: {
             ...mapGetters(["getToggleStatus"]),
-            ...mapGetters("Categories", ["getCategories", "paginatedCategories", "getCategoryCurrentPage"]),
+            ...mapGetters("Products", ["getProducts"]),
+            ...mapGetters("Categories", ["getCategories"]),
        },
        methods: {
-            ...mapActions("Categories", ["categoryPaginator"]),
-            onCategorytPageChange(currentPage){
-                this.currentPage = currentPage;
-                let page = {
-                    currentPage: this.currentPage,
-                    perPage: this.perPage
+            ...mapActions("Products", ["changeCategoryTitleOfProduct"]),
+            ...mapActions("Categories", ["createCategory", "deleteCategory", "updateCategory"]),
+            showModal(status, id){
+                this.category = {};
+                this.categoryName = "";
+                this.categoryTitle = "";
+
+                if(id !== null){
+                    let category = this.getCategories.filter(category=>{
+                        return category.id === id;
+                    });
+                    this.category = category[0];
                 }
-                this.categoryPaginator(page);
+                this.modalToggle(status);
+            },
+            createNewCategory(categoryTitle){
+                let newCategory = {
+                    "title": categoryTitle
+                }
+
+                this.createCategory(newCategory);
+                this.modalToggle("create");
+            },
+            deleteChosenCategory(id){
+                if(!this.getProducts.some(product => product.category_id === id)){
+                   this.deleteCategory(id);
+                   this.modalToggle("delete");
+                   return;
+                }
+                this.modalToggle("delete");
+            },
+            async updateChosenCategory(categoryId, categoryTitle){
+                let newCategory = {
+                   "id": categoryId,
+                   "title": categoryTitle
+                }
+                await this.updateCategory(newCategory);
+                this.getProducts.forEach(product => {
+                    this.getCategories.forEach(category=>{
+                        if(product.category_id === category.id && product.category_title !== category.title){
+                            product.category_title = category.title;
+                        }
+                    })
+                });
+                this.changeCategoryTitleOfProduct(this.getProducts);
+                this.modalToggle("update");
+            },
+            modalToggle(status){
+                if(status === "create"){
+                    this.createCategoryStatus = ! this.createCategoryStatus;
+                    return;
+                }
+                if(status === "update"){
+                    this.updateCategoryStatus = ! this.updateCategoryStatus;
+                    return;
+                }
+                if(status === "delete"){
+                    this.deleteCategoryStatus = ! this.deleteCategoryStatus;
+                    return;
+                }
             },
        },
-       mounted () {
-            this.currentPage=this.getCategoryCurrentPage;
-        }
     }
 </script>
 
@@ -75,73 +141,72 @@ import Paginator from "../components/data-paginators/CategoryPaginator.vue";
         left: 70px;
         width: calc(100% - 70px);
     }
-    ul, header{
-        margin: 30px auto;
-        padding: 0;
-        max-width: 600px;
+
+    /* modals */
+    .delete-modal{
+       width: 100vw;
+       height: 100vh;
     }
-    header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    ul li{
-        list-style-type: none;
-        background: #b3e0dc;
-        padding: 16px;
-        margin: 16px 0;
-        border-radius: 4px;
-    }
-    ul li h3{
-        margin: 0 0 10px; 
-        text-transform: capitalize;
-    }
-    ul li .btn-box button,
-    header button{
-        margin: 0 10px 0 0;
-        padding: 8px;
-        border: none;
-        border-radius: 2px;
+    .delete-modal h4{
+        margin-bottom: 10px;
+        font-size: 1rem;
+     }
+     .delete-modal button,
+     .create-modal button,
+     .update-modal button{
+        width: 100px;
+        padding: 10px ;
+        border-radius: 5px;
+        margin-right: 10px;
         background: #4fb9af;
-        transition: 0.2s;
+        color: #fff;
+        border: none
     }
-    ul li .btn-box button:active,
-    header button:active{
-        transform: scale(0.9);
+    .delete-modal button:active
+    .create-modal button:active,
+    .update-modal button:active{
+        transform : scale(0.9);
+        background: #b3e0dc;
+    }
+    .create-modal label,
+    .update-modal label{
+        display: block;
+        text-align: start;
+        margin-bottom: 10px;
+        font-size : 1rem;
+        color : teal;
+        font-weight: 800;
+        align-self: flex-start;
+    }
+    .create-modal input,
+    .update-modal input{
+        display: inline-block;
+        width: 100%;
+        margin-bottom: 15px;
+        padding : 10px 8px;
+        border-radius: 6px;
+        border : 1px solid #b3e0dc;
     }
 
     /* make it response */
-    @media (max-width: 768px) {
-        .modal-inner{
-            width: 300px;
-            padding: 8px;
-            border-radius: 8px;
+    @media (max-width: 650px) {
+        .delete-modal h4{
+            font-size: 0.8rem;
         }
-        .btn-box{
-            padding: 7px 4px;
-        }
-        .btn-box button{
-            padding: 6px 10px;
-            font-size: 0.7rem;
-        }
-        table tr td {
-            font-size: 0.9rem;
-            padding: 8px 5px;
+        .delete-modal button,
+        .create-modal button,
+        .update-modal button{
+            width: 80px;
+            padding: 8px ;
         }
     }
-    @media (max-width: 650px) {
-        .modal-inner{
-            width: 200px;
-            padding: 8px;
-            border-radius: 6px;
-        }
-        .btn-box button{
-            padding: 5px 8px;
-            font-size: 0.6rem;
-        }
-        .table-box{
-            columns: 1;
-        }
+    @media (max-width : 400px) {
+        .main {
+            position:fixed;
+            top:0;
+            left:0;
+            width: 100%;
+        } 
     }
 </style>
 
