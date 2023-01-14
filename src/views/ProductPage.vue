@@ -1,16 +1,26 @@
 <template>
     <div class="branch-parent">
+        <div v-show="deleteProductStatus" class="modal-box-one">
+             <Modal @close="modalToggle()">
+               <h4>Do you really want to delete {{ product.title }} permanantly?</h4>
+               <button  @click="productDeleting(product.id)">Delete</button>
+               <button @click="modalToggle()">Cancel</button>
+             </Modal>
+        </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <div class="table-box">
-                <div class="btn-box">
-                    <button @click="showProductBranches('productTable', null)" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                    <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
-                </div>
-                <ProductTable @showProductBranch="showProductBranches"  v-show="tableStatus"></ProductTable>
+                <header>
+                    <h1>Products</h1>
+                    <div class="btn-box">
+                        <button @click="showProductBranches('productTable', null)" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
+                    </div>
+                </header>
+                <ProductTable @showProductBranch="showProductBranches" @deleteProduct="showDeleteProductModal" @productUpdate="productUpdate" v-show="tableStatus"></ProductTable>
                 <CreateProduct v-show="createStatus" @previousPage="showPreviousPage"></CreateProduct>
-                <ProductDetail v-show="detailStatus" :id= idForPage></ProductDetail>
-                <UpdateProduct v-show="updateStatus" :id= idForPage></UpdateProduct>
+                <ProductDetail v-show="detailStatus" :id= idForDetail ></ProductDetail>
+                <UpdateProduct v-show="updateStatus" @previousPage="showPreviousPage" :product= dataForUpdate></UpdateProduct>
             </div>
         </div>
     </div>
@@ -19,14 +29,11 @@
 <script>
     import { mapGetters, mapActions } from "vuex";
     import TopBar from "../components/TopBar.vue";
-    // import Modal from ".././components/AllModals.vue";
+    import Modal from ".././components/AllModals.vue";
     import ProductTable from "../components/product-branches/ProductTable.vue";
-    // import CategoryTable from "../components/product-branches/CategoryTable.vue";
     import CreateProduct from "../components/product-branches/CreateProduct.vue";
     import ProductDetail from "../components/product-branches/ProductDetail.vue";
     import UpdateProduct from "../components/product-branches/UpdateProduct.vue";
-    // import ProductModal from "../components/product-branches/ProductModals.vue";
-    // import ProductsOfEachCategory from "../components/product-branches/ProductsOfEachCategory.vue";
 
     export default {
         name : 'ProductPage',
@@ -37,13 +44,20 @@
                 detailStatus: false,
                 updateStatus: false,
 
-                modalStatus: false,
-                chosenModal: null,
-                idForModal: null,
-                idForPage: null,
+                idForDetail: null,
+                dataForUpdate: {
+                    id: "",
+                    title: "",
+                    category: "",
+                    price: "",
+                    description: ""
+                },
+
+                product: {},
+                deleteProductStatus: false,
             }
         },
-        components : { TopBar, ProductTable, CreateProduct, ProductDetail, UpdateProduct },
+        components : { TopBar, Modal, ProductTable, CreateProduct, ProductDetail, UpdateProduct },
         computed: {
             ...mapGetters( ["getToggleStatus"]),
             ...mapGetters("Products", ["getProducts"]),
@@ -60,36 +74,47 @@
                 switch (status) {
                   case "productTable":
                     this.tableStatus = true;
-                    this.idForPage = id;
+                    this.idForDetail = id;
+                    this.idForUpdate = id;
                     break;
                   case "createProduct":
                     this.createStatus = true;
-                    this.idForPage = id;
+                    this.idForDetail = id;
+                    this.idForUpdate = id;
                     break;
                   case "productDetail":
                     this.detailStatus = true;
-                    this.idForPage = id;
+                    this.idForDetail = id;
                     break;
                   case "productUpdate":
                     this.updateStatus = true; 
-                    this.idForPage = id;
+                    this.idForUpdate = id;
                     break;
                 }
             },
-            
-            showChosenProductBranch(status, id){
-                this.selectItem("product");
-                this.showProductBranches (status, id);
-            },
             showPreviousPage(status){
-                // if(status === "categoryTable"){
-                //     this.showCategoryBranches("categoryTable", null);
-                // }
                 if(status=== "productTable"){
                     this.showProductBranches("productTable", null);
                 }
-                this.modalToggle(null, null);
-            }
+            },
+            showDeleteProductModal(id){
+                let product = this.getProducts.filter(product=>{
+                    return product.id === id;
+                });
+                this.product = product[0];
+                this.deleteProductStatus= true;
+            },
+            productDeleting(id){
+                this.deleteProduct(id);
+                this.modalToggle();
+            },
+            productUpdate(product){
+                this.dataForUpdate = product;
+                this.showProductBranches("productUpdate", null);
+            },
+            modalToggle(){
+                this.deleteProductStatus = ! this.deleteProductStatus;
+            },
         },
     }
 </script>
@@ -119,9 +144,18 @@
     height: 80%;
     margin: 30px auto 0 auto;
     box-shadow: 1px 1px 4px 2px #000;
-    padding: 20px 15px;
+    padding: 15px;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1{
+    text-transform : uppercase;
+    color: teal;
+}
 .btn-box{
     width: 100%;
     padding: 10px 5px;
@@ -181,6 +215,9 @@
     }
 }
 @media (max-width : 650px) {
+    header h1{
+        font-size: 1.5rem;
+    }
     .btn-box button{
         padding: 5px 8px;
         font-size: 0.6rem;

@@ -8,8 +8,8 @@
                     <th class="category" style="color: #fff;">Category</th>
                     <th class="price" style="color: #fff;">Price</th>
                     <th class="view" style="color: #fff;">View_count</th>
-                    <th class="react" style="color: #fff;">React</th>
-                    <th class="review" style="color: #fff;">Review</th>
+                    <th class="rate" style="color: #fff;">Rate</th>
+                    <!-- <th class="review" style="color: #fff;">Review</th> -->
                     <th class="updated" style="color: #fff;">Latest_update</th>
                     <th class="control btns" style="color: #fff;"></th>
                 </tr>
@@ -21,12 +21,11 @@
                     <td class="category" >{{product.category_title}}</td>
                     <td class="price p" >{{product.price}}</td>
                     <td class="view vc" >{{product.count}}</td>
-                    <td class="react re" >{{product.rate}}</td>
-                    <td class="review rv" > .</td>
+                    <td class="rate re" >{{product.rate}}</td>
                     <td class="updated" >{{ product.updatedAt }}</td>
                     <td class="control btns" >
-                        <button @click="showProductBranch('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
-                        <button  title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                        <button @click="showProductUpdatePage('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <button @click="$emit('deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                         <button @click="showProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
                     </td>
                 </tr>
@@ -37,6 +36,7 @@
  </template>
  
  <script>
+    import axios from "axios";
     import { mapGetters, mapActions } from "vuex";
     import Paginator from "../data-paginators/ProductPaginator.vue";
     export default {
@@ -65,6 +65,10 @@
                 }
                 this.productPaginator(page);
             },
+            async showProductUpdatePage(status, id){
+                let { data } = await axios.get(`http://localhost:8000/api/product/getProductDataForUpdate/${id}`);
+                this.$emit("productUpdate", data);
+            }
         },
         mounted () {
             this.currentPage=this.getProductCurrentPage;
@@ -125,16 +129,10 @@
     .vc{
         text-align: right;
     }
-    .react{
+    .rate{
         width: 5%;
     }
     .re{
-        text-align: right;
-    }
-    .review{
-        width: 5%;
-    }
-    .rv{
         text-align: right;
     }
     .control{
@@ -156,12 +154,13 @@
         transform: scale(1.3);
     }
     .updated{
-        width: 15%;
+        width: 20%;
+        text-align: end;
     }
 
     /* make it responsive */
     @media (max-width: 991px) {
-        .view, .review, .react, .category{
+        .view, .rate, .category{
             display : none;
         }
        .photo{
@@ -175,9 +174,6 @@
        }
        .price{
         width: 20%;
-       }
-       .updated{
-            width : 20%;
        }
     }
     @media (max-width : 768px) {

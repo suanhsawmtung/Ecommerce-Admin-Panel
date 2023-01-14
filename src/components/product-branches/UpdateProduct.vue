@@ -2,23 +2,23 @@
     <div class="createProduct">
         <div class="form">
             <h4 class="title">Update Product</h4>
-            <form class="form-body">
+            <div class="form-body">
                 <div class="item item1">
                     <label for="name">Product Name</label>
-                    <input type="text" class="inputField" id="name" v-model="chosenProduct.title"   />
+                    <input type="text" class="inputField" id="name" v-model="productData.title" />
                 </div>
                 
                 <div class="item item2">
                     <label for="category">Product Category</label>
-                    <select class="inputField" id="category" >
+                    <select class="inputField" id="category" v-model="productData.category">
                         <!-- <option disable value="" class="opt">Choose category</option> -->
-                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id" :selected="category.id === product.category">{{ category.title }}</option>
+                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id" :selected="category.id === productData.category">{{ category.title }}</option>
                     </select>
                 </div>
                 
                 <div class="item item3">
                     <label for="price">Product Price</label>
-                    <input type="number" class="inputField" id="price" v-model="chosenProduct.price"  placeholder="Enter product price" >
+                    <input type="number" class="inputField" id="price" v-model="productData.price" /> 
                 </div>
 
                 
@@ -29,65 +29,47 @@
 
                 <div class="item item5">
                     <label for="description">Product Description</label>
-                    <textarea class="inputField" id="description" cols="30" rows="10" placeholder="Enter product description" v-model="chosenProduct.description"></textarea>
+                    <textarea class="inputField" id="description" cols="30" rows="10"  v-model="productData.description"></textarea>
                 </div>
 
                 <div class="item6">
-                     <button type="submit" class="btn">Update</button>
+                     <button  type="button" class="btn" @click="updateProductData()">Update</button>
                 </div>
-            </form>
+            </div>
         </div>
         
     </div>
 </template>
 
 <script>
-    import { mapGetters } from "vuex";
+    import { mapGetters, mapActions } from "vuex";
     export default {
         name : "UpdateProduct",
-        data () {
-            return {
-                product: {
-                    name : null,
-                    category : null,
-                    price : null,
-                    image : null,
-                    description : null,
-                },
-                chosenProduct: {},
-            }
-        },
-        props: ["id"],
+        props: ["product"],
         computed: {
-            ...mapGetters("Products", [ "getProducts" ]),
             ...mapGetters("Categories", [ "getCategories" ]),
-        },
-        methods: {
-            selectImage (event) {
-                this.product.image = event.target.files[0];
-            },
-            setProductData(i){
-                if(i != null){
-                    let chosenProduct = this.getProducts.filter(product => {
-                        return product.id === i;
-                    });
-
-                    this.chosenProduct= chosenProduct[0];
-
+            productData(){
+                return {
+                    "id": this.product.id,
+                    "title": this.product.title,
+                    "category": this.product.category_id,
+                    "price": this.product.price,
+                    "description": this.product.description,
+                    "image": ""
                 }
             },
-            // updateProductData (product) {
-            //     product.title = this.product.name;
-            //     product.category = this.product.category;
-            //     product.price = this.product.price;
-            //     product.description = this.product.description;
-
-            //     this.$store.dispatch("updateProduct", product);
-            // },
         },
-        updated () {
-            this.setProductData(this.id);
-        }
+        methods: {
+            ...mapActions("Products", ["updateProduct"]),
+            selectImage (event) {
+                this.productData.image = event.target.files[0];
+                console.log(this.productData, "hello");
+            },
+            async updateProductData () {
+                await this.updateProduct(this.productData);
+                this.$emit("previousPage", "productTable");
+            },
+        },
 
     }
 </script>
@@ -119,7 +101,7 @@
     .item6{grid-area: six; }
     .form-body{
         display: grid;
-        grid-template-areas: 'one one five five' 'two two five five' 'three three five five' 'four four six six' ;
+        grid-template-areas: 'three three five five' 'two two five five' 'one one five five' 'four four six six' ;
         grid-template-columns: auto auto auto auto;
         gap: 10px;
     }
@@ -222,7 +204,7 @@
     }
     @media (max-width : 650px) {
         .form-body{
-            grid-template-areas: 'one one' 'two two' 'three three' 'four four' 'five five' '. six' ;
+            grid-template-areas: 'three three' 'two two' 'one one' 'four four' 'five five' '. six' ;
             grid-template-columns: auto auto;
             gap: 7px;
         }

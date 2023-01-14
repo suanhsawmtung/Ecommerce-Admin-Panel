@@ -20,7 +20,12 @@ export default {
     },
 
     mutations: {
-        setProducts: (state, products) => state.products = products.reverse(),
+        setProducts: (state, products) => {
+            products.forEach(product => {
+                product.image = 'http://localhost:8000/storage/' + product.image;
+            })
+            state.products = products.reverse();
+        },
         removeProduct: (state, removeId) => {
             state.products = state.products.filter(product => {
                 return product.id != removeId;
@@ -32,8 +37,15 @@ export default {
         },
         addNewProduct: (state, newProduct) => {
             newProduct.image = "http://localhost:8000/storage/" + newProduct.image;
-            state.products.push(newProduct);
+            state.products.unshift(newProduct);
         },
+        updateOldProduct: (state, updatedProduct) => {
+            updatedProduct.image = "http://localhost:8000/storage/" + updatedProduct.image;
+            state.products = state.products.filter(product => {
+                return product.id !== updatedProduct.id
+            });
+            state.products.unshift(updatedProduct);
+        }
     },
 
     actions: {
@@ -60,6 +72,14 @@ export default {
         },
         changeCategoryTitleOfProduct: ({ commit }, allProducts) => {
             commit("setProducts", allProducts);
+        },
+        updateProduct: async({ commit }, updateData) => {
+            try {
+                let { data } = await axios.post(`http://localhost:8000/api/product/updateProduct/${updateData.id}`, updateData);
+                commit("updateOldProduct", data);
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }

@@ -17,7 +17,7 @@
                     <label for="category">Product Category</label>
                     <select class="inputField" id="category" v-model="product.category">
                         <option  value="" class="opt" :selected="true">Choose category</option>
-                        <option class="opt" v-for="(category, index) in $store.getters.getCategories" :key="index" :value="category.id">{{ category.title }}</option>
+                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id">{{ category.title }}</option>
                     </select>
                 </div>
                 
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+    import { mapGetters, mapActions } from "vuex";
     export default {
         name : "CreateProduct",
         data () {
@@ -54,29 +55,35 @@
                 }
             }
         },
+        computed: {
+            ...mapGetters("Categories", ["getCategories"]),
+        },
         methods: {
-            // selectImage (event) {
-            //     this.product.image = event.target.files[0];
-            // },
-            // createNewProduct(){
-            //     let formData = new FormData();
-            //     formData.append("title", this.product.title);
-            //     formData.append("category", this.product.category);
-            //     formData.append("price", this.product.price);
-            //     formData.append("image", this.product.image);
-            //     formData.append("description", this.product.description);
+            ...mapActions("Products", ["createProduct"]),
+            selectImage (event) {
+                this.product.image = event.target.files[0];
+            },
+            createNewProduct(){
+                let formData = new FormData();
+                formData.append("title", this.product.title);
+                formData.append("category", this.product.category);
+                formData.append("price", this.product.price);
+                formData.append("image", this.product.image);
+                formData.append("description", this.product.description);
                 
-            //     this.$store.dispatch("createProduct", formData);
-            //     this.clearProductData();    
-            //     this.$emit("previousPage", "productTable");
-            // },
-            // clearProductData (){
-            //     this.product.title = "";
-            //     this.category= "";
-            //     this.price = "";
-            //     this.image= null;
-            //     this.description= "";
-            // }
+                this.createProduct(formData);
+                this.clearProductData();    
+                this.$emit("previousPage", "productTable");
+            },
+            clearProductData (){
+                this.product =  {
+                    title : " ",
+                    category : "",
+                    price : " ",
+                    image : null,
+                    description : " "
+                }
+            }
         },
     }
 </script>

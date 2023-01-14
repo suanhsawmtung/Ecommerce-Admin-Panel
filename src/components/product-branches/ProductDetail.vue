@@ -3,14 +3,14 @@
         <h2>{{ product.title }}</h2>
         <div class="fact-box box-one">
             <span>Category - {{ product.category_title }}</span>
-            <span>Created_at - Aug 21, 1999 at 7:00 AM</span>
-            <span>Updated_at - Oct 22, 1998 at 10:00 AM</span>
+            <span>Created_at - {{ product.createdAt }}</span>
+            <span>Updated_at - {{ product.updatedAt }}</span>
         </div>
         <div class="fact-box box-two">
             <span>{{ product.price }} Ks</span>
-            <span><i class="fa-regular fa-eye"></i> - 200</span>
-            <span><i class="fa-regular fa-heart"></i> - 50</span>
-            <span><i class="fa-regular fa-message"></i> - 20</span>
+            <span><i class="fa-regular fa-eye"></i> - {{ product.count }}</span>
+            <span><i class="fa-solid fa-star"></i> - {{ product.rate }}</span>
+            <!-- <span><i class="fa-regular fa-message"></i> - 20</span> -->
         </div>
         <div class="box-three">
             <div class="img-box">
@@ -25,28 +25,31 @@
 </template>
 
 <script>
+    import { mapGetters } from "vuex"
     export default {
         name: "ProductDetail.vue",
+        props: ['id'],
         data () {
             return {
-                product: {},
+                product: {}
             }
         },
-        props: ["id"],
-        methods: {
-            // setProductData(i){
-            //     if(i != null){
-            //         let chosenProduct = this.$store.getters.getProducts.filter(product => {
-            //             return product.id === i;
-            //         });
-
-            //         this.product = chosenProduct[0];
-            //     }
-            // }
+        computed: {
+            ...mapGetters("Products", ["getProducts"]),
         },
-        // updated () {
-        //     this.setProductData(this.id);
-        // }
+        methods: {
+            setProduct (id) {
+                if(id!==null){
+                    let productData = this.getProducts.filter(product=>{
+                        return product.id === id;
+                    });
+                    this.product = productData[0];
+                }
+            },
+        },
+        updated () {
+            this.setProduct(this.id);
+        }
     }
 </script>
 
@@ -133,7 +136,7 @@
         .detail .box-three{
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             padding: 8px 12px ;
         }
@@ -146,7 +149,7 @@
     }
     @media (max-width: 620px) {
         .detail h2{
-           font-size: 1.5rem;
+           font-size: 1.2rem;
            margin-bottom: 6px;
         }
         .detail .fact-box{

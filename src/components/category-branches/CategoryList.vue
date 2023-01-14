@@ -74,6 +74,10 @@
         margin: 0 0 10px; 
         text-transform: capitalize;
     }
+    header h1{
+        text-transform : uppercase;
+        color: teal;
+    }
     ul li .btn-box button,
     header button{
         margin: 0 10px 0 0;
@@ -98,6 +102,9 @@
     @media (max-width: 600px) {
         ul, header{
             max-width: 400px;
+        }
+        header h1{
+            font-size: 1.5rem;
         }
     }
     @media (max-width: 510px) {
