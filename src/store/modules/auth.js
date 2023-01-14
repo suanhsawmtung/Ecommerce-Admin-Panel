@@ -20,14 +20,14 @@ export default {
             }
             state.myData = data.user;
             state.token = data.token;
-            sessionStorage.setItem("TOKEN", data.token);
-            sessionStorage.setItem("EMAIL", data.user.email);
+            localStorage.setItem("TOKEN", data.token);
+            localStorage.setItem("EMAIL", data.user.email);
             state.error = null;
         },
         cleanMyData: state => {
             state.myData = {};
             state.token = null;
-            sessionStorage.clear();
+            localStorage.clear();
         },
     },
     actions: {

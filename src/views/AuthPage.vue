@@ -15,6 +15,7 @@
 </template>
 
 <script>
+    import { mapActions } from "vuex";
     import RegisterPage from "../components/auth-branches/RegisterPage.vue";
     import LoginPage from "../components/auth-branches/LoginPage.vue";
     import setAuthHeader from "../utils/setAuthHeader";
@@ -31,8 +32,6 @@
             }
         },
         methods: {
-            ...mapActions("Products", ['allProducts']),
-            ...mapActions("Categories", ['allCategories']),
             changeForm (status) {
                 this.registerStatus= false;
                 this.loginStatus= false;
@@ -59,8 +58,8 @@
                 }
             },
             getAllDatas(){
-                this.allProducts();
-                this.allCategories();
+                this.$store.dispatch("allProducts");
+                this.$store.dispatch("allCategories");
                 this.$store.dispatch("allCustomers");
             },
             showLoginForm(){
@@ -76,7 +75,7 @@
                 this.credentialsErrorStatus = true;
                 setTimeout(() => this.credentialsErrorStatus = false, 3000);
             }
-        }
+        },
     }
 </script>
 
