@@ -13,7 +13,7 @@ export default {
     getters: {
         getCustomers: state => state.customers.reverse(),
         getAdmins: state => state.admins.reverse(),
-        getMyProfileData: state => state.myProfileData,
+        getMyProfileData: state => state.myProfileData[0],
         paginatedCustomers: state => state.customers.slice(state.customerPaginationPoints.start, state.customerPaginationPoints.end),
         getCustomerCurrentPage: state => {
             return state.customerPaginationPoints.end / (state.customerPaginationPoints.end - state.customerPaginationPoints.start);
@@ -31,7 +31,7 @@ export default {
                 return user.role === "admin";
             });
             state.myProfileData = data.filter(user => {
-                return user.email === sessionStorage.getItem("EMAIL");
+                return user.email === localStorage.getItem("EMAIL");
             });
         },
         removeUser: (state, removeId) => {

@@ -73,7 +73,7 @@
         methods: {
             ...mapActions(["toggle", "allProducts"]),
             logout(){
-                setAuthHeader(sessionStorage.getItem("TOKEN")); 
+                setAuthHeader(localStorage.getItem("TOKEN")); 
                 this.$store.dispatch("logout").then(() => {
                     this.$router.push({ path: '/' });
                 });

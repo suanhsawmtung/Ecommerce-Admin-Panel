@@ -22,7 +22,7 @@
                 <i class="fa-regular fa-user"></i>
               </div>
               <div class="user-name">
-                {{ $store.getters.getMyData.name }}
+                {{ $store.getters.getMyProfileData.name }}
               </div>
           </div>
       </div>

@@ -50,7 +50,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async(to) => {
-    if (sessionStorage.length === 0 && to.name !== 'auth') {
+    if (localStorage.length === 0 && to.name !== 'auth') {
         return { name: 'auth' }
     }
 })

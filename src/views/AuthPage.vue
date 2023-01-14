@@ -1,5 +1,10 @@
 <template>
     <div class="branch-parent">
+        <transition name="intro">
+            <div class="intro" v-show="introStatus">
+                <h1>Ecommerce Admin Panel</h1>
+            </div>
+        </transition>
         <transition name="error">
             <div class="error-box" v-show="credentialsErrorStatus">
                 <h3>{{ errorMessage }}</h3>
@@ -15,23 +20,28 @@
 </template>
 
 <script>
-    import { mapActions } from "vuex";
     import RegisterPage from "../components/auth-branches/RegisterPage.vue";
     import LoginPage from "../components/auth-branches/LoginPage.vue";
     import setAuthHeader from "../utils/setAuthHeader";
-    import { mapActions } from "vuex";
+    import { mapActions, mapGetters } from "vuex";
     export default {
         name: 'AuthPage',
         components: {RegisterPage, LoginPage},
         data () {
             return {
+                introStatus: true,
                 registerStatus: false,
-                loginStatus: true,
+                loginStatus: false,
                 credentialsErrorStatus: false,
                 errorMessage: ""
             }
         },
+        computed: {
+            ...mapGetters("Categories", ["getCategories"]),
+        },
         methods: {
+            ...mapActions("Products", ["allProducts"]),
+            ...mapActions("Categories", ["allCategories"]),
             changeForm (status) {
                 this.registerStatus= false;
                 this.loginStatus= false;
@@ -47,10 +57,10 @@
                 }
             },
             showOverviewPage(){
-                if(sessionStorage.getItem("TOKEN") !== null){
-                    setAuthHeader(sessionStorage.getItem("TOKEN")); 
+                if(localStorage.getItem("TOKEN") !== null){
+                    setAuthHeader(localStorage.getItem("TOKEN")); 
                     this.getAllDatas();
-                    this.$router.push({ path: '/overview' });
+                    setTimeout(()=>this.$router.push({ path: '/overview' }), 2500);
                 }else{
                     this.errorMessage = this.$store.getters.getError;
                     this.credentialsErrorStatus = true;
@@ -58,8 +68,8 @@
                 }
             },
             getAllDatas(){
-                this.$store.dispatch("allProducts");
-                this.$store.dispatch("allCategories");
+                this.allProducts();
+                this.allCategories();
                 this.$store.dispatch("allCustomers");
             },
             showLoginForm(){
@@ -74,8 +84,23 @@
                 this.errorMessage = error.response.data.errors.email[0];
                 this.credentialsErrorStatus = true;
                 setTimeout(() => this.credentialsErrorStatus = false, 3000);
-            }
+            },
+            checkLogin(){
+                if(localStorage.getItem("TOKEN") !== null){
+                    setAuthHeader(localStorage.getItem("TOKEN"));
+                    this.getAllDatas();
+                    setTimeout(() => this.$router.push({ path: '/overview' }), 5000);
+                }else{
+                    setTimeout(()=>{
+                        this.introStatus = false;
+                        this.loginStatus = true;
+                    }, 1500);
+                }
+            } 
         },
+        mounted () {
+            this.checkLogin();
+        }
     }
 </script>
 
@@ -89,6 +114,12 @@
         align-items: center;
         background: teal;
     }
+    .intro{
+        margin-bottom: 15px;
+    }
+    .intro h1{
+        font-size: 5rem;
+    }
 
     .error-box{
         padding: 15px;
@@ -101,6 +132,18 @@
         text-align: center;
     }
 
+
+    /* intro animation */
+    .intro-enter-from,
+    .intro-leave-to{
+        transform: scale(0.5);
+        opacity: 0
+    }
+
+    .intro-enter-active,
+    .intro-leave-active{
+        transition: all 1s ease;
+    }
 
     /* Auth transition */
     .auth-enter-from{
