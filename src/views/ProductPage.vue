@@ -202,9 +202,6 @@ header h1{
 
 
 /* make it responsive */
-@media (max-width: 991px) {
-
-}
 @media (max-width : 768px) {
     .btn-box{
         padding: 7px 4px;

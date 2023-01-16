@@ -2,10 +2,10 @@
     <div class="branch">
         <div class="branch-inner">
             <div class="info-box">
-                <h3><span>Name</span><span class="icon"><i class="fa-regular fa-user"></i></span><small>-</small><span>{{ getMyProfileData[0].name }}</span></h3>
-                <h3><span>Email</span><span class="icon"><i class="fa-regular fa-envelope"></i></span><small>-</small><span>{{ getMyProfileData[0].email }}</span></h3>
-                <h3><span>Address</span><span class="icon"><i class="fa-regular fa-house"></i></span><small>-</small><span>{{ getMyProfileData[0].address }}</span></h3>
-                <h3><span>Joined at</span><span class="icon"><i class="fa-regular fa-calendar"></i></span><small>-</small><span>{{ getMyProfileData[0].createdAt }}</span></h3>
+                <h3><span>Name</span><span class="icon"><i class="fa-regular fa-user"></i></span><small>-</small><span>{{ user.name }}</span></h3>
+                <h3><span>Email</span><span class="icon"><i class="fa-regular fa-envelope"></i></span><small>-</small><span>{{ user.email }}</span></h3>
+                <h3><span>Address</span><span class="icon"><i class="fa-regular fa-house"></i></span><small>-</small><span>{{ user.address }}</span></h3>
+                <h3><span>Joined at</span><span class="icon"><i class="fa-regular fa-calendar"></i></span><small>-</small><span>{{ user.createdAt }}</span></h3>
             </div>
         </div>
     </div>
@@ -14,10 +14,32 @@
 <script>
     import { mapGetters } from 'vuex';
     export default {
-       name: "MyProfile", 
-       computed: {
-            ...mapGetters(["getMyProfileData"])
+       name: "UserDetail",
+       data () {
+        return {
+            user: {
+                name: "",
+                email: "",
+                address: "",
+                createdAt: ""
+            }
+        }
        },
+       props: ["id"], 
+       computed: {
+            ...mapGetters(["getAllUsers"]),
+       },
+       methods: {
+            setUser () {
+                if(this.id!==null){
+                    let userData = this.getAllUsers.filter(user=>user.id===this.id);
+                    this.user = userData[0];
+                }
+            }
+       },
+       updated () {
+            this.setUser();
+       }
     }
 </script>
 
@@ -36,7 +58,7 @@
     }
     .info-box h3 span{
         display: inline-block;
-        width: 200px;
+        width: 220px;
         color: #000;
         padding: 5px;
         text-align: start;

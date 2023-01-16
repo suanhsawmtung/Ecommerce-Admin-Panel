@@ -2,28 +2,36 @@ import axios from "axios";
 
 export default {
     state: {
+        allUsers: [],
         customers: [],
         admins: [],
         myProfileData: [],
         customerPaginationPoints: {
             start: 0,
-            end: 5
+            end: 4
+        },
+        adminPaginationPoints: {
+            start: 0,
+            end: 4
         }
     },
     getters: {
-        getCustomers: state => state.customers.reverse(),
-        getAdmins: state => state.admins.reverse(),
+        getAllUsers: state => state.allUsers,
+        getCustomers: state => state.customers,
+        getAdmins: state => state.admins,
         getMyProfileData: state => state.myProfileData[0],
         paginatedCustomers: state => state.customers.slice(state.customerPaginationPoints.start, state.customerPaginationPoints.end),
+        paginatedAdmins: state => state.admins.slice(state.adminPaginationPoints.start, state.adminPaginationPoints.end),
         getCustomerCurrentPage: state => {
             return state.customerPaginationPoints.end / (state.customerPaginationPoints.end - state.customerPaginationPoints.start);
+        },
+        getAdminCurrentPage: state => {
+            return state.adminPaginationPoints.end / (state.adminPaginationPoints.end - state.adminPaginationPoints.start);
         }
     },
     mutations: {
         setCustomers: (state, data) => {
-            // for (let i = 0; i < data.lenght; i++) {
-            //     data[i].image = 'http://localhost:8000/storage/' + data[i].image;
-            // }
+            state.allUsers = data;
             state.customers = data.filter(user => {
                 return user.role === "customer";
             });
@@ -38,10 +46,6 @@ export default {
             state.customers = state.customers.filter(customer => {
                 return customer.id !== removeId;
             });
-        },
-        setCustomerPaginationPoints: (state, points) => {
-            state.customerPaginationPoints.start = points.start;
-            state.customerPaginationPoints.end = points.end;
         },
         updateUserData: (state, updateUserData) => {
             state.customers.forEach(user => {
@@ -62,7 +66,15 @@ export default {
                     return user.id !== updatedUser.id;
                 })
             }
-        }
+        },
+        setCustomerPaginationPoints: (state, points) => {
+            state.customerPaginationPoints.start = points.start;
+            state.customerPaginationPoints.end = points.end;
+        },
+        setAdminPaginationPoints: (state, points) => {
+            state.adminPaginationPoints.start = points.start;
+            state.adminPaginationPoints.end = points.end;
+        },
     },
 
     actions: {
@@ -91,6 +103,16 @@ export default {
             }
 
             commit("setCustomerPaginationPoints", points);
+        },
+        adminPaginator: ({ commit }, page) => {
+            let start = (page.currentPage - 1) * page.perPage;
+            let end = start + page.perPage;
+            let points = {
+                start: start,
+                end: end
+            }
+
+            commit("setAdminPaginationPoints", points);
         },
     }
 }

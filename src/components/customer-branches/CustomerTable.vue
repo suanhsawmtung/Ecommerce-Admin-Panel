@@ -20,11 +20,12 @@
                 <td class="date" >{{ customer.createdAt }}</td>
                 <td class="control btns" >
                     <button @click="showModalOne(customer.id)" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
+                    <button @click="$emit('detail', 'customer', customer.id)" title="details"><i class="fa-solid fa-info"></i></button>
                     <button @click="showModalTwo(customer.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>
         </table>
-        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
@@ -36,7 +37,7 @@
         data () {
             return {
                 currentPage: 1,
-                perPage: 5,
+                perPage: 4,
                 maxVisibleButton: 4,
             }
         },

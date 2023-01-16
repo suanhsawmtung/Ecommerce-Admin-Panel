@@ -2,38 +2,60 @@
     <div class="branchTable">
         <table>
             <tr style="background-color: teal;">
-                <th class="photo" style="color: #fff;">Photo</th>
                 <th class="name" style="color: #fff;">Name</th>
                 <th class="email" style="color: #fff;">Email</th>
-                <th class="address" style="color: #fff;">Address</th>
+                <th class="phone" style="color: #fff;">Phone</th>
                 <th class="date" style="color: #fff;">Joined Date</th>
                 <th class="control btns" style="color: #fff;"></th>
             </tr>
-            <tr v-for="(admin, index) in $store.getters.getAdmins" :key="index">
-                <td class="photo" >
-                    <img :src="admin.image" alt="">
-                </td>
+            <tr v-for="(admin, index) in paginatedAdmins" :key="index">
                 <td class="name" >{{ admin.name }}</td>
                 <td class="email" >{{ admin.email }}</td>
-                <td class="address " >{{ admin.address }}</td>
+                <td class="phone" >{{ admin.address }}</td>
                 <td class="date" >{{ admin.createdAt }}</td>
                 <td class="control btns" >
-                    <button @click="showModalTwo(admin.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="showRemoveModal(admin.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="$emit('detail', 'admin', admin.id)" title="details"><i class="fa-solid fa-info"></i></button>
                 </td>
             </tr>
         </table>
+        <Paginator v-show="getAdmins.length>perPage" @adminPageChanged="onAdminPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getAdmins.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
  </template>
  
  <script>
+    import Paginator from "../data-paginators/AdminPaginator.vue";
+    import { mapGetters } from "vuex";
     export default {
         name: "AdminTable",
-
-        methods: {
-            showModalTwo(id){
-                this.$emit("showModal", "removeAdmin", id)
+        data () {
+            return {
+                currentPage: 1,
+                perPage: 4,
+                maxVisibleButton: 4,
             }
         },
+        components: { Paginator },
+        computed: {
+            ...mapGetters([ "getAdmins", "paginatedAdmins", "getAdminCurrentPage" ]),
+        },
+        methods: {
+            showRemoveModal(id){
+                this.$emit("showModal", "removeAdmin", id)
+            },
+            onAdminPageChange(currentPage){
+                this.currentPage = currentPage;
+                let page = {
+                    currentPage: this.currentPage,
+                    perPage: this.perPage
+                }
+
+                this.$store.dispatch("adminPaginator", page)
+            }
+        },
+        mounted () {
+            this.currentPage = this.getAdminCurrentPage;
+        }
     }
  </script>
  
@@ -60,14 +82,6 @@
     table tr td {
         padding: 10px 7px;
     }
-    .photo{
-        width: 10%;
-        object-fit: contain;
-        text-align: center;
-    }
-    .photo img{
-        width: 50%;
-    }
 
     .name{
         width: 20%;
@@ -75,11 +89,11 @@
     .email{
         width: 20%;
     }
-    .address{
+    .phone{
         width: 20%;
     }
     .date{
-        width: 15%;
+        width: 25%;
     }
 
     .control{
@@ -101,13 +115,15 @@
     .control button:hover{
         transform: scale(1.3);
     }
-    .updated{
-        width: 15%;
-    }
 
     /* make it responsive */
-    @media (max-width: 991px) {
-        .date, .email{
+    @media (max-width: 786px) {
+        .date{
+            display: none;
+        }
+    }
+    @media (max-width: 480px) {
+        .phone{
             display: none;
         }
     }

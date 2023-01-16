@@ -1,7 +1,7 @@
 <template>
     <div class="branch-parent">
       <div v-show="modalStatus" class="modal-parent-box">
-        <CustomerModal :chosenModal="chosenModal" :id=idForModal @close="modalToggle(null)"></CustomerModal>
+        <CustomerModal :modal="modal" :user="user" @close="modalToggle('close', null)"></CustomerModal>
       </div>
       <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
           <TopBar></TopBar>
@@ -13,28 +13,19 @@
                   <div class="nav-item" :class="{ 'active' : adminStatus }" @click="selectItem('admin')" >
                      <h4>Admins</h4>
                   </div>
-                  <div class="nav-item" :class="{ 'active' : profileStatus }" @click="selectItem('profile')" >
-                     <h4>My Profile</h4>
-                  </div>
               </div>
+              <h1>Customers</h1>
               <div v-show="customerStatus">
-                <div class="btn-box">
-                    <button @click="showListBranches('list')" v-show="!customerTableStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                </div>
-                <CustomerTable v-show="customerTableStatus" @showModal="modalToggle"></CustomerTable>
+                <CustomerTable v-show="customerTableStatus" @showModal="modalToggle" @detail="showDetailPage"></CustomerTable>
               </div>
               <div v-show="adminStatus">
-                <div class="btn-box">
-                    <button @click="showProfileBranches('adminList')" v-show="!adminListStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                </div>
-                <AdminTable v-show="adminListStatus" @showModal="modalToggle"></AdminTable>
+                <AdminTable v-show="adminListStatus" @showModal="modalToggle" @detail="showDetailPage"></AdminTable>
               </div>
-              <div v-show="profileStatus">
+              <div v-show="detailStatus">
                   <div class="btn-box">
-                      <button @click="showProfileBranches('myProfile')" v-show="!myProfileStatus"><i class="fa-solid fa-arrow-left"></i></button>
-                      <button @click="modalToggle('editProfile', null)" v-show="myProfileStatus">Edit Profile</button>
+                      <button @click="goPrevious()" v-show="detailStatus"><i class="fa-solid fa-arrow-left"></i></button>
                   </div>
-                  <MyProfile v-show="myProfileStatus"></MyProfile>
+                  <UserDetail v-show="myProfileStatus" :id="id"></UserDetail>
               </div>
           </div>
       </div>
@@ -45,7 +36,7 @@
   import { mapGetters } from "vuex";
   import CustomerTable from "../components/customer-branches/CustomerTable.vue";
   import AdminTable from "../components/customer-branches/AdminTable.vue";
-  import MyProfile from "../components/customer-branches/MyProfile.vue";
+  import UserDetail from "../components/customer-branches/UserDetail.vue";
   import TopBar from "../components/TopBar.vue";
   import CustomerModal from "../components/customer-branches/CustomerModals.vue";
 
@@ -55,89 +46,101 @@
           return {
               customerStatus : true,
               adminStatus: false,
-              profileStatus : false,
+              detailStatus : false,
 
               
               customerTableStatus: true,
-              customerDetailStatus: false,
-
               adminListStatus: true,
-              adminDetailStatus: false,
 
               myProfileStatus: true,
               updateProfileStatus: false,
 
               modalStatus: false,
-              chosenModal: null,
-              idForModal: null,
+              modal: null,
+              id: null,
+              user: {
+                id: null,
+                name: ""
+              }
           }
       },
-      components : { TopBar, CustomerTable, AdminTable, MyProfile, CustomerModal },
+      components : { TopBar, CustomerTable, AdminTable, UserDetail, CustomerModal },
       computed: {
-          ...mapGetters(["getToggleStatus"])
+          ...mapGetters(["getToggleStatus", "getAllUsers"])
       },
       methods: {
         selectItem (item){
             this.customerStatus = false;
             this.adminStatus = false;
-            this.profileStatus = false;
 
             if(item == 'customer'){
                 this.customerStatus = true;
+                this.customerTableStatus=true;
                 return;
             }
 
             if(item == 'admin'){
                 this.adminStatus = true;
-                return;
-            }
-
-            if(item == 'profile'){
-                this.profileStatus = true;
+                this.adminListStatus=true;
                 return;
             }
         },
-        showProfileBranches (status) {
-            this.myProfileStatus = false;
-            this.updateProfileStatus = false;
-
-            switch (status) {
-              case "myProfile":
-                this.myProfileStatus = true;
-                break;
-              case "editMyProfile":
-                this.updateProfileStatus = true;
-                break;
+        modalToggle(status, id){
+          this.modal = null;
+          if(id!==null){
+            let userData = this.getAllUsers.filter(user => user.id === id);
+            this.user = userData[0];
+          }else{
+            this.user= {
+              id: null,
+              name: ""
             }
-        },
-        modalToggle(m, id){
-          this.chosenModal = null;
-          this.idForModal= null;
+          }
+          
 
-          if(m=="addAdmin"){
-            this.chosenModal= "addAdmin";
+          if(status=="addAdmin"){
+            this.modal= "addAdmin";
             this.idForModal= id;
           }
 
-          if(m=="removeAdmin"){
-            this.chosenModal= "removeAdmin";
+          if(status=="removeAdmin"){
+            this.modal= "removeAdmin";
             this.idForModal= id;
           }
 
-          if(m=="deleteAcc"){
-            this.chosenModal= "deleteAcc";
-            this.idForModal= id;
-          }
-
-          if(m=="editProfile"){
-            this.chosenModal= "editProfile";
+          if(status=="deleteAcc"){
+            this.modal= "deleteAcc";
             this.idForModal= id;
           }
 
           this.modalStatus = !this.modalStatus;
         },
+        showDetailPage(status, id){
+            this.id = id;
+            if(status === 'customer'){
+              this.customerTableStatus= false;
+            }
+            if(status === 'admin'){
+              this.adminListStatus= false;
+            }
+            this.detailStatus=true;
+        },
+        goPrevious(){
+            this.detailStatus=false;
+            this.id = null;
+            
+            if(!this.customerTableStatus){
+              this.customerTableStatus=true;
+              return;
+            }
+            if(!this.adminListStatus){
+              this.adminListStatus=true;
+              return;
+            }
+          }
       },
-  }
+    }
+
 </script>
 
 <style scoped>
@@ -161,13 +164,20 @@
   width: calc(100% - 70px);
 }
 .table-box{
+  position: relative;
   width: 95%;
   margin: 30px auto 0 auto;
   box-shadow: 1px 1px 4px 2px #000;
   padding: 20px 15px;
 }
+.table-box h1{
+  position: absolute;
+  top: 25px;
+  right: 15px;
+  text-transform : uppercase;
+  color: teal;
+}
 .branch-nav{
-  position: relative;
   display: flex;
   align-items: center;
   margin: 10px 0;
@@ -234,6 +244,10 @@
   }
 }
 @media (max-width : 650px) {
+  .table-box h1{
+      font-size: 1.5rem;
+      top: 35px;
+  }
   .branch-nav .nav-item h4{
       font-size: 0.8rem;
       padding: 5px 6px;
@@ -241,6 +255,12 @@
   .btn-box button{
       padding: 5px 8px;
       font-size: 0.6rem;
+  }
+}
+@media (max-width : 480px) {
+  .table-box h1{
+      font-size: 1.2rem;
+      top: 40px;
   }
 }
 @media (max-width : 400px) {
