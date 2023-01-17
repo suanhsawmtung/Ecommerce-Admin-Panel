@@ -4,7 +4,7 @@
             <div class="info-box">
                 <h3><span>Name</span><span class="icon"><i class="fa-regular fa-user"></i></span><small>-</small><span>{{ user.name }}</span></h3>
                 <h3><span>Email</span><span class="icon"><i class="fa-regular fa-envelope"></i></span><small>-</small><span>{{ user.email }}</span></h3>
-                <h3><span>Address</span><span class="icon"><i class="fa-regular fa-house"></i></span><small>-</small><span>{{ user.address }}</span></h3>
+                <h3><span>Phone</span><span class="icon"><i class="fa-solid fa-mobile-screen"></i></span><small>-</small><span>{{ user.phone }}</span></h3>
                 <h3><span>Joined at</span><span class="icon"><i class="fa-regular fa-calendar"></i></span><small>-</small><span>{{ user.createdAt }}</span></h3>
             </div>
         </div>
@@ -20,7 +20,7 @@
             user: {
                 name: "",
                 email: "",
-                address: "",
+                phone: "",
                 createdAt: ""
             }
         }

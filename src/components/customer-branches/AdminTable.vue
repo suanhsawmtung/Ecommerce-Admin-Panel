@@ -11,15 +11,17 @@
             <tr v-for="(admin, index) in paginatedAdmins" :key="index">
                 <td class="name" >{{ admin.name }}</td>
                 <td class="email" >{{ admin.email }}</td>
-                <td class="phone" >{{ admin.address }}</td>
+                <td class="phone" >{{ admin.phone }}</td>
                 <td class="date" >{{ admin.createdAt }}</td>
                 <td class="control btns" >
-                    <button @click="showRemoveModal(admin.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="showRemoveModal(admin.id)" title="delete"><i class="fa-solid fa-minus"></i></button>
                     <button @click="$emit('detail', 'admin', admin.id)" title="details"><i class="fa-solid fa-info"></i></button>
                 </td>
             </tr>
         </table>
-        <Paginator v-show="getAdmins.length>perPage" @adminPageChanged="onAdminPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getAdmins.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <div class="paginator">
+            <Paginator v-show="getAdmins.length>perPage" @adminPageChanged="onAdminPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getAdmins.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        </div>
     </div>
  </template>
  
@@ -62,6 +64,16 @@
  <style scoped>
     .branchTable{
         width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    .branchTable .paginator{
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     table{
         width : 100%;

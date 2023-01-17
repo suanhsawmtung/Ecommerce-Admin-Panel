@@ -15,7 +15,12 @@
                 <label for="email">Email</label>
                 <input type="email" name="email" placeholder="Enter email..." v-model="user.email">
                 <small style="color: red" v-show="validation.emailStatus">User email is required.</small>
-                <small></small>
+            </div>
+
+            <div class="input-box">
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" placeholder="Enter phone number..." v-model="user.phone">
+                <small style="color: red" v-show="validation.phoneStatus">User phone is required.</small>
             </div>
 
             <div class="input-box">
@@ -32,10 +37,6 @@
                 <small style="color: red" v-show="validation.password_confirmationStatus">Confirm password does not match.</small>
                 <small style="color: red" v-show="validation.confirmationCheckStatus">Password Confirmation is required.</small>
             </div>
-
-            <!-- <div>
-                <input type="checkbox" name="name"> <span>Remember me?</span>
-            </div> -->
 
             <div class="input-box">
                 <button type="button" class="btn" @click="register()">Register</button>
@@ -57,6 +58,7 @@
                 user: {
                     name: "",
                     email: "",
+                    phone: "",
                     role: "admin",
                     password: "",
                     password_confirmation: ""
@@ -65,6 +67,7 @@
                     nameStatus: false,
                     nameCountStatus: false,
                     emailStatus: false,
+                    phoneStatus: false,
                     passwordStatus: false,
                     passwordCountStatus: false,
                     confirmationCheckStatus: false,
@@ -100,6 +103,10 @@
                 }
                 if(this.user.email === ""){
                     this.validation.emailStatus = true;
+                    return;
+                }
+                if(this.user.phone === ""){
+                    this.validation.phoneStatus = true;
                     return;
                 }
                 if(this.user.password === ""){

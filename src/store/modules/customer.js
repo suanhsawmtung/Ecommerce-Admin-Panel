@@ -48,11 +48,17 @@ export default {
             });
         },
         updateUserData: (state, updateUserData) => {
-            state.customers.forEach(user => {
+            state.allUsers.forEach(user => {
                 if (user.id === updateUserData.id) {
                     user = updateUserData;
                 }
             });
+            state.admins.forEach(admin => {
+                if (admin.id === updateUserData.id) {
+                    admin = updateUserData;
+                }
+            });
+            state.myProfileData = [updateUserData];
         },
         addChangedRole: (state, updatedUser) => {
             if (updatedUser.role === "admin") {
@@ -113,6 +119,6 @@ export default {
             }
 
             commit("setAdminPaginationPoints", points);
-        },
+        }
     }
 }

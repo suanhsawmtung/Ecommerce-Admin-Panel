@@ -6,11 +6,13 @@
                 <div class="item item3">
                     <label for="price">Product Price</label>
                     <input type="number" class="inputField" id="price" v-model="product.price" placeholder="Enter product price" >
+                    <small style="color: red" v-show="priceError">Product price is required.</small>
                 </div>
 
                 <div class="item item1">
                     <label for="name">Product Name</label>
                     <input type="text" class="inputField" id="name" v-model="product.title" placeholder="Enter product name..."/>
+                    <small style="color: red" v-show="nameError">Product name is required.</small>
                 </div>
                 
                 <div class="item item2">
@@ -19,16 +21,19 @@
                         <option  value="" class="opt" :selected="true">Choose category</option>
                         <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id">{{ category.title }}</option>
                     </select>
+                    <small style="color: red" v-show="categoryError">Product Category is required.</small>
                 </div>
                 
                 <div class="item item4">
                     <label for="image"><i class="fa-solid fa-plus"></i>Choose a photo</label>
                     <input type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
+                    <small style="color: red" v-show="imageError">Product image is required.</small>
                 </div>
 
                 <div class="item item5">
                     <label for="description">Product Description</label>
                     <textarea class="inputField" id="description" cols="30" rows="10" v-model="product.description" placeholder="Enter product description" ></textarea>
+                    <small style="color: red" v-show="descriptionError">Product description is required.</small>
                 </div>
 
                 <div class="item6">
@@ -47,12 +52,20 @@
         data () {
             return {
                 product: {
-                    title : " ",
+                    title : "",
                     category : "",
-                    price : " ",
+                    price : null,
                     image : null,
-                    description : " "
-                }
+                    description : ""
+                },
+
+                nameError: false,
+                priceError: false,
+                categoryError: false,
+                imageError: false,
+                descriptionError: false,
+                createProductStatus: false,
+
             }
         },
         computed: {
@@ -64,25 +77,62 @@
                 this.product.image = event.target.files[0];
             },
             createNewProduct(){
-                let formData = new FormData();
-                formData.append("title", this.product.title);
-                formData.append("category", this.product.category);
-                formData.append("price", this.product.price);
-                formData.append("image", this.product.image);
-                formData.append("description", this.product.description);
+                this.clearValidationMessage();
+                this.createProductValidation();
+
+                if(this.createProductStatus === true){
+                    let formData = new FormData();
+                    formData.append("title", this.product.title);
+                    formData.append("category", this.product.category);
+                    formData.append("price", this.product.price);
+                    formData.append("image", this.product.image);
+                    formData.append("description", this.product.description);
                 
-                this.createProduct(formData);
-                this.clearProductData();    
-                this.$emit("previousPage", "productTable");
+                    this.createProduct(formData);    
+                    this.$emit("previousPage", "productTable");
+                    this.clearProductData();
+                    this.clearValidationMessage();
+                }
             },
             clearProductData (){
                 this.product =  {
-                    title : " ",
+                    title : "",
                     category : "",
-                    price : " ",
+                    price : null,
                     image : null,
-                    description : " "
+                    description : ""
                 }
+            },
+            createProductValidation(){
+                if(this.product.price === null){
+                    this.priceError = true;
+                    return;
+                }
+                if(this.product.title === ""){
+                    this.nameError = true;
+                    return;
+                }
+                if(this.product.category === ""){
+                    this.categoryError = true;
+                    return;
+                }
+                if(this.product.image === null){
+                    this.imageError = true;
+                    return;
+                }
+                if(this.product.description === ""){
+                    this.descriptionError = true;
+                    return;
+                }
+                this.createProductStatus = true;
+            },
+            clearValidationMessage(){
+                this.nameError = false,
+                this.priceError = false,
+                this.categoryError = false,
+                this.imageError = false,
+                this.descriptionErrorf = false,
+                this.createProductStatus = false
             }
         },
     }

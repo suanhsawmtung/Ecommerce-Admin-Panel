@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="category-box">
         <header>
             <h1>Category</h1>
             <button @click="$emit('showModal', 'create', null)">Create Category</button>
@@ -53,10 +53,16 @@
 </script>
 
 <style scoped>
+    .category-box{
+        height: 100%;
+    }
     ul, header{
         margin: 30px auto;
         padding: 0;
         max-width: 600px;
+    }
+    ul{
+        height: 50%;
     }
     header{
         display: flex;

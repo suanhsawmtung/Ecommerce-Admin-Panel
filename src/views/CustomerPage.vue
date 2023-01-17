@@ -15,10 +15,10 @@
                   </div>
               </div>
               <h1>Customers</h1>
-              <div v-show="customerStatus">
+              <div v-show="customerStatus" class="table">
                 <CustomerTable v-show="customerTableStatus" @showModal="modalToggle" @detail="showDetailPage"></CustomerTable>
               </div>
-              <div v-show="adminStatus">
+              <div v-show="adminStatus" class="table">
                 <AdminTable v-show="adminListStatus" @showModal="modalToggle" @detail="showDetailPage"></AdminTable>
               </div>
               <div v-show="detailStatus">
@@ -166,6 +166,7 @@
 .table-box{
   position: relative;
   width: 95%;
+  height: 80%;
   margin: 30px auto 0 auto;
   box-shadow: 1px 1px 4px 2px #000;
   padding: 20px 15px;
@@ -176,6 +177,10 @@
   right: 15px;
   text-transform : uppercase;
   color: teal;
+}
+.table-box .table{
+  width: 100%;
+  height: 90%;
 }
 .branch-nav{
   display: flex;

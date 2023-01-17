@@ -6,12 +6,12 @@
                 <div class="item item1">
                     <label for="name">Product Name</label>
                     <input type="text" class="inputField" id="name" v-model="productData.title" />
+                    <small style="color: red" v-show="nameError">Product name is required.</small>
                 </div>
                 
                 <div class="item item2">
                     <label for="category">Product Category</label>
                     <select class="inputField" id="category" v-model="productData.category">
-                        <!-- <option disable value="" class="opt">Choose category</option> -->
                         <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id" :selected="category.id === productData.category">{{ category.title }}</option>
                     </select>
                 </div>
@@ -19,17 +19,19 @@
                 <div class="item item3">
                     <label for="price">Product Price</label>
                     <input type="number" class="inputField" id="price" v-model="productData.price" /> 
+                    <small style="color: red" v-show="priceError">Product price is required.</small>
                 </div>
 
                 
                 <div class="item item4">
-                    <label for="image"><i class="fa-solid fa-plus"></i>Choose a photo</label>
-                    <input type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
+                    <!-- <label for="image"><i class="fa-solid fa-plus"></i>Choose a photo</label>
+                    <input type="file" class="inputField" id="image"  @change="selectImage" > -->
                 </div>
 
                 <div class="item item5">
                     <label for="description">Product Description</label>
                     <textarea class="inputField" id="description" cols="30" rows="10"  v-model="productData.description"></textarea>
+                    <small style="color: red" v-show="descriptionError">Product description is required.</small>
                 </div>
 
                 <div class="item6">
@@ -45,6 +47,16 @@
     import { mapGetters, mapActions } from "vuex";
     export default {
         name : "UpdateProduct",
+        data () {
+            return {
+                nameError: false,
+                priceError: false,
+                descriptionError: false,
+                updateProductStatus: false,
+
+                // image: null
+            }
+        },
         props: ["product"],
         computed: {
             ...mapGetters("Categories", [ "getCategories" ]),
@@ -55,20 +67,45 @@
                     "category": this.product.category_id,
                     "price": this.product.price,
                     "description": this.product.description,
-                    "image": ""
                 }
             },
         },
         methods: {
             ...mapActions("Products", ["updateProduct"]),
-            selectImage (event) {
-                this.productData.image = event.target.files[0];
-                console.log(this.productData, "hello");
-            },
+            // selectImage (event) {
+            //     // this.image = event.target.files[0];
+            //     console.log(event.target);
+            // },
             async updateProductData () {
-                await this.updateProduct(this.productData);
-                this.$emit("previousPage", "productTable");
+                this.clearValidationMessage();
+                this.updateProductValidation();
+                if(this.updateProductStatus===true){
+                    await this.updateProduct(this.productData);
+                    this.$emit("previousPage", "productTable");
+                    this.clearValidationMessage();
+                }
             },
+            updateProductValidation(){
+                if(this.productData.title === ""){
+                    this.nameError = true;
+                    return;
+                }
+                if(this.productData.price === ""){
+                    this.priceError = true;
+                    return;
+                }
+                if(this.productData.description === ""){
+                    this.descriptionError = true;
+                    return;
+                }
+                this.updateProductStatus = true;
+            },
+            clearValidationMessage(){
+                this.nameError = false,
+                this.priceError = false,
+                this.descriptionErrorf = false,
+                this.updateProductStatus = false
+            }
         },
 
     }
@@ -101,7 +138,7 @@
     .item6{grid-area: six; }
     .form-body{
         display: grid;
-        grid-template-areas: 'three three five five' 'two two five five' 'one one five five' 'four four six six' ;
+        grid-template-areas: 'one one five five' 'two two five five' 'three three five five' 'four four six six' ;
         grid-template-columns: auto auto auto auto;
         gap: 10px;
     }

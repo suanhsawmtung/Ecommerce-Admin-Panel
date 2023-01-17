@@ -16,7 +16,7 @@
                 </td>
                 <td class="name" >{{ customer.name }}</td>
                 <td class="email" >{{ customer.email }}</td>
-                <td class="address " >{{ customer.address }}</td>
+                <td class="phone" >{{ customer.phone }}</td>
                 <td class="date" >{{ customer.createdAt }}</td>
                 <td class="control btns" >
                     <button @click="showModalOne(customer.id)" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
@@ -25,7 +25,9 @@
                 </td>
             </tr>
         </table>
-        <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <div class="paginator">
+            <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        </div>
     </div>
  </template>
  
@@ -71,6 +73,16 @@
  <style scoped>
     .branchTable{
         width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    .branchTable .paginator{
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     table{
         width : 100%;
@@ -106,7 +118,7 @@
     .email{
         width: 20%;
     }
-    .address{
+    .phone{
         width: 20%;
     }
     .date{
@@ -116,7 +128,6 @@
     .control{
         width: 15%;
         text-align: center;
-        /* background: red; */
     }
     .control button{
         width: 22px;

@@ -9,7 +9,6 @@
                     <th class="price" style="color: #fff;">Price</th>
                     <th class="view" style="color: #fff;">View_count</th>
                     <th class="rate" style="color: #fff;">Rate</th>
-                    <!-- <th class="review" style="color: #fff;">Review</th> -->
                     <th class="updated" style="color: #fff;">Latest_update</th>
                     <th class="control btns" style="color: #fff;"></th>
                 </tr>
@@ -31,7 +30,9 @@
                 </tr>
             </tbody>
         </table>
-        <Paginator v-show="getProducts.length>perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <div class="paginator">
+            <Paginator v-show="getProducts.length>perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        </div>
     </div>
  </template>
  
@@ -79,6 +80,16 @@
  <style scoped>
     .productTable{
         width: 100%;
+        height: 90%;
+        position: relative;
+    }
+    .productTable .paginator{
+        width: 100%;
+        position: absolute;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     table{
         width : 100%;
@@ -211,14 +222,12 @@
        }
        .photo{
             width : 35%;
-            font-size: 0.6rem;
         }
         .name{
             width : 35%;
-            font-size: 0.6rem;
             text-align: center;
         }
-        .price{
+        .control{
             width: 30%;
             font-size: 0.6rem;
             text-align: center;

@@ -198,4 +198,22 @@
         90% { transform: translateX(-6px) }
         100% { transform: translateX(0px) }
     }
+
+    /* make it response */
+    @media (max-width: 991px) {
+        .intro h1{
+            font-size: 3rem;
+        }
+    }
+    @media (max-width: 580px) {
+        .intro h1{
+            font-size: 2rem;
+        }
+    }
+    @media (max-width: 380px) {
+        .intro h1{
+            font-size: 1.8rem;
+        }
+    }
+
 </style>

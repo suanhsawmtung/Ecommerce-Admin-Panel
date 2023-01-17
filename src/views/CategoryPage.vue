@@ -4,23 +4,31 @@
              <Modal @close="modalToggle('create')">
                 <label for="categoryName">Create New Category</label>
                 <input type="text" id="categoryName" placeholder="Enter category name..." v-model="categoryName">
-                <button @click="createNewCategory(categoryName)" >Create</button>
-                <button @click="modalToggle('create')">Cancel</button>
+                <small style="color: red" v-show="createError">Category name is required.</small>
+                <div class="btn-box">
+                    <button @click="createNewCategory(categoryName)" >Create</button>
+                    <button @click="modalToggle('create')">Cancel</button>
+                </div>
              </Modal>
         </div>
         <div v-show="updateCategoryStatus" class="update-modal">
              <Modal @close="modalToggle('update')">
                 <label for="categoryName">Update Category</label>
                 <input type="text" id="categoryName" :placeholder="category.title" v-model="categoryTitle">
-                <button @click="updateChosenCategory(category.id, categoryTitle)" >Update</button>
-                <button @click="modalToggle('update')">Cancel</button>
+                <small style="color: red" v-show="updateError">New category name is required.</small>
+                <div class="btn-box">
+                    <button @click="updateChosenCategory(category.id, categoryTitle)" >Update</button>
+                    <button @click="modalToggle('update')">Cancel</button>
+                </div>
              </Modal>
         </div>
         <div v-show="deleteCategoryStatus" class="delete-modal">
              <Modal @close="modalToggle('delete')">
                <h4>Do you really want to delete {{ category.title }} permanantly?</h4>
-               <button  @click="deleteChosenCategory(category.id)">Delete</button>
-               <button @click="modalToggle('delete')">Cancel</button>
+               <div class="btn-box">
+                    <button  @click="deleteChosenCategory(category.id)">Delete</button>
+                    <button @click="modalToggle('delete')">Cancel</button>
+                </div>
              </Modal>
         </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
@@ -43,6 +51,9 @@
             createCategoryStatus: false,
             updateCategoryStatus: false,
             deleteCategoryStatus: false,
+
+            createError: false,
+            updateError: false,
 
             category: {},
             categoryName: "",
@@ -72,10 +83,15 @@
                 this.modalToggle(status);
             },
             createNewCategory(categoryTitle){
+                if(this.categoryName===""){
+                    this.createError = true;
+                    return;
+                }
+
                 let newCategory = {
                     "title": categoryTitle
                 }
-
+                
                 this.createCategory(newCategory);
                 this.modalToggle("create");
             },
@@ -88,6 +104,11 @@
                 this.modalToggle("delete");
             },
             async updateChosenCategory(categoryId, categoryTitle){
+                if(this.categoryTitle===""){
+                    this.updateError = true;
+                    return;
+                }
+
                 let newCategory = {
                    "id": categoryId,
                    "title": categoryTitle
@@ -106,10 +127,12 @@
             modalToggle(status){
                 if(status === "create"){
                     this.createCategoryStatus = ! this.createCategoryStatus;
+                    this.clearValidationMessage();
                     return;
                 }
                 if(status === "update"){
                     this.updateCategoryStatus = ! this.updateCategoryStatus;
+                    this.clearValidationMessage();
                     return;
                 }
                 if(status === "delete"){
@@ -117,6 +140,10 @@
                     return;
                 }
             },
+            clearValidationMessage(){
+                this.createError = false;
+                this.updateError = false;
+            }
        },
     }
 </script>
@@ -151,9 +178,7 @@
         margin-bottom: 10px;
         font-size: 1rem;
      }
-     .delete-modal button,
-     .create-modal button,
-     .update-modal button{
+   .btn-box button{
         width: 100px;
         padding: 10px ;
         border-radius: 5px;
@@ -162,9 +187,7 @@
         color: #fff;
         border: none
     }
-    .delete-modal button:active
-    .create-modal button:active,
-    .update-modal button:active{
+    .btn-box button:active{
         transform : scale(0.9);
         background: #b3e0dc;
     }
@@ -182,10 +205,12 @@
     .update-modal input{
         display: inline-block;
         width: 100%;
-        margin-bottom: 15px;
         padding : 10px 8px;
         border-radius: 6px;
         border : 1px solid #b3e0dc;
+    }
+    .btn-box{
+        margin-top: 15px;
     }
 
     /* make it response */
@@ -193,9 +218,7 @@
         .delete-modal h4{
             font-size: 0.8rem;
         }
-        .delete-modal button,
-        .create-modal button,
-        .update-modal button{
+        .btn-box button{
             width: 80px;
             padding: 8px ;
         }

@@ -10,7 +10,6 @@
             <span>{{ product.price }} Ks</span>
             <span><i class="fa-regular fa-eye"></i> - {{ product.count }}</span>
             <span><i class="fa-solid fa-star"></i> - {{ product.rate }}</span>
-            <!-- <span><i class="fa-regular fa-message"></i> - 20</span> -->
         </div>
         <div class="box-three">
             <div class="img-box">
