@@ -31,10 +31,10 @@ const routes = [{
             import ('../views/CustomerPage.vue')
     },
     {
-        path: '/message',
-        name: 'message',
+        path: '/order',
+        name: 'order',
         component: () =>
-            import ('../views/MessagePage.vue')
+            import ('../views/OrderPage.vue')
     },
     {
         path: '/setting',
