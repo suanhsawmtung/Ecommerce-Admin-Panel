@@ -1,22 +1,22 @@
 <template>
     <div class="parent-container">
-        <div class="chart-box">
+        <div class="chart-box" v-show="topCategory">
             <h3>Best Selling Category</h3>
             <div class="chart">
                 <canvas id="categoryChart"></canvas>
             </div>
         </div>
-        <div class="table-box">
+        <div class="table-box" v-show="topSaleItem">
             <h3 >Best Selling Items</h3>
             <div class="table">
                 <table>
                     <tbody>
-                        <!-- <tr v-for="(product, index) in getTopSellerItems" :key="index">
-                            <td class="title"><small>{{ product }}</small></td>
+                        <tr v-for="(product, index) in topSellerItems" :key="index">
+                            <td class="title"><small>{{ product.title }}</small></td>
                             <td class="image">
                                 <img :src="product.image" alt="">
                             </td>
-                        </tr> -->
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -25,8 +25,9 @@
 </template>
 
 <script>
+    import axios from "axios";
     import Chart from 'chart.js/auto';
-    import {mapGetters} from "vuex";
+    import { mapGetters } from "vuex";
 
     export default {
         name: "TopSaleProduct",
@@ -38,33 +39,45 @@
         },
         computed: {
             ...mapGetters("Products", ["getProducts"]),   
-            ...mapGetters("Categories", ["getCategories"]),   
+            ...mapGetters("Categories", ["getCategories"]), 
+            ...mapGetters(["topCategory", "topSaleItem"])  
         },
         methods: {
-            setTopSellerItems() {
-                let productsSortedByCount = this.getProducts.sort(function(a, b){
-                    return a.count - b.count;
+            async setTopSellerItems(){
+                let { data } = await axios.get("https://fakestoreapi.com/products");
+                let productsSortedByCount = data.sort(function(a, b){
+                    return a.rating.count - b.rating.count;
                 });
 
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 4; i++) {
                     this.topSellerItems.push(productsSortedByCount[i])
                 }
-            },
-            setTopSaleCategories ()  {
-                this.getCategories.forEach(category => {
-                    this.topSaleCategories.push(category.title);
-                });
-            },
+            }
+            // setTopSellerItems() {
+            //     let productsSortedByCount = this.getProducts.sort(function(a, b){
+            //         return a.count - b.count;
+            //     });
+
+            //     for (let i = 0; i < 6; i++) {
+            //         this.topSellerItems.push(productsSortedByCount[i])
+            //     }
+            // },
+            // setTopSaleCategories ()  {
+            //     this.getCategories.forEach(category => {
+            //         this.topSaleCategories.push(category.title);
+            //     });
+            // },
         },
         created () {
             this.setTopSellerItems();
-            this.setTopSaleCategories();
+            // this.setTopSaleCategories();
         },
         mounted () {
             const ctx = document.getElementById('categoryChart');
 
             const data = {
-              labels: this.topSaleCategories,
+            //   labels: this.topSaleCategories,
+              labels: ["electronics", "women's clothing", "men's clothing", "jewelery"],
               datasets: [{
                 label: 'Total Count',
                 data: [173, 58, 37, 109],
@@ -122,7 +135,10 @@
         padding: 10px;
     }
     .parent-container .table-box h3{
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    tbody tr{
+        height: 60px;
     }
     tbody tr .image{
         object-fit: cover;
@@ -132,7 +148,7 @@
         color: #777777;
     }
     tbody tr .image img{
-        width: 98%;
+        width: 95%;
     }
     .title{
         width: 60%;
@@ -169,7 +185,15 @@
         tbody tr .image{
             width: 15%;
         }
+        tbody tr .image img{
+            width: 70%;
+        }
     }
+    @media (max-width: 860px) {
+        tbody tr .image img{
+            width: 50%;
+        }
+    } 
     @media (max-width: 800px) {
         .parent-container{
             grid-template-columns: 1fr;
@@ -181,8 +205,8 @@
             width: 90%;
             margin: 0 auto;
         }
-        tbody tr .image{
-            width: 10%;
+        tbody tr .image img{
+            width: 80%;
         }
     } 
 </style>

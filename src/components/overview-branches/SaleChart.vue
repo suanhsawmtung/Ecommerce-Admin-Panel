@@ -1,5 +1,5 @@
 <template>
-    <div class="chart" >
+    <div class="chart" v-show="saleHistory">
         <h3>Last 6 months sales </h3>
         <canvas id="myChart"></canvas>
     </div>
@@ -7,6 +7,7 @@
 
 <script>
     import Chart from 'chart.js/auto';
+    import { mapGetters } from "vuex";
     export default {
         name: "SaleChart",
         data () {
@@ -16,6 +17,9 @@
                 ],
                 monthsForChartLabel: []
             }
+        },
+        computed: {
+            ...mapGetters(["saleHistory"]),
         },
         methods: {
            setLabelsForChart (){
@@ -98,6 +102,11 @@
         .chart{
             width: 80%;
             margin: 0 auto;
+        }
+    } 
+    @media (max-width: 820px) {
+        .chart{
+            margin: 30px 0;
         }
     } 
     @media (max-width: 800px) {

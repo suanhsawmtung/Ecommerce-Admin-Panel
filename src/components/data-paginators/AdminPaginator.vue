@@ -28,7 +28,7 @@
 
 <script>
     export default {
-        name: "CustomerPaginator",
+        name: "AdminPaginator",
         props: {
             currentPage: {
                 type: Number,

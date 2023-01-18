@@ -3,7 +3,7 @@
         <div class="main" :class="{'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <transition-group tag="ul" name="cards" appear class="card-container" @before-enter="beforeEnter" @enter="enter">
-                <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index">
+                <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index" v-show="boxStatus">
                     <div class="number">
                         <h2>{{ info.value }}</h2>
                         <p>{{ info.title }}</p>
@@ -18,21 +18,33 @@
                 <ProductChart></ProductChart>
             </div>
         </div>
+        <div class="paginator">
+            <Paginator :currentPage="currentPage" v-show="paginatorStatus"></Paginator>
+        </div>
     </div>
  </template>
  
  <script>
-    import { mapGetters } from "vuex";
+    import { mapGetters, mapActions } from "vuex";
     import gsap from "gsap";
     import { ref } from "vue";
     import TopBar from "../components/TopBar.vue";
     import SaleChart from "../components/overview-branches/SaleChart.vue";
     import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
+    import Paginator from "../components/data-paginators/OverviewPaginator.vue";
     export default {
         name : 'OverviewPage',
-        components: {TopBar, SaleChart, ProductChart},
+        data () {
+            return {
+                currentPage: 1,
+            }
+        },
+        components: {TopBar, SaleChart, ProductChart, Paginator},
         computed: {
-            ...mapGetters(["getToggleStatus"]),
+            ...mapGetters(["getToggleStatus", "paginatorStatus", "overviewCurrentPage", "boxStatus"]),
+        },
+        methods: {
+            ...mapActions(["showPaginator", "resetBoxes"]),
         },
         setup(){
             const overviewInfo = ref([
@@ -55,10 +67,17 @@
                     onComplete: done,
                     delay: el.dataset.index * 0.2,
 
-                })
+                })  
             }
 
             return { beforeEnter, enter, overviewInfo }
+        },
+        mounted () {
+            this.currentPage=this.overviewCurrentPage;
+            this.showPaginator();
+            window.addEventListener("resize", this.showPaginator);
+            this.resetBoxes();
+            window.addEventListener("resize", this.resetBoxes);
         }
     }
  </script>
@@ -70,6 +89,11 @@
         left:0;
         width:100vw;
         height: 100vh;
+    }
+    .paginator {
+        position: absolute;
+        bottom: 20px;
+        right: 40px;
     }
     .main {
         position:absolute;
