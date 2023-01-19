@@ -48,10 +48,12 @@
               return;
             }
             this.$emit("close");
+            this.$emit("toastAlert", newRole);
          },
          deleteUserAccount(id){
             this.$store.dispatch("deleteUser", id);
             this.$emit("close");
+            this.$emit("toastAlert", "delete");
          }
       },
       

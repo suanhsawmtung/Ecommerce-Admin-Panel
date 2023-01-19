@@ -4,7 +4,7 @@
             <h1>Category</h1>
             <button @click="$emit('showModal', 'create', null)">Create Category</button>
         </header>
-        <ul>
+        <ul v-if="getCategories.length!==0">
             <li v-for="(category, index) in paginatedCategories" :key="index">
                 <h3>{{ category.title }}</h3>
                 <div class="btn-box">
@@ -13,6 +13,9 @@
                 </div>
             </li>
         </ul>
+        <div class="noData" v-else>
+            <h1>There is no category here.</h1>
+        </div>
         <Paginator v-show="getCategories.length > perPage" @categoryPageChanged="onCategorytPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCategories.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
 </template>
@@ -97,6 +100,16 @@
     header button:active{
         transform: scale(0.9);
     }
+    .noData{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .noData h1{
+        color: teal;
+    }
 
      /* make it response */
      @media (max-width: 750px) {
@@ -116,6 +129,11 @@
     @media (max-width: 510px) {
         ul, header{
             max-width: 300px;
+        }
+    }
+    @media (max-width: 485px) {
+        .noData h1{
+            font-size: 1.5rem;
         }
     }
 </style>

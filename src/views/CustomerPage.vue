@@ -1,7 +1,12 @@
 <template>
     <div class="branch-parent">
+      <transition name="toast">
+          <div class="toast" v-show="toastStatus">
+              <h3 >{{ toastMessage }}</h3>
+          </div>
+      </transition>
       <div v-show="modalStatus" class="modal-parent-box">
-        <CustomerModal :modal="modal" :user="user" @close="modalToggle('close', null)"></CustomerModal>
+        <CustomerModal :modal="modal" :user="user" @close="modalToggle('close', null)" @toastAlert="toastAlert"></CustomerModal>
       </div>
       <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
           <TopBar></TopBar>
@@ -48,6 +53,8 @@
               adminStatus: false,
               detailStatus : false,
 
+              toastStatus: false,
+              toastMessage: "",
               
               customerTableStatus: true,
               adminListStatus: true,
@@ -137,7 +144,27 @@
               this.adminListStatus=true;
               return;
             }
+        },
+        toastAlert(status){
+            if(status==="customer"){
+                this.toastMessage = "Removed form admin list. ";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
+                return;
+            }
+            if(status==="admin"){
+                this.toastMessage = "Added to admin list ";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
+                return;
+            }
+            if(status==="delete"){
+              this.toastMessage = "Deleted account successfully.";
+              setTimeout(() => this.toastStatus = true, 1000);
+              setTimeout(() => this.toastStatus = false, 3000);
+              return;
           }
+        }
       },
     }
 
@@ -150,6 +177,20 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+.toast{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #12cc99;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    z-index: 20;
+}
+.toast h3{
+    color: #fff;
+    text-align: center;
 }
 .main {
   position: absolute;
@@ -235,10 +276,28 @@
   background: #4fb9af;
 }
 
-/* make it responsive */
-@media (max-width: 991px) {
+ /* toast animation */
+ .toast-enter-from{
+    opacity: 0;
+  }
+  .toast-enter-to{
+      opacity: 1;
+  }
+  .toast-leave-from{
+      opacity: 1;
+  }
+  .toast-leave-to{
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  .toast-enter-active{
+      transition: all 0.5s ease;
+  }
+  .toast-leave-active{
+      transition: all 0.3s ease;
+  }
 
-}
+/* make it responsive */
 @media (max-width : 768px) {
   .btn-box{
       padding: 7px 4px;

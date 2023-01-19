@@ -1,7 +1,7 @@
 <template>
     <div class="branchTable">
 
-        <table>
+        <table v-if="getCustomers.length!==0">
             <tr style="background-color: teal;">
                 <th class="photo" style="color: #fff;">Photo</th>
                 <th class="name" style="color: #fff;">Name</th>
@@ -25,6 +25,9 @@
                 </td>
             </tr>
         </table>
+        <div class="noData" v-else>
+            <h1>There is no customer here.</h1>
+        </div>
         <div class="paginator">
             <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
         </div>
@@ -146,11 +149,26 @@
     .updated{
         width: 15%;
     }
+    .noData{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .noData h1{
+        color: teal;
+    }
 
     /* make it responsive */
     @media (max-width: 991px) {
         .date, .email{
             display: none;
+        }
+    }
+    @media (max-width: 485px) {
+        .noData h1{
+            font-size: 1.5rem;
         }
     }
  </style>

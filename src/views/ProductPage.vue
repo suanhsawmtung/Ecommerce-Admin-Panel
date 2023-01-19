@@ -1,5 +1,10 @@
 <template>
     <div class="branch-parent">
+        <transition name="toast">
+            <div class="toast" v-show="toastStatus">
+                <h3 >{{ toastMessage }}</h3>
+            </div>
+        </transition>
         <div v-show="deleteProductStatus" class="modal-box-one">
              <Modal @close="modalToggle()">
                <h4>Do you really want to delete {{ product.title }} permanantly?</h4>
@@ -18,9 +23,9 @@
                     </div>
                 </header>
                 <ProductTable @showProductBranch="showProductBranches" @deleteProduct="showDeleteProductModal" @productUpdate="productUpdate" v-show="tableStatus"></ProductTable>
-                <CreateProduct v-show="createStatus" @previousPage="showPreviousPage"></CreateProduct>
+                <CreateProduct v-show="createStatus" @previousPage="showPreviousPage" @toastAlert="toastAlert"></CreateProduct>
                 <ProductDetail v-show="detailStatus" :id= idForDetail ></ProductDetail>
-                <UpdateProduct v-show="updateStatus" @previousPage="showPreviousPage" :product= dataForUpdate></UpdateProduct>
+                <UpdateProduct v-show="updateStatus" @toastAlert="toastAlert" @previousPage="showPreviousPage" :product= dataForUpdate></UpdateProduct>
             </div>
         </div>
     </div>
@@ -43,6 +48,9 @@
                 createStatus: false,
                 detailStatus: false,
                 updateStatus: false,
+
+                toastStatus: false,
+                toastMessage: "",
 
                 idForDetail: null,
                 dataForUpdate: {
@@ -107,6 +115,9 @@
             productDeleting(id){
                 this.deleteProduct(id);
                 this.modalToggle();
+                this.toastMessage = "Deleted product successfully.";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             productUpdate(product){
                 this.dataForUpdate = product;
@@ -115,6 +126,20 @@
             modalToggle(){
                 this.deleteProductStatus = ! this.deleteProductStatus;
             },
+            toastAlert(status){
+                if(status==="create"){
+                    this.toastMessage = "Created new product successfully. ";
+                    setTimeout(() => this.toastStatus = true, 1000);
+                    setTimeout(() => this.toastStatus = false, 3000);
+                    return;
+                }
+                if(status==="update"){
+                    this.toastMessage = "Updated product successfully. ";
+                    setTimeout(() => this.toastStatus = true, 1000);
+                    setTimeout(() => this.toastStatus = false, 3000);
+                    return;
+                }
+            }
         },
     }
 </script>
@@ -126,6 +151,20 @@
     left: 0;
     width: 100vw;
     height: 100vh;
+}
+.toast{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #12cc99;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    z-index: 20;
+}
+.toast h3{
+    color: #fff;
+    text-align: center;
 }
 .main {
     position: absolute;
@@ -198,6 +237,27 @@ header h1{
 .modal-box-one button:active{
     transform : scale(0.9);
     background: #b3e0dc;
+}
+
+ /* toast animation */
+ .toast-enter-from{
+    opacity: 0;
+}
+.toast-enter-to{
+    opacity: 1;
+}
+.toast-leave-from{
+    opacity: 1;
+}
+.toast-leave-to{
+    opacity: 0;
+    transform: translateY(-50px);
+}
+.toast-enter-active{
+    transition: all 0.5s ease;
+}
+.toast-leave-active{
+    transition: all 0.3s ease;
 }
 
 

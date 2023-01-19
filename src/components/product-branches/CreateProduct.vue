@@ -92,6 +92,7 @@
                     this.$emit("previousPage", "productTable");
                     this.clearProductData();
                     this.clearValidationMessage();
+                    this.$emit("toastAlert", "create");
                 }
             },
             clearProductData (){

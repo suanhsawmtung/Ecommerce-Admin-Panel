@@ -83,6 +83,7 @@
                     await this.updateProduct(this.productData);
                     this.$emit("previousPage", "productTable");
                     this.clearValidationMessage();
+                    this.$emit("toastAlert", "update");
                 }
             },
             updateProductValidation(){

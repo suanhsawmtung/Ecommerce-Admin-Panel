@@ -1,6 +1,6 @@
 <template>
     <div class="productTable">
-        <table>
+        <table v-if="getProducts.length!==0">
             <thead>
                 <tr style="background-color: teal;">
                     <th class="photo pt" style="color: #fff;">Photo</th>
@@ -18,7 +18,7 @@
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
                     <td class="category" >{{product.category_title}}</td>
-                    <td class="price p" >{{product.price}}</td>
+                    <td class="price p" >{{product.price}} Ks</td>
                     <td class="view vc" >{{product.count}}</td>
                     <td class="rate re" >{{product.rate}}</td>
                     <td class="updated" >{{ product.updatedAt }}</td>
@@ -30,6 +30,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="noData" v-else>
+            <h1>There is no product here.</h1>
+        </div>
         <div class="paginator">
             <Paginator v-show="getProducts.length>perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
         </div>
@@ -168,6 +171,16 @@
         width: 20%;
         text-align: end;
     }
+    .noData{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .noData h1{
+        color: teal;
+    }
 
     /* make it responsive */
     @media (max-width: 991px) {
@@ -237,6 +250,11 @@
         }
         table tr td {
             padding: 6px 4px;
+        }
+    }
+    @media (max-width: 485px) {
+        .noData h1{
+            font-size: 1.5rem;
         }
     }
  </style>

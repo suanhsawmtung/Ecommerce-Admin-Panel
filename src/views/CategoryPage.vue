@@ -1,5 +1,10 @@
 <template>
     <div class="branch-parent">
+        <transition name="toast">
+            <div class="toast" v-show="toastStatus">
+                <h3 >{{ toastMessage }}</h3>
+            </div>
+        </transition>
         <div v-show="createCategoryStatus" class="create-modal">
              <Modal @close="modalToggle('create')">
                 <label for="categoryName">Create New Category</label>
@@ -55,6 +60,9 @@
             createError: false,
             updateError: false,
 
+            toastStatus: false,
+            toastMessage: "",
+
             category: {},
             categoryName: "",
             categoryTitle: "",
@@ -94,11 +102,17 @@
                 
                 this.createCategory(newCategory);
                 this.modalToggle("create");
+                this.toastMessage = "New category created. ";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             deleteChosenCategory(id){
                 if(!this.getProducts.some(product => product.category_id === id)){
                    this.deleteCategory(id);
                    this.modalToggle("delete");
+                   this.toastMessage = "Delete category success. ";
+                   setTimeout(() => this.toastStatus = true, 1000);
+                   setTimeout(() => this.toastStatus = false, 3000);
                    return;
                 }
                 this.modalToggle("delete");
@@ -123,6 +137,9 @@
                 });
                 this.changeCategoryTitleOfProduct(this.getProducts);
                 this.modalToggle("update");
+                this.toastMessage = "Update category success. ";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             modalToggle(status){
                 if(status === "create"){
@@ -143,7 +160,7 @@
             clearValidationMessage(){
                 this.createError = false;
                 this.updateError = false;
-            }
+            },
        },
     }
 </script>
@@ -155,6 +172,21 @@
         left: 0;
         width: 100vw;
         height: 100vh;
+    }
+
+    .toast{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+        background: #12cc99;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        z-index: 20;
+    }
+    .toast h3{
+        color: #fff;
+        text-align: center;
     }
     .main {
         position: absolute;
@@ -211,6 +243,27 @@
     }
     .btn-box{
         margin-top: 15px;
+    }
+
+    /* toast animation */
+    .toast-enter-from{
+        opacity: 0;
+    }
+    .toast-enter-to{
+        opacity: 1;
+    }
+    .toast-leave-from{
+        opacity: 1;
+    }
+    .toast-leave-to{
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    .toast-enter-active{
+        transition: all 0.5s ease;
+    }
+    .toast-leave-active{
+        transition: all 0.3s ease;
     }
 
     /* make it response */

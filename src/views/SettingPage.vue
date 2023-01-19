@@ -1,5 +1,10 @@
 <template>
     <div class="branch-parent">
+        <transition name="toast">
+            <div class="toast" v-show="toastStatus">
+                <h3 >{{ toastMessage }}</h3>
+            </div>
+        </transition>
         <div v-show="nameStatus" class="name-modal">
              <Modal @close="modalToggle('name')">
                 <label for="name">Change your name</label>
@@ -89,6 +94,9 @@
             confirmationError: false,
             passwordChangeStatus: false,
 
+            toastStatus: false,
+            toastMessage: "",
+
             name: "",
             email: "",
             phone: "",
@@ -117,6 +125,9 @@
                 }
                 this.modalToggle("name");
                 this.name = "";
+                this.toastMessage = "Changed name successfully.";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             changeEmail(){
                 this.clearValidationMessage();
@@ -129,6 +140,9 @@
                 }
                 this.modalToggle("email");
                 this.email = "";
+                this.toastMessage = "Changed email successfully.";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             changePhone(){
                 this.clearValidationMessage();
@@ -141,6 +155,9 @@
                 }
                 this.modalToggle("phone");
                 this.phone = "";
+                this.toastMessage = "Changed phone number successfully.";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             changePassword(){
                 this.clearValidationMessage();
@@ -153,6 +170,9 @@
                     }
                     axios.post("http://localhost:8000/api/user/changePassword", data);
                     this.modalToggle("password");
+                    this.toastMessage = "Changed password successfully.";
+                    setTimeout(() => this.toastStatus = true, 1000);
+                    setTimeout(() => this.toastStatus = false, 3000);
                 }
             },
             modalToggle(status){
@@ -225,6 +245,20 @@
         width: 100vw;
         height: 100vh;
     }
+    .toast{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 15px;
+        background: #12cc99;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        z-index: 20;
+    }
+    .toast h3{
+        color: #fff;
+        text-align: center;
+    }
     .main {
         position: absolute;
         top: 0;
@@ -285,6 +319,27 @@
         padding : 10px 8px;
         border-radius: 6px;
         border : 1px solid #b3e0dc;
+    }
+
+     /* toast animation */
+     .toast-enter-from{
+        opacity: 0;
+    }
+    .toast-enter-to{
+        opacity: 1;
+    }
+    .toast-leave-from{
+        opacity: 1;
+    }
+    .toast-leave-to{
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    .toast-enter-active{
+        transition: all 0.5s ease;
+    }
+    .toast-leave-active{
+        transition: all 0.3s ease;
     }
 
     /* make it response */

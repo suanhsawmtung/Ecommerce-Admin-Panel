@@ -44,6 +44,12 @@ export default {
             state.overviewPaginatorStatus = changeStatus;
         },
         resetOveviewBoxes: (state, width) => {
+            if (width > 1330) {
+                state.boxStatus = true;
+                state.saleHistoryStatus = true;
+                state.topCategoryStatus = true;
+                state.topSaleItemStatus = true;
+            }
             if (width < 1330) {
                 state.boxStatus = true;
                 state.saleHistoryStatus = false;

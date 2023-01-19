@@ -30,7 +30,7 @@ export default {
                 return category.id !== removeId;
             })
         },
-        addNewCategory: (state, newCategory) => state.categories.push(newCategory),
+        addNewCategory: (state, newCategory) => state.categories.unshift(newCategory),
         updatedCategory: (state, updatedCategory) => {
             state.categories.forEach(category => {
                 if (category.id === updatedCategory.id) {

@@ -32,11 +32,15 @@ export default {
     mutations: {
         setCustomers: (state, data) => {
             state.allUsers = data;
-            state.customers = data.filter(user => {
-                return user.role === "customer";
+            data.forEach(user => {
+                if (user.role === "customer") {
+                    state.customers.unshift(user);
+                }
             });
-            state.admins = data.filter(user => {
-                return user.role === "admin";
+            data.forEach(user => {
+                if (user.role === "admin") {
+                    state.admins.unshift(user);
+                }
             });
             state.myProfileData = data.filter(user => {
                 return user.email === localStorage.getItem("EMAIL");
@@ -62,12 +66,12 @@ export default {
         },
         addChangedRole: (state, updatedUser) => {
             if (updatedUser.role === "admin") {
-                state.admins.push(updatedUser);
+                state.admins.unshift(updatedUser);
                 state.customers = state.customers.filter(user => {
                     return user.id !== updatedUser.id;
                 })
             } else {
-                state.customers.push(updatedUser);
+                state.customers.unshift(updatedUser);
                 state.admins = state.admins.filter(user => {
                     return user.id !== updatedUser.id;
                 })
