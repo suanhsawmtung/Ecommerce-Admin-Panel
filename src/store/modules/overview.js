@@ -1,3 +1,4 @@
+import axios from "axios";
 export default {
     state: {
         boxStatus: true,
@@ -6,6 +7,7 @@ export default {
         topSaleItemStatus: true,
         overviewPaginatorStatus: true,
         currentOverviewPage: 1,
+        dataForTopSaleItem: [],
     },
     getters: {
         boxStatus: state => state.boxStatus,
@@ -13,7 +15,8 @@ export default {
         topCategory: state => state.topCategoryStatus,
         topSaleItem: state => state.topSaleItemStatus,
         paginatorStatus: state => state.overviewPaginatorStatus,
-        overviewCurrentPage: state => state.currentOverviewPage
+        overviewCurrentPage: state => state.currentOverviewPage,
+        getDataForTopSaleItem: state => state.dataForTopSaleItem,
     },
     mutations: {
         changeOverviewStatus: (state, number) => {
@@ -75,6 +78,9 @@ export default {
                 state.topSaleItemStatus = false;
             }
         },
+        setOverviewData: (state, data) => {
+            state.dataForTopSaleItem = data;
+        }
     },
     actions: {
         overviewStatus: ({ commit }, number) => {
@@ -92,5 +98,9 @@ export default {
         resetBoxes: ({ commit }) => {
             commit("resetOveviewBoxes", window.innerWidth);
         },
+        overviewData: async({ commit }) => {
+            let { data } = await axios.get("https://fakestoreapi.com/products");
+            commit("setOverviewData", data);
+        }
     }
 }

@@ -1,21 +1,17 @@
 <template>
+     <SearchBox v-show="searchKey!==''">
+      <div class="search-item" v-for="(product, index) in setSearchData" :key="index">
+        <span>{{ product.title }}</span>
+        <img :src="product.image" alt="">
+      </div>
+    </SearchBox>
     <transition name="top" appear>
       <div class="topBar" >
           <div class="toggle" @click="toggle(getToggleStatus)" >
               <i class="fa-solid fa-bars"></i>
           </div>
           <div class="searchBox">
-            <input type="text" class="search" placeholder="Search here">
-            <!-- <table class="searchDataBox" v-show="searchKey.length!== 0">
-              <tbody class="searchData">
-                <tr v-for="(product, index) in setSearchData" :key="index">
-                  <td class="title"><small>{{ product.title }}</small></td>
-                  <td class="imgBox">
-                    <img :src="product.image" alt="">
-                  </td>
-                </tr>
-              </tbody>
-            </table> -->
+            <input type="text" class="search" placeholder="Search here" v-model="searchKey">
           </div>
           <div class="iconBox">
               <div class="user-icon">
@@ -31,32 +27,43 @@
    
    <script>
       import { mapGetters, mapActions } from "vuex";
+      import SearchBox from "./SearchBox.vue";
       export default {
           name : 'TopBar',
           data () {
             return {
-              // searchKey: "",
-              // searchData: [],
+              searchKey: '',
             }
           },
+          components: { SearchBox },
           methods: {
              ...mapActions(["toggle"]),
           },
           computed: {
             ...mapGetters(["getToggleStatus"]),
             ...mapGetters("Products", ["getProducts"]),
-            // setSearchData(){
-            //     return this.searchData.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
-            // }
+            setSearchData(){
+                return this.getProducts.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
+            }
           },
-          // mounted () {
-          //   this.searchData = this.getProducts;
-          // }
-  
       }
    </script>
    
    <style scoped>
+   .search-item{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+   }
+   .search-item span{
+    width: 75%;
+    color: teal;
+   }
+   .search-item img{
+    width: 20%;
+   }
     .topBar{
       width: 100%;
       position: relative;
@@ -65,6 +72,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 70;
       transition:0.5s;
     }
     .topBar .toggle{
@@ -97,39 +105,6 @@
       top:1px;
       left:60px;
       color:#5a5456;
-    }
-    .search .searchDataBox{
-      position: fixed;
-      top: 80px;
-      left: 0px;
-      background: red;
-      box-shadow:  1px 1px 5px 0.2px #000;
-      border-radius: 10px;
-      margin: 0 0 0 15px;
-      padding: 10px;
-      z-index: 99;
-    }
-    .searchData tr{
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-    }
-    .searchData tr .title{
-      width: 60%;
-      text-align: start;
-      overflow: hidden;
-      padding: 5px;
-      color: #777777;
-    }
-    .searchData .imgBox{
-      object-fit: cover;
-      width: 10%;
-      overflow: hidden;
-      padding: 5px;
-      color: #777777;
-    }
-    .imgBox img{
-      width: 50%;
     }
     .iconBox{
       width:220px;

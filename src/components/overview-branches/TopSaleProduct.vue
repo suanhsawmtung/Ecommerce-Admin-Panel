@@ -25,7 +25,6 @@
 </template>
 
 <script>
-    import axios from "axios";
     import Chart from 'chart.js/auto';
     import { mapGetters } from "vuex";
 
@@ -40,12 +39,11 @@
         computed: {
             ...mapGetters("Products", ["getProducts"]),   
             ...mapGetters("Categories", ["getCategories"]), 
-            ...mapGetters(["topCategory", "topSaleItem"])  
+            ...mapGetters(["topCategory", "topSaleItem", "getDataForTopSaleItem"])  
         },
         methods: {
-            async setTopSellerItems(){
-                let { data } = await axios.get("https://fakestoreapi.com/products");
-                let productsSortedByCount = data.sort(function(a, b){
+            setTopSellerItems(){
+                let productsSortedByCount = this.getDataForTopSaleItem.sort(function(a, b){
                     return a.rating.count - b.rating.count;
                 });
 

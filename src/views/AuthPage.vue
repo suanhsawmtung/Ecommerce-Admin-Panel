@@ -70,6 +70,7 @@
             getAllDatas(){
                 this.allProducts();
                 this.allCategories();
+                this.$store.dispatch("overviewData");
                 this.$store.dispatch("allCustomers");
             },
             showLoginForm(){

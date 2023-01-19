@@ -11,24 +11,11 @@
 
 <script>
   import SideBar from "./components/SideNavBar.vue";
-  // import setAuthHeader from  "./utils/setAuthHeader";
-  import { mapActions } from "vuex";
-
   export default {
     components: {SideBar},
     methods: {
-      ...mapActions("Products", ["allProducts"]),
-      ...mapActions("Categories", ["allCategories"]),
-      getAllDatas(){
-          this.allProducts();
-          this.allCategories();
-          this.$store.dispatch("allCustomers");
-      },
       checkingLogIn(){
-          // setAuthHeader(localStorage.getItem("TOKEN"));
-          // this.getAllDatas();
           this.$router.push({ path: '/' }); 
-          // setTimeout(() => this.$router.push({ path: '/overview' }), 5000);
       }
     },
     mounted () {
