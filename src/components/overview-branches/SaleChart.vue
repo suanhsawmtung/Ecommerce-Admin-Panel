@@ -15,11 +15,13 @@
                 months: [
                     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
                 ],
-                monthsForChartLabel: []
+                monthsForChartLabel: [],
+                lastSixMonthSale: [],
+                totalPrice: 0,
             }
         },
         computed: {
-            ...mapGetters(["saleHistory"]),
+            ...mapGetters(["saleHistory", "getOrderDetails"]),
         },
         methods: {
            setLabelsForChart (){
@@ -34,11 +36,23 @@
                 for(let i=loopingStartPoint; i > loopingStartPoint-6; i--){
                     this.monthsForChartLabel.unshift(this.months[i]);
                 }
+           },
+           setLastSixMonthSaleData(){
+                this.monthsForChartLabel.forEach(month=>{
+                    this.totalPrice=0;
+                    this.getOrderDetails.forEach(order=>{
+                        let monthOfOrder = order.orderTime.slice(0, 3);
+                        if(month===monthOfOrder){
+                            this.totalPrice+=order.total;
+                        }
+                    });
+                    this.lastSixMonthSale.push(this.totalPrice);
+                })
            }
         },
         mounted () {
-
             this.setLabelsForChart();
+            this.setLastSixMonthSaleData();
             const ctx = document.getElementById('myChart');
 
             const labels = this.monthsForChartLabel;
@@ -46,7 +60,7 @@
               labels: labels,
               datasets: [{
                 label: '(Kyats)',
-                data: [500000, 920000, 432600, 500000, 685070, 1040000],
+                data: this.lastSixMonthSale,
                 backgroundColor: [
                   'rgba(255, 99, 132, 1)',
                   'rgba(255, 159, 64, 1)',

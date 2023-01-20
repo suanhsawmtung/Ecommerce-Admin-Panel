@@ -178,6 +178,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: absolute;
+        bottom: 40px;
+        right: 30px;
     }
     .footer button{
         width: 30px;

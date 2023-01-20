@@ -1,5 +1,10 @@
 <template>
     <div class="branch-parent">
+        <transition name="toast">
+            <div class="toast" v-show="toastStatus">
+                <h3 >{{ toastMessage }}</h3>
+            </div>
+        </transition>
         <div v-show="orderModalStatus" class="modal-box-one">
              <Modal @close="modalToggle()">
                <h4>Do you really want to change the status of {{ orderToChangeStatus.orderCode }} to {{ newStatus }} ?</h4>
@@ -43,6 +48,9 @@
             return {
                 orderTableStatus: true,
                 orderListStatus: false,
+
+                toastStatus: false,
+                toastMessage: "",
 
                 totalPrice: 0,
                 orderStatus: "",
@@ -125,6 +133,9 @@
                 this.changeNewOrderStatus(newStatusData);
                 this.modalToggle();
                 this.showOrderBranches('table');
+                this.toastMessage = "Changed order status successfully.";
+                setTimeout(() => this.toastStatus = true, 1000);
+                setTimeout(() => this.toastStatus = false, 3000);
             },
             modalToggle(){
                 this.orderModalStatus = ! this.orderModalStatus;
@@ -142,6 +153,20 @@
     left: 0;
     width: 100vw;
     height: 100vh;
+}
+.toast{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #12cc99;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    z-index: 20;
+}
+.toast h3{
+    color: #fff;
+    text-align: center;
 }
 .main {
     position: absolute;

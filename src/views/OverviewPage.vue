@@ -27,7 +27,8 @@
  <script>
     import { mapGetters, mapActions } from "vuex";
     import gsap from "gsap";
-    import { ref } from "vue";
+    import { ref, computed } from "vue";
+    import { useStore } from "vuex";
     import TopBar from "../components/TopBar.vue";
     import SaleChart from "../components/overview-branches/SaleChart.vue";
     import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
@@ -47,11 +48,30 @@
             ...mapActions(["showPaginator", "resetBoxes"]),
         },
         setup(){
+            const store = useStore();
+            const getOrders = computed(()=>store.getters.getOrders);
+            const getCustomers = computed(()=>store.getters.getCustomers);
+
+            const totalCustomers = computed(()=>getCustomers.value.length);
+            const totalRevenue = computed(()=>{
+                let revenue = 0;
+                getOrders.value.forEach(order=>{
+                    revenue += order.total;
+                });
+                return revenue.toString() + ' Ks';
+            });
+
+            const pendingOrders = computed(()=>{
+                let pending = getOrders.value.filter(order => order.status === "pending");
+                return pending.length;
+            })
+
+
             const overviewInfo = ref([
-                {value: "50", title: "Customer Counts", icon: "fa-solid fa-users"},
+                {value: totalCustomers, title: "Customer Counts", icon: "fa-solid fa-users"},
                 {value: "25,000 Ks", title: "Today's Income", icon: "fa-solid fa-dollar-sign"},
-                {value: "2,423,000 Ks", title: "Total Revenue", icon: "fa-solid fa-sack-dollar"},
-                {value: "204", title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
+                {value: totalRevenue , title: "Total Revenue", icon: "fa-solid fa-sack-dollar"},
+                {value: pendingOrders, title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
             ]) 
 
             const beforeEnter = (el) => {
@@ -70,7 +90,7 @@
                 })  
             }
 
-            return { beforeEnter, enter, overviewInfo }
+            return { beforeEnter, enter, overviewInfo, getOrders, getCustomers, totalCustomers, totalRevenue, pendingOrders }
         },
         mounted () {
             this.currentPage=this.overviewCurrentPage;

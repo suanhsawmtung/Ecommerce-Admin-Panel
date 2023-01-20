@@ -72,7 +72,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 70;
       transition:0.5s;
     }
     .topBar .toggle{
