@@ -12,7 +12,7 @@
             <tr v-for="(order, index) in paginatedOrders" :key="index">
                 <td class="code" >{{ order.orderCode }}</td>
                 <td class="status" >{{ order.status }}</td>
-                <td class="customer" >{{ order.customer_id }}</td>
+                <td class="customer" >{{ order.customerName }}</td>
                 <td class="total" >{{ order.total }} Ks</td>
                 <td class="date" >{{ order.orderTime }}</td>
                 <td class="control btns" >
@@ -36,20 +36,25 @@
                 currentPage: 1,
                 perPage: 5,
                 maxVisibleButton: 4,
-
-                order: null,
+                allOrderData: []
             }
         },
+        props: ["orderStatus"],
         components: { Paginator },
         computed: {
-            ...mapGetters([ "getOrders", "paginatedOrders", "getOrderCurrentPage" ]),
+            ...mapGetters([ "getOrders", "getOrderCurrentPage", "getOrderPaginationPoints" ]),
+            paginatedOrders(){
+                return this.allOrderData.slice(this.getOrderPaginationPoints.start, this.getOrderPaginationPoints.end);
+            },
+            filterOrders(){
+                if (this.orderStatus === "") {
+                    return this.getOrders;
+                } else {
+                    return this.getOrders.filter(order => order.status === this.orderStatus);
+                }
+            }
         },
         methods: {
-            // showOrderDetail(code){
-            //     let orderData = this.getOrders.filter(order => order.orderCode === code);
-            //     this.order = orderData[0];
-                
-            // },
             onOrderPageChange(currentPage){
                 this.currentPage = currentPage;
                 let page = {
@@ -58,10 +63,14 @@
                 }
 
                 this.$store.dispatch("orderPaginator", page)
-            }
+            },
         },
         mounted () {
             this.currentPage = this.getOrderCurrentPage;
+            this.allOrderData = this.filterOrders;
+        },
+        updated () {
+            this.allOrderData = this.filterOrders;
         }
     }
  </script>
@@ -110,7 +119,7 @@
     }
     .customer{
         width: 20%;
-        text-align: center;
+        text-align: end;
     }
     .total{
         width: 20%;

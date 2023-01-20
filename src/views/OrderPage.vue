@@ -1,20 +1,19 @@
 <template>
     <div class="branch-parent">
-        <!-- <div v-show="deleteProductStatus" class="modal-box-one">
+        <div v-show="orderModalStatus" class="modal-box-one">
              <Modal @close="modalToggle()">
-               <h4>Do you really want to delete {{ product.title }} permanantly?</h4>
-               <button  @click="productDeleting(product.id)">Delete</button>
+               <h4>Do you really want to change the status of {{ orderToChangeStatus.orderCode }} to {{ newStatus }} ?</h4>
+               <button @click="changeOrderStatus(orderToChangeStatus.orderCode, newStatus)">Change</button>
                <button @click="modalToggle()">Cancel</button>
              </Modal>
-        </div> -->
+        </div>
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
             <TopBar></TopBar>
             <div class="table-box">
-                <header>
-                    <h1 v-show="tableStatus">Products</h1>
-                    <h1 v-show="listStatus">...</h1>
+                <header v-show="orderTableStatus">
+                    <h1>Products</h1>
                     <div class="btn-box">
-                        <select class="inputField" v-model="orderStatus" @change="filterOrder()">
+                        <select class="inputField" v-model="orderStatus" >
                             <option class="opt" value="" selected>All</option>
                             <option class="opt" value="pending" style="{color: #ff9966}">Pending</option>
                             <option class="opt" value="invoiced" style="{color: #044cd0}">Invoiced</option>
@@ -24,8 +23,8 @@
                         </select>
                     </div>
                 </header>
-                <OrderTable @detail="showDetailPage" v-show="tableStatus"></OrderTable>
-                <OrderList v-show="listStatus" @previousPage="showPreviousPage" :orders="orders"></OrderList>
+                <OrderTable @detail="showDetailPage" v-show="orderTableStatus" :orderStatus="orderStatus"></OrderTable>
+                <OrderList v-show="orderListStatus" :orders="orders" :totalPrice="totalPrice" @showModal="showOrderStatusChangeModal" @backToOrderPage="backToOrderPage"></OrderList>
             </div>
         </div>
     </div>
@@ -33,8 +32,8 @@
 
 <script>
     import { mapGetters, mapActions } from "vuex";
+    import Modal from "../components/AllModals.vue";
     import TopBar from "../components/TopBar.vue";
-    // import Modal from ".././components/AllModals.vue";
     import OrderTable from "../components/order-branches/OrderTable.vue";
     import OrderList from "../components/order-branches/OrderList.vue";
 
@@ -42,65 +41,96 @@
         name : 'ProductPage',
         data () {
             return {
-                tableStatus: true,
-                listStatus: false,
+                orderTableStatus: true,
+                orderListStatus: false,
 
-                idForList: null,
+                totalPrice: 0,
                 orderStatus: "",
+                
+                orderModalStatus: false,
+                orderToChangeStatus: {orderCode: ""},
+                newStatus: "",
 
-                orders: null
+                orders: [{ 
+                    orderCode: '', 
+                    productName: '', 
+                    count: '', 
+                    categoryName: '', 
+                    customerName: '', 
+                    customerEmail: '', 
+                    customerPhone: "", 
+                    customerAddress: "" ,
+                    total: "", 
+                    status: "",
+                    orderTime: ""
+                }]
 
             }
         },
-        components: { TopBar, OrderTable, OrderList },
+        components: { TopBar, OrderTable, OrderList, Modal },
         computed: {
-            ...mapGetters( ["getToggleStatus", "getOrders"]),
+            ...mapGetters( ["getToggleStatus", "getOrders", "getOrderDetails"]),
         },
         methods: {
-            ...mapActions("Products", ["deleteProduct"]),
-            showProductBranches (status) {
-                this.tableStatus = false;
-                this.listStatus = false;
+            ...mapActions(["changeNewOrderStatus"]),
+            showOrderBranches (status) {
+                this.orderTableStatus = false;
+                this.orderListStatus = false;
 
                 switch (status) {
                   case "table":
-                    this.tableStatus = true;
+                    this.orderTableStatus = true;
                     break;
                   case "list":
-                    this.listStatus = true;
+                    this.orderListStatus = true;
                     break;
-                }
-            },
-            showPreviousPage(status){
-                if(status=== "table"){
-                    this.showProductBranches("table", null);
                 }
             },
             showDetailPage(code){
-                this.orders = this.getOrders.filter(order => order.orderCode === code);
-                this.showProductBranches("list");
+                this.orders = this.getOrderDetails.filter(order => order.orderCode === code);
+                this.orders.forEach(order=>{
+                    this.totalPrice+=order.total;
+                });
+
+                this.showOrderBranches("list");
             },
-            // showDeleteProductModal(id){
-            //     let product = this.getProducts.filter(product=>{
-            //         return product.id === id;
-            //     });
-            //     this.product = product[0];
-            //     this.deleteProductStatus= true;
-            // },
-            // productDeleting(id){
-            //     this.deleteProduct(id);
-            //     this.modalToggle();
-            // },
-            // productUpdate(product){
-            //     this.dataForUpdate = product;
-            //     this.showProductBranches("productUpdate", null);
-            // },
-            // modalToggle(){
-            //     this.deleteProductStatus = ! this.deleteProductStatus;
-            // },
-            filterOrder(){
-                this.$store.dispatch("filterOrder", this.orderStatus);
-            }
+            backToOrderPage(){
+                this.showOrderBranches('table');
+                this.orders = [{ 
+                    orderCode: '', 
+                    productName: '', 
+                    count: '', 
+                    categoryName: '', 
+                    customerName: '', 
+                    customerEmail: '', 
+                    customerPhone: "", 
+                    customerAddress: "" ,
+                    total: "", 
+                    status: "",
+                    orderTime: ""
+                }];
+                this.totalPrice = 0;
+            },
+            showOrderStatusChangeModal(code, newStatus){
+                let order = this.getOrders.filter(order=>order.orderCode === code);
+                this.orderToChangeStatus = order[0];
+                this.newStatus=newStatus;
+                this.orderModalStatus= true;
+            },
+            changeOrderStatus(code, status){
+                let newStatusData = {
+                    orderCode: code,
+                    newStatus: status
+                }
+                this.changeNewOrderStatus(newStatusData);
+                this.modalToggle();
+                this.showOrderBranches('table');
+            },
+            modalToggle(){
+                this.orderModalStatus = ! this.orderModalStatus;
+                this.newStatus="";
+                this.orderToChangeStatus = {orderCode: ""};
+            },
         },
     }
 </script>
@@ -127,7 +157,7 @@
 }
 .table-box{
     width: 95%;
-    height: 80%;
+    height: 84%;
     margin: 30px auto 0 auto;
     box-shadow: 1px 1px 4px 2px #000;
     padding: 15px;
@@ -161,7 +191,8 @@ header h1{
     font-size: 0.8rem;
 }
 
-/* .modal-box-one{
+
+.modal-box-one{
    width: 100vw;
    height: 100vh;
 }
@@ -181,7 +212,7 @@ header h1{
 .modal-box-one button:active{
     transform : scale(0.9);
     background: #b3e0dc;
-} */
+}
 
 
 /* make it responsive */
@@ -202,13 +233,13 @@ header h1{
         padding: 5px 8px;
         font-size: 0.6rem;
     }
-    /* .modal-box-one h4{
+    .modal-box-one h4{
         font-size: 0.8rem;
     }
     .modal-box-one button{
         width: 80px;
         padding: 8px ;
-    } */
+    }
 }
 @media (max-width : 400px) {
     .main {
