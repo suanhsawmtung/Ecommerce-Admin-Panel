@@ -18,6 +18,14 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="/order" active-class="active" class="side-btn">
+                        <div class="link-container">
+                            <div class="icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                            <div class="text-title">Orders</div>
+                        </div>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="/category" active-class="active" class="side-btn">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-list-ul"></i></div>
@@ -28,7 +36,7 @@
                 <li>
                     <router-link to="/product" active-class="active" class="side-btn">
                         <div class="link-container">
-                            <div class="icon"><i class="fa-solid fa-list-ul"></i></div>
+                            <div class="icon"><i class="fa-brands fa-product-hunt"></i></div>
                             <div class="text-title">Products</div>
                         </div>
                     </router-link>
