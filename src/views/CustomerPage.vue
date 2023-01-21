@@ -1,16 +1,33 @@
 <template>
     <div class="branch-parent">
+
+      <!-- Toast Alert -->
       <transition name="toast">
           <div class="toast" v-show="toastStatus">
               <h3 >{{ toastMessage }}</h3>
           </div>
       </transition>
+      <!-- Toast Alert End -->
+
+      <!-- All Modals -->
       <div v-show="modalStatus" class="modal-parent-box">
-        <CustomerModal :modal="modal" :user="user" @close="modalToggle('close', null)" @toastAlert="toastAlert"></CustomerModal>
+        
+          <!-- Modal Component -->
+          <CustomerModal :modal="modal" :user="user" @close="modalToggle('close', null)" @toastAlert="toastAlert"></CustomerModal>
+      
       </div>
+      <!-- All Modals End -->
+
+      <!-- Main -->
       <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
+
+          <!-- Top Bar -->
           <TopBar></TopBar>
+
+          <!-- Table Box -->
           <div class="table-box">
+
+              <!-- Control For Change Showing Components -->
               <div class="branch-nav">
                   <div class="nav-item" :class="{ 'active' : customerStatus }"  @click="selectItem('customer')">
                       <h4>Customers</h4>
@@ -19,20 +36,40 @@
                      <h4>Admins</h4>
                   </div>
               </div>
+              <!-- Control For Change Showing Components End -->
+
+              <!-- Page Title -->
               <h1>Customers</h1>
-              <div v-show="customerStatus" class="table">
-                <CustomerTable v-show="customerTableStatus" @showModal="modalToggle" @detail="showDetailPage"></CustomerTable>
+
+              <!-- Customer Table Component Box -->
+              <div v-show="customerStatus" :class="{'table': !detailStatus}">
+                  <!-- Customer Table -->
+                  <CustomerTable v-show="customerTableStatus" @showModal="modalToggle" @detail="showDetailPage"></CustomerTable>
               </div>
-              <div v-show="adminStatus" class="table">
-                <AdminTable v-show="adminListStatus" @showModal="modalToggle" @detail="showDetailPage"></AdminTable>
+
+              <!-- Admin Table Component Box -->
+              <div v-show="adminStatus" :class="{'table': !detailStatus}">
+                  <!-- Admin Table -->
+                  <AdminTable v-show="adminListStatus" @showModal="modalToggle" @detail="showDetailPage"></AdminTable>
               </div>
+              
+              <!-- User Detail Component Box -->
               <div v-show="detailStatus">
+                  
+                  <!-- Button Box -->
                   <div class="btn-box">
                       <button @click="goPrevious()" v-show="detailStatus"><i class="fa-solid fa-arrow-left"></i></button>
                   </div>
-                  <UserDetail v-show="myProfileStatus" :id="id"></UserDetail>
+                  <!-- Button Box End -->
+
+                  <!-- User Detail -->
+                  <UserDetail v-show="detailStatus" :id="id"></UserDetail>
+
               </div>
+
           </div>
+          <!-- Table Box End -->
+
       </div>
   </div>
 </template>
@@ -49,19 +86,21 @@
       name : 'ProductPage',
       data () {
           return {
+
+            /* Use To Choose Which Section Show, Admin Or Customer */
               customerStatus : true,
               adminStatus: false,
               detailStatus : false,
 
+            /* Status For Show Toast And Toast Message */ 
               toastStatus: false,
               toastMessage: "",
               
+            /* Status For Which Components Show Or Not */ 
               customerTableStatus: true,
               adminListStatus: true,
 
-              myProfileStatus: true,
-              updateProfileStatus: false,
-
+            /* Use For User CRUD And Modal */
               modalStatus: false,
               modal: null,
               id: null,
@@ -76,6 +115,7 @@
           ...mapGetters(["getToggleStatus", "getAllUsers"])
       },
       methods: {
+        /* Admin Section Show Or User Section Show */
         selectItem (item){
             this.customerStatus = false;
             this.adminStatus = false;
@@ -92,6 +132,8 @@
                 return;
             }
         },
+
+        /* Choose Which Modal Show Or Hide */
         modalToggle(status, id){
           this.modal = null;
           if(id!==null){
@@ -104,7 +146,6 @@
             }
           }
           
-
           if(status=="addAdmin"){
             this.modal= "addAdmin";
             this.idForModal= id;
@@ -122,6 +163,8 @@
 
           this.modalStatus = !this.modalStatus;
         },
+
+        /* Show User Detail Page */
         showDetailPage(status, id){
             this.id = id;
             if(status === 'customer'){
@@ -132,6 +175,8 @@
             }
             this.detailStatus=true;
         },
+
+        /* Go Back To Previous Page */
         goPrevious(){
             this.detailStatus=false;
             this.id = null;
@@ -145,6 +190,8 @@
               return;
             }
         },
+
+        /* Show Toast Alert And Hide Itself */
         toastAlert(status){
             if(status==="customer"){
                 this.toastMessage = "Removed form admin list. ";
@@ -170,173 +217,4 @@
 
 </script>
 
-<style scoped>
-.branch-parent{
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-}
-.toast{
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 15px;
-    background: #12cc99;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    z-index: 20;
-}
-.toast h3{
-    color: #fff;
-    text-align: center;
-}
-.main {
-  position: absolute;
-  top: 0;
-  left: 250px;
-  width: calc(100% - 250px);
-  height: 100%;
-  transition: 0.5s;
-}
-.toggleWidth{
-  left: 70px;
-  width: calc(100% - 70px);
-}
-.table-box{
-  position: relative;
-  width: 95%;
-  height: 80%;
-  margin: 30px auto 0 auto;
-  box-shadow: 1px 1px 4px 2px #000;
-  padding: 20px 15px;
-}
-.table-box h1{
-  position: absolute;
-  top: 25px;
-  right: 15px;
-  text-transform : uppercase;
-  color: teal;
-}
-.table-box .table{
-  width: 100%;
-  height: 90%;
-}
-.branch-nav{
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  padding: 10px 0 0 0;
-  border-bottom: 2px solid #4fb9af;
-}
-.branch-nav .nav-item{
-  margin: 0 10px;
-  text-decoration: none;
-  cursor: pointer;
-  color: #000;
-}
-.active{
-  position: relative;
-  border: 2px solid #4fb9af;
-  border-style: solid solid none solid;
-}
-.active::before{
-  content: " ";
-  position: absolute;
-  left: 0;
-  bottom: -3px;
-  width: 100%;
-  height: 6px;
-  background: #fff;
-}
-.branch-nav .nav-item h4{
-  padding: 5px 20px;
-}
-
-.btn-box{
-  width: 100%;
-  padding: 10px 5px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.btn-box button{
-  padding: 8px 15px;
-  color: #fff;
-  background: teal;
-  font-size: 0.8rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: 0.5s;
-}
-.btn-box button:active{
-  transform: scale(0.93);
-  background: #4fb9af;
-}
-
- /* toast animation */
- .toast-enter-from{
-    opacity: 0;
-  }
-  .toast-enter-to{
-      opacity: 1;
-  }
-  .toast-leave-from{
-      opacity: 1;
-  }
-  .toast-leave-to{
-      opacity: 0;
-      transform: translateY(-50px);
-  }
-  .toast-enter-active{
-      transition: all 0.5s ease;
-  }
-  .toast-leave-active{
-      transition: all 0.3s ease;
-  }
-
-/* make it responsive */
-@media (max-width : 768px) {
-  .btn-box{
-      padding: 7px 4px;
-  }
-  .btn-box button{
-      padding: 6px 10px;
-      font-size: 0.7rem;
-  }
-}
-@media (max-width : 650px) {
-  .table-box h1{
-      font-size: 1.5rem;
-      top: 35px;
-  }
-  .branch-nav .nav-item h4{
-      font-size: 0.8rem;
-      padding: 5px 6px;
-  }
-  .btn-box button{
-      padding: 5px 8px;
-      font-size: 0.6rem;
-  }
-}
-@media (max-width : 480px) {
-  .table-box h1{
-      font-size: 1.2rem;
-      top: 40px;
-  }
-}
-@media (max-width : 400px) {
-  .main {
-      position:fixed;
-      top:0;
-      left:0;
-      width: 100%;
-  } 
-  .branch-nav .nav-item{
-      margin: 0 5px;
-  }
-}
-
-</style>
+<style src="../assets/css/customer.css" scoped></style>

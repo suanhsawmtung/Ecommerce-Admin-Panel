@@ -1,0 +1,139 @@
+.branch-parent {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.toast {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #12cc99;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    z-index: 20;
+}
+
+.toast h3 {
+    color: #fff;
+    text-align: center;
+}
+
+.main {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    height: 100%;
+    transition: 0.5s;
+}
+
+.toggleWidth {
+    left: 70px;
+    width: calc(100% - 70px);
+}
+
+
+/* modals */
+
+.delete-modal {
+    width: 100vw;
+    height: 100vh;
+}
+
+.delete-modal h4 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.btn-box button {
+    width: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background: #4fb9af;
+    color: #fff;
+    border: none
+}
+
+.btn-box button:active {
+    transform: scale(0.9);
+    background: #b3e0dc;
+}
+
+.create-modal label,
+.update-modal label {
+    display: block;
+    text-align: start;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: teal;
+    font-weight: 800;
+    align-self: flex-start;
+}
+
+.create-modal input,
+.update-modal input {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 8px;
+    border-radius: 6px;
+    border: 1px solid #b3e0dc;
+}
+
+.btn-box {
+    margin-top: 15px;
+}
+
+
+/* toast animation */
+
+.toast-enter-from {
+    opacity: 0;
+}
+
+.toast-enter-to {
+    opacity: 1;
+}
+
+.toast-leave-from {
+    opacity: 1;
+}
+
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.toast-enter-active {
+    transition: all 0.5s ease;
+}
+
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+
+/* make it response */
+
+@media (max-width: 650px) {
+    .delete-modal h4 {
+        font-size: 0.8rem;
+    }
+    .btn-box button {
+        width: 80px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .main {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+}

@@ -1,0 +1,172 @@
+.branch-parent {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.toast {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #12cc99;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    z-index: 20;
+}
+
+.toast h3 {
+    color: #fff;
+    text-align: center;
+}
+
+.main {
+    position: absolute;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    height: 100%;
+    transition: 0.5s;
+}
+
+.toggleWidth {
+    left: 70px;
+    width: calc(100% - 70px);
+}
+
+.table-box {
+    width: 95%;
+    height: 85%;
+    margin: 30px auto 0 auto;
+    box-shadow: 1px 1px 4px 2px #000;
+    padding: 15px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    text-transform: uppercase;
+    color: teal;
+}
+
+.btn-box {
+    width: 100%;
+    padding: 10px 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.btn-box button {
+    padding: 8px 15px;
+    color: #fff;
+    background: teal;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.btn-box button:active {
+    transform: scale(0.93);
+    background: #4fb9af;
+}
+
+.modal-box-one {
+    width: 100vw;
+    height: 100vh;
+}
+
+.modal-box-one h4 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.modal-box-one button {
+    width: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background: #4fb9af;
+    color: #fff;
+    border: none
+}
+
+.modal-box-one button:active {
+    transform: scale(0.9);
+    background: #b3e0dc;
+}
+
+
+/* toast animation */
+
+.toast-enter-from {
+    opacity: 0;
+}
+
+.toast-enter-to {
+    opacity: 1;
+}
+
+.toast-leave-from {
+    opacity: 1;
+}
+
+.toast-leave-to {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.toast-enter-active {
+    transition: all 0.5s ease;
+}
+
+.toast-leave-active {
+    transition: all 0.3s ease;
+}
+
+
+/* make it responsive */
+
+@media (max-width: 768px) {
+    .btn-box {
+        padding: 7px 4px;
+    }
+    .btn-box button {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 650px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+    .btn-box button {
+        padding: 5px 8px;
+        font-size: 0.6rem;
+    }
+    .modal-box-one h4 {
+        font-size: 0.8rem;
+    }
+    .modal-box-one button {
+        width: 80px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .main {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+}

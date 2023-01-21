@@ -1,0 +1,144 @@
+.branch-parent {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: teal;
+}
+
+.intro {
+    margin-bottom: 15px;
+}
+
+.intro h1 {
+    font-size: 5rem;
+}
+
+.error-box {
+    padding: 15px;
+    background: #cc2212;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.error-box h3 {
+    color: #fff;
+    text-align: center;
+}
+
+
+/* intro animation */
+
+.intro-enter-from,
+.intro-leave-to {
+    transform: scale(0.5);
+    opacity: 0
+}
+
+.intro-enter-active,
+.intro-leave-active {
+    transition: all 1s ease;
+}
+
+
+/* Auth transition */
+
+.auth-enter-from {
+    opacity: 0.5;
+    transform: translateX(300px);
+}
+
+.auth-enter-to {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.auth-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.auth-leave-from {
+    opacity: 1;
+    transform: translate(0);
+}
+
+.auth-leave-to {
+    opacity: 0;
+    transform: scale(0.2);
+}
+
+.auth-leave-active {
+    transition: all 0.3s ease-out;
+}
+
+
+/* auth error animation */
+
+.error-enter-from,
+.error-leave-to {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.error-enter-to,
+.error-leave-from {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+.error-enter-active {
+    animation: wobble 0.5s ease;
+}
+
+.error-leave-active {
+    transition: all 0.3s ease;
+}
+
+@keyframes wobble {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px)
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0px)
+    }
+    60% {
+        transform: translateX(8px)
+    }
+    70% {
+        transform: translateX(-8px)
+    }
+    80% {
+        transform: translateX(6px)
+    }
+    90% {
+        transform: translateX(-6px)
+    }
+    100% {
+        transform: translateX(0px)
+    }
+}
+
+
+/* make it response */
+
+@media (max-width: 991px) {
+    .intro h1 {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 580px) {
+    .intro h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .intro h1 {
+        font-size: 1.8rem;
+    }
+}

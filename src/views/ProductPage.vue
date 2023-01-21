@@ -1,10 +1,15 @@
 <template>
     <div class="branch-parent">
+
+        <!-- Toast Alert -->
         <transition name="toast">
             <div class="toast" v-show="toastStatus">
                 <h3 >{{ toastMessage }}</h3>
             </div>
         </transition>
+        <!-- Toast Alert End -->
+
+        <!-- Delete Product Modal -->
         <div v-show="deleteProductStatus" class="modal-box-one">
              <Modal @close="modalToggle()">
                <h4>Do you really want to delete {{ product.title }} permanantly?</h4>
@@ -12,22 +17,48 @@
                <button @click="modalToggle()">Cancel</button>
              </Modal>
         </div>
+        <!-- Delete Product Modal End -->
+
+        <!-- Main -->
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
+
+            <!-- Top Bar -->
             <TopBar></TopBar>
+
+            <!-- Table Box -->
             <div class="table-box">
+                
                 <header>
+
+                    <!-- Table Title -->
                     <h1>Products</h1>
+
+                    <!-- Button Box -->
                     <div class="btn-box">
                         <button @click="showProductBranches('productTable', null)" v-show="!tableStatus"><i class="fa-solid fa-arrow-left"></i></button>
                         <button @click="showProductBranches('createProduct', null)" v-show="tableStatus">Create New Product</button>
                     </div>
+                    <!-- Button Box End -->
+
                 </header>
+
+                <!-- Product Table Component -->
                 <ProductTable @showProductBranch="showProductBranches" @deleteProduct="showDeleteProductModal" @productUpdate="productUpdate" v-show="tableStatus"></ProductTable>
+                
+                <!-- Create Product Form Component -->
                 <CreateProduct v-show="createStatus" @previousPage="showPreviousPage" @toastAlert="toastAlert"></CreateProduct>
+                
+                <!-- Product Detail Component -->
                 <ProductDetail v-show="detailStatus" :id= idForDetail ></ProductDetail>
+                
+                <!-- Update Product Component -->
                 <UpdateProduct v-show="updateStatus" @toastAlert="toastAlert" @previousPage="showPreviousPage" :product= dataForUpdate></UpdateProduct>
             </div>
+            <!-- Table Box End -->
+
         </div>
+        <!-- Main End -->
+
     </div>
 </template>
 
@@ -44,15 +75,21 @@
         name : 'ProductPage',
         data () {
             return {
+
+            /* Use To Choose Which Section Show, Table Or Create Form Or Update Form Or Detail */
                 tableStatus: true,
                 createStatus: false,
                 detailStatus: false,
                 updateStatus: false,
 
+            /* Status For Show Toast And Toast Message */ 
                 toastStatus: false,
                 toastMessage: "",
-
+            
+            /* Unique Id To Show Product Detail */ 
                 idForDetail: null,
+            
+            /* Product To Make Update */ 
                 dataForUpdate: {
                     id: "",
                     title: "",
@@ -60,7 +97,7 @@
                     price: "",
                     description: ""
                 },
-
+            /* Select Product To Delete */ 
                 product: {},
                 deleteProductStatus: false,
             }
@@ -73,6 +110,8 @@
         },
         methods: {
             ...mapActions("Products", ["deleteProduct"]),
+
+            /* Control Status Which Component Show */ 
             showProductBranches (status, id) {
                 this.tableStatus = false;
                 this.createStatus = false;
@@ -100,11 +139,15 @@
                     break;
                 }
             },
+
+            /* Go Back To The Previous Page */ 
             showPreviousPage(status){
                 if(status=== "productTable"){
                     this.showProductBranches("productTable", null);
                 }
             },
+
+            /* Show Delete Product Modal */ 
             showDeleteProductModal(id){
                 let product = this.getProducts.filter(product=>{
                     return product.id === id;
@@ -112,20 +155,29 @@
                 this.product = product[0];
                 this.deleteProductStatus= true;
             },
+
+            /* Delete Product Function */ 
             productDeleting(id){
                 this.deleteProduct(id);
                 this.modalToggle();
+                
                 this.toastMessage = "Deleted product successfully.";
                 setTimeout(() => this.toastStatus = true, 1000);
                 setTimeout(() => this.toastStatus = false, 3000);
             },
+
+            /* Show Update Product Component */ 
             productUpdate(product){
                 this.dataForUpdate = product;
                 this.showProductBranches("productUpdate", null);
             },
+
+            /* Show Or Hide Modal */ 
             modalToggle(){
                 this.deleteProductStatus = ! this.deleteProductStatus;
             },
+
+            /* Toast Alert Function */ 
             toastAlert(status){
                 if(status==="create"){
                     this.toastMessage = "Created new product successfully. ";
@@ -144,156 +196,4 @@
     }
 </script>
 
-<style scoped>
-.branch-parent{
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-}
-.toast{
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    padding: 15px;
-    background: #12cc99;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    z-index: 20;
-}
-.toast h3{
-    color: #fff;
-    text-align: center;
-}
-.main {
-    position: absolute;
-    top: 0;
-    left: 250px;
-    width: calc(100% - 250px);
-    height: 100%;
-    transition: 0.5s;
-}
-.toggleWidth{
-    left: 70px;
-    width: calc(100% - 70px);
-}
-.table-box{
-    width: 95%;
-    height: 80%;
-    margin: 30px auto 0 auto;
-    box-shadow: 1px 1px 4px 2px #000;
-    padding: 15px;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-header h1{
-    text-transform : uppercase;
-    color: teal;
-}
-.btn-box{
-    width: 100%;
-    padding: 10px 5px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-.btn-box button{
-    padding: 8px 15px;
-    color: #fff;
-    background: teal;
-    font-size: 0.8rem;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    transition: 0.5s;
-}
-.btn-box button:active{
-    transform: scale(0.93);
-    background: #4fb9af;
-}
-
-.modal-box-one{
-   width: 100vw;
-   height: 100vh;
-}
-.modal-box-one h4{
-    margin-bottom: 10px;
-    font-size: 1rem;
- }
- .modal-box-one button{
-    width: 100px;
-    padding: 10px ;
-    border-radius: 5px;
-    margin-right: 10px;
-    background: #4fb9af;
-    color: #fff;
-    border: none
-}
-.modal-box-one button:active{
-    transform : scale(0.9);
-    background: #b3e0dc;
-}
-
- /* toast animation */
- .toast-enter-from{
-    opacity: 0;
-}
-.toast-enter-to{
-    opacity: 1;
-}
-.toast-leave-from{
-    opacity: 1;
-}
-.toast-leave-to{
-    opacity: 0;
-    transform: translateY(-50px);
-}
-.toast-enter-active{
-    transition: all 0.5s ease;
-}
-.toast-leave-active{
-    transition: all 0.3s ease;
-}
-
-
-/* make it responsive */
-@media (max-width : 768px) {
-    .btn-box{
-        padding: 7px 4px;
-    }
-    .btn-box button{
-        padding: 6px 10px;
-        font-size: 0.7rem;
-    }
-}
-@media (max-width : 650px) {
-    header h1{
-        font-size: 1.5rem;
-    }
-    .btn-box button{
-        padding: 5px 8px;
-        font-size: 0.6rem;
-    }
-    .modal-box-one h4{
-        font-size: 0.8rem;
-    }
-    .modal-box-one button{
-        width: 80px;
-        padding: 8px ;
-    }
-}
-@media (max-width : 400px) {
-    .main {
-        position:fixed;
-        top:0;
-        left:0;
-        width: 100%;
-    } 
-}
-
-</style>
+<style src="../assets/css/product.css" scoped></style>

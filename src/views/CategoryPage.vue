@@ -1,10 +1,15 @@
 <template>
     <div class="branch-parent">
+
+        <!-- Toast Alert -->
         <transition name="toast">
             <div class="toast" v-show="toastStatus">
                 <h3 >{{ toastMessage }}</h3>
             </div>
         </transition>
+        <!-- Toast Alert End -->
+
+        <!-- Category Create Modal -->
         <div v-show="createCategoryStatus" class="create-modal">
              <Modal @close="modalToggle('create')">
                 <label for="categoryName">Create New Category</label>
@@ -16,6 +21,9 @@
                 </div>
              </Modal>
         </div>
+        <!-- Category Create Modal End -->
+
+        <!-- Category Update Modal -->
         <div v-show="updateCategoryStatus" class="update-modal">
              <Modal @close="modalToggle('update')">
                 <label for="categoryName">Update Category</label>
@@ -27,6 +35,9 @@
                 </div>
              </Modal>
         </div>
+        <!-- Category Update Modal End -->
+
+        <!-- Category Delete Modal -->
         <div v-show="deleteCategoryStatus" class="delete-modal">
              <Modal @close="modalToggle('delete')">
                <h4>Do you really want to delete {{ category.title }} permanantly?</h4>
@@ -36,10 +47,19 @@
                 </div>
              </Modal>
         </div>
+        <!-- Category Delete Modal End -->
+
+        <!-- Main -->
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
+
+            <!-- Top Bar -->
             <TopBar></TopBar>
+
+            <!-- Category List -->
             <CategoryList @showModal="showModal" />
+
         </div>
+        <!-- Main End -->
     </div>
 </template>
 
@@ -53,19 +73,25 @@
        name : 'CategoryPage', 
        data () {
         return {
+            
+        /* Status For Show Associated Modal Or Not */
             createCategoryStatus: false,
             updateCategoryStatus: false,
             deleteCategoryStatus: false,
 
+        /* Validation Message Status For Input Of Modal */
             createError: false,
             updateError: false,
 
+        /* Status For Show Toast And Toast Message */
             toastStatus: false,
             toastMessage: "",
 
+        /* Use For Cateory CRUD And Modal */
             category: {},
             categoryName: "",
             categoryTitle: "",
+
         }
        },
        components: { TopBar, CategoryList, Modal },
@@ -77,19 +103,25 @@
        methods: {
             ...mapActions("Products", ["changeCategoryTitleOfProduct"]),
             ...mapActions("Categories", ["createCategory", "deleteCategory", "updateCategory"]),
+
+              /* Show Modal */
             showModal(status, id){
                 this.category = {};
                 this.categoryName = "";
                 this.categoryTitle = "";
 
+                  /* Choose Category To Show On Modal */
                 if(id !== null){
                     let category = this.getCategories.filter(category=>{
                         return category.id === id;
                     });
                     this.category = category[0];
                 }
+
                 this.modalToggle(status);
             },
+
+              /* Create New Category */
             createNewCategory(categoryTitle){
                 if(this.categoryName===""){
                     this.createError = true;
@@ -102,21 +134,28 @@
                 
                 this.createCategory(newCategory);
                 this.modalToggle("create");
+
                 this.toastMessage = "New category created. ";
                 setTimeout(() => this.toastStatus = true, 1000);
                 setTimeout(() => this.toastStatus = false, 3000);
             },
+
+              /* Delete Category */
             deleteChosenCategory(id){
                 if(!this.getProducts.some(product => product.category_id === id)){
                    this.deleteCategory(id);
                    this.modalToggle("delete");
+                   
                    this.toastMessage = "Delete category success. ";
                    setTimeout(() => this.toastStatus = true, 1000);
                    setTimeout(() => this.toastStatus = false, 3000);
                    return;
                 }
+                
                 this.modalToggle("delete");
             },
+
+              /* Update Category */
             async updateChosenCategory(categoryId, categoryTitle){
                 if(this.categoryTitle===""){
                     this.updateError = true;
@@ -127,6 +166,7 @@
                    "id": categoryId,
                    "title": categoryTitle
                 }
+
                 await this.updateCategory(newCategory);
                 this.getProducts.forEach(product => {
                     this.getCategories.forEach(category=>{
@@ -137,10 +177,13 @@
                 });
                 this.changeCategoryTitleOfProduct(this.getProducts);
                 this.modalToggle("update");
+                
                 this.toastMessage = "Update category success. ";
                 setTimeout(() => this.toastStatus = true, 1000);
                 setTimeout(() => this.toastStatus = false, 3000);
             },
+
+              /* To Open and Close Modal */
             modalToggle(status){
                 if(status === "create"){
                     this.createCategoryStatus = ! this.createCategoryStatus;
@@ -157,6 +200,8 @@
                     return;
                 }
             },
+
+              /* Clear Validation Message */
             clearValidationMessage(){
                 this.createError = false;
                 this.updateError = false;
@@ -165,124 +210,5 @@
     }
 </script>
 
-<style scoped>
-    .branch-parent{
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .toast{
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        padding: 15px;
-        background: #12cc99;
-        border-radius: 5px;
-        margin-bottom: 15px;
-        z-index: 20;
-    }
-    .toast h3{
-        color: #fff;
-        text-align: center;
-    }
-    .main {
-        position: absolute;
-        top: 0;
-        left: 250px;
-        width: calc(100% - 250px);
-        height: 100%;
-        transition: 0.5s;
-    }
-    .toggleWidth{
-        left: 70px;
-        width: calc(100% - 70px);
-    }
-
-    /* modals */
-    .delete-modal{
-       width: 100vw;
-       height: 100vh;
-    }
-    .delete-modal h4{
-        margin-bottom: 10px;
-        font-size: 1rem;
-     }
-   .btn-box button{
-        width: 100px;
-        padding: 10px ;
-        border-radius: 5px;
-        margin-right: 10px;
-        background: #4fb9af;
-        color: #fff;
-        border: none
-    }
-    .btn-box button:active{
-        transform : scale(0.9);
-        background: #b3e0dc;
-    }
-    .create-modal label,
-    .update-modal label{
-        display: block;
-        text-align: start;
-        margin-bottom: 10px;
-        font-size : 1rem;
-        color : teal;
-        font-weight: 800;
-        align-self: flex-start;
-    }
-    .create-modal input,
-    .update-modal input{
-        display: inline-block;
-        width: 100%;
-        padding : 10px 8px;
-        border-radius: 6px;
-        border : 1px solid #b3e0dc;
-    }
-    .btn-box{
-        margin-top: 15px;
-    }
-
-    /* toast animation */
-    .toast-enter-from{
-        opacity: 0;
-    }
-    .toast-enter-to{
-        opacity: 1;
-    }
-    .toast-leave-from{
-        opacity: 1;
-    }
-    .toast-leave-to{
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-    .toast-enter-active{
-        transition: all 0.5s ease;
-    }
-    .toast-leave-active{
-        transition: all 0.3s ease;
-    }
-
-    /* make it response */
-    @media (max-width: 650px) {
-        .delete-modal h4{
-            font-size: 0.8rem;
-        }
-        .btn-box button{
-            width: 80px;
-            padding: 8px ;
-        }
-    }
-    @media (max-width : 400px) {
-        .main {
-            position:fixed;
-            top:0;
-            left:0;
-            width: 100%;
-        } 
-    }
-</style>
+<style src="../assets/css/category.css" scoped></style>
 

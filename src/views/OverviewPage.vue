@@ -55,19 +55,24 @@
     import SaleChart from "../components/overview-branches/SaleChart.vue";
     import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
     import Paginator from "../components/data-paginators/OverviewPaginator.vue";
+    import setAuthHeader from "../utils/setAuthHeader";
+
     export default {
         name : 'OverviewPage',
         components: {TopBar, SaleChart, ProductChart, Paginator},
         computed: {
-            ...mapGetters(["getToggleStatus", "paginatorStatus", "overviewCurrentPage", "boxStatus"]),
+            ...mapGetters(["getToggleStatus", "paginatorStatus", "overviewCurrentPage", "boxStatus", "getMyProfileData"]),
         },
         methods: {
             ...mapActions(["showPaginator", "resetBoxes"]),
         },
         setup(){
+            
             const store = useStore();
+            
             /* Get All Orders From Vuex */
             const getOrders = computed(()=>store.getters.getOrders);
+            
             /* Get All Customers From Vuex */
             const getCustomers = computed(()=>store.getters.getCustomers);
 
@@ -103,7 +108,7 @@
                 el.style.transform = "scale(0)"
             }
 
-            /* GAnimation For Top Four Boxes By Using Gsap, Enter */
+            /* Animation For Top Four Boxes By Using Gsap, Enter */
             const enter = (el, done) => {
                 gsap.to(el, {
                     opacity: 1,
@@ -118,6 +123,15 @@
             return { beforeEnter, enter, overviewInfo, getOrders, getCustomers, totalCustomers, totalRevenue, pendingOrders }
         },
         mounted () {
+            /* Check My Role Is Admin Or Not */ 
+            if(this.getMyProfileData.role!=="admin"){
+                setAuthHeader(localStorage.getItem("TOKEN")); 
+                this.$store.dispatch("logout").then(() => {
+                    this.$router.push({ path: '/' });
+                });
+                return;
+            }
+
             /* Checking To Show Or Hide Paginator When Screen Size Change Or When Enter With Every Screen Size */
             this.showPaginator();
             window.addEventListener("resize", this.showPaginator);

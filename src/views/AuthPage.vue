@@ -9,17 +9,26 @@
         </transition>
         <!-- Intro Message End -->
 
+        <!-- Error Message -->
         <transition name="error">
             <div class="error-box" v-show="credentialsErrorStatus">
                 <h3>{{ errorMessage }}</h3>
             </div>
         </transition>
+        <!-- Error Message End -->
+
+        <!-- Register Form -->
         <transition name="auth">
             <RegisterPage v-show="registerStatus" @changeForm="changeForm" @success="showOverviewPage" @error="showErrorMessage"></RegisterPage>
         </transition>
+        <!-- Register Form End -->
+
+        <!-- Login Form -->
         <transition name="auth" appear >
             <LoginPage v-show="loginStatus" @changeForm="changeForm"  @success="showOverviewPage"></LoginPage>
         </transition>
+        <!-- Login Form End -->
+
     </div>
 </template>
 
@@ -46,6 +55,8 @@
         methods: {
             ...mapActions("Products", ["allProducts"]),
             ...mapActions("Categories", ["allCategories"]),
+
+            /* Change Login and Register Form */
             changeForm (status) {
                 this.registerStatus= false;
                 this.loginStatus= false;
@@ -60,9 +71,11 @@
                     return;
                 }
             },
+
+             /* Login And Show Overview Page After Login */
             showOverviewPage(){
                 if(localStorage.getItem("TOKEN") !== null){
-                    setAuthHeader(localStorage.getItem("TOKEN")); 
+                    setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
                     this.getAllDatas();
                     setTimeout(()=>this.$router.push({ path: '/overview' }), 2500);
                 }else{
@@ -71,28 +84,38 @@
                     setTimeout(() => this.credentialsErrorStatus = false, 3000);
                 }
             },
+
+             /* Get All Required Data */
             getAllDatas(){
                 this.allProducts();
                 this.allCategories();
                 this.$store.dispatch("overviewData");
                 this.$store.dispatch("allCustomers");
             },
+
+             /* Show Login Form */
             showLoginForm(){
                 this.registerStatus= false;
                 this.loginStatus= true;
             },
+
+             /* Show Register Form */
             showRegisterForm(){
                 this.registerStatus= true;
                 this.loginStatus= false;
             },
+
+             /* Show Error Message From Backend */
             showErrorMessage(error){
                 this.errorMessage = error.response.data.errors.email[0];
                 this.credentialsErrorStatus = true;
                 setTimeout(() => this.credentialsErrorStatus = false, 3000);
             },
+
+             /* Checking Already Login Or Not */
             checkLogin(){
                 if(localStorage.getItem("TOKEN") !== null){
-                    setAuthHeader(localStorage.getItem("TOKEN"));
+                    setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
                     this.getAllDatas();
                     setTimeout(() => this.$router.push({ path: '/overview' }), 5000);
                 }else{
@@ -109,116 +132,4 @@
     }
 </script>
 
-<style scoped>
-    .branch-parent{
-        width: 100vw;
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: teal;
-    }
-    .intro{
-        margin-bottom: 15px;
-    }
-    .intro h1{
-        font-size: 5rem;
-    }
-
-    .error-box{
-        padding: 15px;
-        background: #cc2212;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-    .error-box h3{
-        color:  #fff;
-        text-align: center;
-    }
-
-
-    /* intro animation */
-    .intro-enter-from,
-    .intro-leave-to{
-        transform: scale(0.5);
-        opacity: 0
-    }
-
-    .intro-enter-active,
-    .intro-leave-active{
-        transition: all 1s ease;
-    }
-
-    /* Auth transition */
-    .auth-enter-from{
-        opacity: 0.5;
-        transform: translateX(300px);
-    }
-    .auth-enter-to{
-        opacity: 1;
-        transform: translateX(0);
-    }
-    .auth-enter-active{
-        transition: all 0.3s ease-out;
-    }
-    .auth-leave-from{
-        opacity: 1;
-        transform: translate(0);
-    }
-    .auth-leave-to{
-        opacity: 0;
-        transform: scale(0.2);
-    }
-    .auth-leave-active{
-        transition: all 0.3s ease-out;
-    }
-
-    /* auth error animation */
-    .error-enter-from,
-    .error-leave-to{
-        opacity: 0;
-        transform: translateY(-50px);
-    }
-
-    .error-enter-to,
-    .error-leave-from{
-        opacity: 1;
-        transform: translateY(0px);
-    }
-
-    .error-enter-active{
-        animation: wobble 0.5s ease;
-    }
-    .error-leave-active{
-        transition: all 0.3s ease;
-    }
-
-    @keyframes wobble{
-        0% { opacity: 0; transform: translateY(-50px) }
-        50% { opacity: 1; transform: translateY(0px) }
-        60% { transform: translateX(8px) }
-        70% { transform: translateX(-8px) }
-        80% { transform: translateX(6px) }
-        90% { transform: translateX(-6px) }
-        100% { transform: translateX(0px) }
-    }
-
-    /* make it response */
-    @media (max-width: 991px) {
-        .intro h1{
-            font-size: 3rem;
-        }
-    }
-    @media (max-width: 580px) {
-        .intro h1{
-            font-size: 2rem;
-        }
-    }
-    @media (max-width: 380px) {
-        .intro h1{
-            font-size: 1.8rem;
-        }
-    }
-
-</style>
+<style src="../assets/css/auth.css" scoped></style>

@@ -4,12 +4,16 @@ import axios from "axios";
 export default {
     state: {
         myData: null,
+
         token: null,
+
         error: null
     },
     getters: {
         getMyData: state => state.myData,
+
         getToken: state => state.token,
+
         /* Error Message */
         getError: state => state.error,
     },
@@ -26,12 +30,14 @@ export default {
             localStorage.setItem("EMAIL", data.user.email);
             state.error = null;
         },
+
         /* Clear State Data And LocalStorage Data After Logout */
         cleanMyData: state => {
             state.myData = {};
             state.token = null;
             localStorage.clear();
         },
+
     },
     actions: {
         /* Register New Account */
@@ -39,11 +45,13 @@ export default {
             let { data } = await axios.post('http://localhost:8000/api/auth/register', userData);
             commit("setMyData", data);
         },
+
         /* Login Account */
         login: async({ commit }, userData) => {
             let { data } = await axios.post('http://localhost:8000/api/auth/login', userData);
             commit("setMyData", data);
         },
+
         /* Logout Account */
         logout: async({ commit }) => {
             await axios.post('http://localhost:8000/api/auth/logout');
