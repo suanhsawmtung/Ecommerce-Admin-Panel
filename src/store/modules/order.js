@@ -1,5 +1,6 @@
 export default {
     state: {
+        /* All Orders , I used these static data for show because I haven't written order section and client side. */
         orderDetails: [
             { orderCode: 'AAA77881', productName: "Rain Jacket Women Windbreaker Striped Climbing Raincoats", count: 3, categoryName: "women's clothing", customerName: 'John', customerEmail: 'John@gmail.com', customerPhone: '093344555', customerAddress: 'Mandalay', total: 220000, status: "pending", orderTime: "Dec 30, 2022 - 12:00 AM" },
             { orderCode: 'AAA77881', productName: "Mens Cotton Jacket", count: 2, categoryName: "men's clothing", customerName: 'John', customerEmail: 'John@gmail.com', customerPhone: '093344555', customerAddress: 'Mandalay', total: 62000, status: "pending", orderTime: "Dec 30, 2022 - 12:00 AM" },
@@ -14,6 +15,7 @@ export default {
             { orderCode: 'EEW77886', productName: "Sun Cream", count: 9, categoryName: "beauty and health", customerName: 'Aung Aung', customerEmail: 'AungAung@gmail.com', customerPhone: '093344550', customerAddress: 'Yangon', total: 100000, status: "rejected", orderTime: "Jul 30, 2022 - 12:00 AM" },
             { orderCode: 'EEW77886', productName: "Solid Gold Petite Micropave", count: 10, categoryName: "jewelery", customerName: 'Aung Aung', customerEmail: 'AungAung@gmail.com', customerPhone: '093344550', customerAddress: 'Yangon', total: 80000, status: "rejected", orderTime: "Jul 30, 2022 - 12:00 AM" },
         ],
+        /* All Orders Summary , I used these static data for show because I haven't written order section and client side. */
         orders: [
             { orderCode: 'AAA77881', customerName: 'John', total: 43000, status: "pending", orderTime: "Dec 30, 2022 - 12:00 AM" },
             { orderCode: 'BBB77882', customerName: 'James', total: 30000, status: "pending", orderTime: "Nov 30, 2022 - 12:00 AM" },
@@ -22,30 +24,39 @@ export default {
             { orderCode: 'FFF77885', customerName: 'Micheal', total: 134000, status: "delivered", orderTime: "Aug 30, 2022 - 12:00 AM" },
             { orderCode: 'EEW77886', customerName: 'Aung Aung', total: 8250000, status: "rejected", orderTime: "Jul 30, 2022 - 12:00 AM" },
         ],
+        /* Start And End Point To Make Paginated Orders Data */
         orderPaginationPoints: {
             start: 0,
             end: 5,
         },
+        /* Thes three status use for show or hide component and paginator to be responsive for every size of screen */
         infoStatus: true,
         listStatus: true,
         orderPaginatorStatus: false,
     },
     getters: {
+        /* Get All Order Details Data */
         getOrderDetails: state => state.orderDetails,
+        /* Get All Order Summary Data */
         getOrders: state => state.orders,
+        /* Get Paginator Point For Orders Summary Data */
         getOrderPaginationPoints: state => state.orderPaginationPoints,
+        /* Not to Change Current Order Paginated Data, When Change Other Route */
         getOrderCurrentPage: state => {
             return state.orderPaginationPoints.end / (state.orderPaginationPoints.end - state.orderPaginationPoints.start);
         },
+        /* Start And End Point To Make Paginated Customer Data */
         getInfoStatus: state => state.infoStatus,
         getListStatus: state => state.listStatus,
         getOrderPaginatorStatus: state => state.orderPaginatorStatus,
     },
     mutations: {
+        /* Set Start Point And End Point To Slice Order Summary Data For Pagination */
         setOrderPaginationPoints: (state, points) => {
             state.orderPaginationPoints.start = points.start;
             state.orderPaginationPoints.end = points.end;
         },
+        /* Change Status To Show Or Hide Components By Using Paginator Button When Screen Size Is Small */
         showAndHideSection: (state, number) => {
             state.infoStatus = false;
             state.listStatus = false;
@@ -57,6 +68,7 @@ export default {
                 state.listStatus = true;
             }
         },
+        /* Change Status to Show Or Hide Components And Paginator When Screen Size Is Small */
         showAndHideSectionWithScreenWidth: (state, width) => {
             if (width > 730) {
                 state.infoStatus = true;
@@ -69,6 +81,7 @@ export default {
                 state.orderPaginatorStatus = true;
             }
         },
+        /* Add Changed New Status To Old Order Data Status */
         changeStatus: (state, newStatusData) => {
             state.orders.forEach(order => {
                 if (order.orderCode === newStatusData.orderCode) {
@@ -84,6 +97,7 @@ export default {
         }
     },
     actions: {
+        /* Start Point And End Point To Slice Order Data For Pagination */
         orderPaginator: ({ commit }, page) => {
             let start = (page.currentPage - 1) * page.perPage;
             let end = start + page.perPage;
@@ -93,12 +107,15 @@ export default {
             }
             commit("setOrderPaginationPoints", points);
         },
+        /* Show Or Hide Components By Using Paginator Button When Screen Size Is Small */
         changeSectionOfOrderList: ({ commit }, number) => {
             commit("showAndHideSection", number);
         },
+        /* Show Or Hide Components And Paginator When Screen Size Is Small */
         changeWithScreenWidth: ({ commit }) => {
             commit("showAndHideSectionWithScreenWidth", window.innerWidth);
         },
+        /* Change Order Status */
         changeNewOrderStatus: ({ commit }, newStatusData) => {
             commit("changeStatus", newStatusData);
         }

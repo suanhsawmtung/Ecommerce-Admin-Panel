@@ -29,12 +29,6 @@
 <script>
     export default {
         name: "OverviewPaginator",
-        props: {
-            currentPage: {
-                type: Number,
-                required: true
-            },
-        },
         methods: {
             onClickPage(page){
                 this.$store.dispatch("overviewStatus", page);

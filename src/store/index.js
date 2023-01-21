@@ -11,13 +11,14 @@ export default createStore({
         toggleStatus: false,
     },
     getters: {
+        /* Status to Change Side Nav Bar Width */
         getToggleStatus: state => state.toggleStatus,
-        getPaginatorStatus: state => state.paginatorStatus,
     },
     mutations: {
         setToggleStatus: (state, changeStatus) => state.toggleStatus = changeStatus,
     },
     actions: {
+        /* Side Nav Bar Width Change Toggle with Screen Size */
         toggle: (context, status) => {
             let changeStatus;
             if (window.innerWidth > 991 || window.innerWidth <= 400) {

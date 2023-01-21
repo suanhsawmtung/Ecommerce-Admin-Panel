@@ -1,10 +1,14 @@
 <template>
     <div class="branch-parent">
+
+        <!-- Intro Message -->
         <transition name="intro">
             <div class="intro" v-show="introStatus">
                 <h1>Ecommerce Admin Panel</h1>
             </div>
         </transition>
+        <!-- Intro Message End -->
+
         <transition name="error">
             <div class="error-box" v-show="credentialsErrorStatus">
                 <h3>{{ errorMessage }}</h3>

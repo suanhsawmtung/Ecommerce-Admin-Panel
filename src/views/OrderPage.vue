@@ -1,10 +1,14 @@
 <template>
     <div class="branch-parent">
+        <!-- Toast Alert -->
         <transition name="toast">
             <div class="toast" v-show="toastStatus">
                 <h3 >{{ toastMessage }}</h3>
             </div>
         </transition>
+        <!-- Toast Alert End -->
+
+        <!-- Modal Box -->
         <div v-show="orderModalStatus" class="modal-box-one">
              <Modal @close="modalToggle()">
                <h4>Do you really want to change the status of {{ orderToChangeStatus.orderCode }} to {{ newStatus }} ?</h4>
@@ -12,12 +16,22 @@
                <button @click="modalToggle()">Cancel</button>
              </Modal>
         </div>
+        <!-- Modal Box End -->
+       
+        <!-- Main -->
         <div class="main" :class="{ 'toggleWidth':getToggleStatus}">
+            
+            <!-- Top Bar -->
             <TopBar></TopBar>
+            
+            <!-- Table Box -->
             <div class="table-box">
+                <!-- Header -->
                 <header v-show="orderTableStatus">
                     <h1>Products</h1>
+                    <!-- Button Box At The Top Of The Table -->
                     <div class="btn-box">
+                        <!-- Select Option Button -->
                         <select class="inputField" v-model="orderStatus" >
                             <option class="opt" value="" selected>All</option>
                             <option class="opt" value="pending" style="{color: #ff9966}">Pending</option>
@@ -28,10 +42,19 @@
                         </select>
                     </div>
                 </header>
+                <!-- Header End -->
+
+                <!-- Order Table -->
                 <OrderTable @detail="showDetailPage" v-show="orderTableStatus" :orderStatus="orderStatus"></OrderTable>
+
+                <!-- Order Detail List And Info -->
                 <OrderList v-show="orderListStatus" :orders="orders" :totalPrice="totalPrice" @showModal="showOrderStatusChangeModal" @backToOrderPage="backToOrderPage"></OrderList>
+
             </div>
+            <!-- Table Box End -->
+
         </div>
+        <!-- Main End -->
     </div>
 </template>
 

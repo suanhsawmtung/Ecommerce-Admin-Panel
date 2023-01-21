@@ -10,9 +10,11 @@ export default {
     getters: {
         getMyData: state => state.myData,
         getToken: state => state.token,
+        /* Error Message */
         getError: state => state.error,
     },
     mutations: {
+        /* Set State Data And LocalStorage Data */
         setMyData: (state, data) => {
             if (data.message) {
                 state.error = data.message;
@@ -24,6 +26,7 @@ export default {
             localStorage.setItem("EMAIL", data.user.email);
             state.error = null;
         },
+        /* Clear State Data And LocalStorage Data After Logout */
         cleanMyData: state => {
             state.myData = {};
             state.token = null;
@@ -31,14 +34,17 @@ export default {
         },
     },
     actions: {
+        /* Register New Account */
         register: async({ commit }, userData) => {
             let { data } = await axios.post('http://localhost:8000/api/auth/register', userData);
             commit("setMyData", data);
         },
+        /* Login Account */
         login: async({ commit }, userData) => {
             let { data } = await axios.post('http://localhost:8000/api/auth/login', userData);
             commit("setMyData", data);
         },
+        /* Logout Account */
         logout: async({ commit }) => {
             await axios.post('http://localhost:8000/api/auth/logout');
             commit('cleanMyData');

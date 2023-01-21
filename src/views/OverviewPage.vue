@@ -1,7 +1,13 @@
  <template>
     <div class="dashboard">
+
+        <!-- Main -->
         <div class="main" :class="{'toggleWidth':getToggleStatus}">
+            
+            <!-- Top Bar -->
             <TopBar></TopBar>
+            
+            <!-- Top Four Boxes -->
             <transition-group tag="ul" name="cards" appear class="card-container" @before-enter="beforeEnter" @enter="enter">
                 <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index" v-show="boxStatus">
                     <div class="number">
@@ -13,14 +19,30 @@
                     </div>
                 </li>
             </transition-group>
+            <!-- Top Four Boxes End -->
+
+            <!-- Three Sale Charts -->
             <div class="chart-container">
+                
+                <!-- Last 6 Months Sale Chart -->
                 <SaleChart></SaleChart>
+                
+                <!-- Top Sale Categories & Top Sale Items Charts -->
                 <ProductChart></ProductChart>
+
             </div>
+            <!-- Three Sale Charts End -->
         </div>
+        <!-- Main End -->
+
+        <!-- Paginator Box -->
         <div class="paginator">
-            <Paginator :currentPage="currentPage" v-show="paginatorStatus"></Paginator>
+            
+            <!-- Paginator -->
+            <Paginator  v-show="paginatorStatus"></Paginator>
+
         </div>
+        <!-- Paginator Box End -->
     </div>
  </template>
  
@@ -35,11 +57,6 @@
     import Paginator from "../components/data-paginators/OverviewPaginator.vue";
     export default {
         name : 'OverviewPage',
-        data () {
-            return {
-                currentPage: 1,
-            }
-        },
         components: {TopBar, SaleChart, ProductChart, Paginator},
         computed: {
             ...mapGetters(["getToggleStatus", "paginatorStatus", "overviewCurrentPage", "boxStatus"]),
@@ -49,10 +66,15 @@
         },
         setup(){
             const store = useStore();
+            /* Get All Orders From Vuex */
             const getOrders = computed(()=>store.getters.getOrders);
+            /* Get All Customers From Vuex */
             const getCustomers = computed(()=>store.getters.getCustomers);
 
+            /* Total Customers Count */
             const totalCustomers = computed(()=>getCustomers.value.length);
+
+            /* Computing And Get Total Revenue */
             const totalRevenue = computed(()=>{
                 let revenue = 0;
                 getOrders.value.forEach(order=>{
@@ -61,12 +83,13 @@
                 return revenue.toString() + ' Ks';
             });
 
+            /* Get All Pending Orders */
             const pendingOrders = computed(()=>{
                 let pending = getOrders.value.filter(order => order.status === "pending");
                 return pending.length;
             })
 
-
+            /* Data To Display Overviews Boxes */
             const overviewInfo = ref([
                 {value: totalCustomers, title: "Customer Counts", icon: "fa-solid fa-users"},
                 {value: "25,000 Ks", title: "Today's Income", icon: "fa-solid fa-dollar-sign"},
@@ -74,11 +97,13 @@
                 {value: pendingOrders, title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
             ]) 
 
+            /* Animation For Top Four Boxes, Before Enter */
             const beforeEnter = (el) => {
                 el.style.opacity = 0;
                 el.style.transform = "scale(0)"
             }
 
+            /* GAnimation For Top Four Boxes By Using Gsap, Enter */
             const enter = (el, done) => {
                 gsap.to(el, {
                     opacity: 1,
@@ -93,165 +118,16 @@
             return { beforeEnter, enter, overviewInfo, getOrders, getCustomers, totalCustomers, totalRevenue, pendingOrders }
         },
         mounted () {
-            this.currentPage=this.overviewCurrentPage;
+            /* Checking To Show Or Hide Paginator When Screen Size Change Or When Enter With Every Screen Size */
             this.showPaginator();
             window.addEventListener("resize", this.showPaginator);
+            
+            /* Checking To Show Or Hide Boxes And Charts When Screen Size Change Or When Enter With Every Screen Size */
             this.resetBoxes();
             window.addEventListener("resize", this.resetBoxes);
         }
     }
  </script>
  
- <style scoped >
-    .dashboard{
-        position:relative;
-        top: 0;
-        left:0;
-        width:100vw;
-        height: 100vh;
-    }
-    .paginator {
-        position: absolute;
-        bottom: 20px;
-        right: 40px;
-    }
-    .main {
-        position:absolute;
-        top:0;
-        left:250px;
-        width: calc(100% - 250px);
-        height: 100%;
-        transition:0.5s;
-    } 
-    .toggleWidth{
-        width:calc(100% - 70px);
-        left: 70px;
-    }
-    .card-container{
-        width:100%;
-        display: grid;
-        grid-template-columns: repeat(4,1fr);
-        grid-gap: 20px;
-        margin: 30px 0;
-        padding: 0px 15px;
-    }
-    .card-container .card{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width:1fr;
-        height: 100px;
-        padding: 5px 15px;
-        border-radius: 20px;
-        box-shadow: 1px 1px 5px 0.2px #000;
-    }
-    .card-container .card:hover{
-        color:#fff;
-        background-color: teal;
-    }
-    .card-container .card .number h2{
-        margin-bottom: 15px;
-    }
-    .card-container .card .icon{
-        font-size:2.5rem
-    }
-    .chart-container{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 5px;
-        padding: 0 15px;
-    }
-
-    /* overView transition */
-    /* .cards-enter-from{
-        opacity:0;
-        transform: scale(0.6);
-    }
-    .cards-enter-active{
-        transition: all 1s ease 1s;
-    } */
-
-
-    /* now, make it responsive */
-    @media (max-width : 1330px) {
-        .chart-container{
-            grid-template-columns: 1fr;
-            gap: 30px;
-        }
-    }
-    @media (max-width : 1280px) {
-        .card-container .card .icon{
-            font-size:1.8rem
-        }
-        .card-container .card{
-            padding: 5px 10px;
-        }
-        .card-container .card .number h2{
-            font-size: 1.2rem
-        }
-    }
-    @media (max-width : 810px) {
-        .card-container{
-            grid-template-columns: repeat(2,1fr);
-            padding: 0px 20px;
-        }
-        .card-container .card .icon{
-            font-size:2rem
-        }
-        .card-container .card{
-            padding: 5px 15px;
-        }
-        .card-container .card .number h2{
-            font-size: 1.8rem
-        }
-    }
-    @media (max-width : 560px) {
-        .card-container .card .icon{
-            font-size:1.5rem
-        }
-        .card-container .card{
-            padding: 5px 10px;
-        }
-        .card-container .card .number h2{
-            font-size: 1.2rem
-        }
-    }
-    @media (max-width : 515px) {
-        .chart-container{
-            margin: 0 auto;
-            padding: 0 8px;
-        }
-    }
-    @media (max-width : 470px) {
-        .card-container{
-            grid-template-columns: repeat(1,1fr);
-            padding: 0px 25px;
-        }
-        .main {
-            position:fixed;
-            top:0;
-            left:70px;
-            width: calc(100% - 70px);
-        } 
-        .card-container .card .icon{
-            font-size:2rem
-        }
-        .card-container .card{
-            padding: 5px 15px;
-        }
-        .card-container .card .number h2{
-            font-size: 1.8rem
-        }
-    }
-    @media (max-width : 400px) {
-        .main {
-            position:fixed;
-            top:0;
-            left:0;
-            width: 100%;
-        } 
-    }
-
-
- </style>
+ <style src="../assets/css/overview.css" scoped ></style>
  
