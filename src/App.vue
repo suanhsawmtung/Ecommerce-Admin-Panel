@@ -1,11 +1,23 @@
 <template>
   <div>
+    
+    <!-- Side Bar Component -->
     <SideBar v-show="this.$route.path !== '/' "></SideBar>
+
+    <!-- All Route View -->
     <router-view v-slot = "{ Component }">
+
+      <!-- Router Animation -->
       <transition name="route" mode="out-in" >
+
         <component :is="Component"></component>
+        
       </transition>
+      <!-- Router Animation End -->
+    
     </router-view>
+    <!-- All Route View End -->
+
   </div>
 </template>
 
@@ -14,10 +26,14 @@
   export default {
     components: {SideBar},
     methods: {
+
+      /* Check Log In Or Not */
       checkingLogIn(){
           this.$router.push({ path: '/' }); 
       }
+
     },
+
     mounted () {
       this.checkingLogIn();
     }
@@ -38,22 +54,18 @@
   /* route-transition */
   .route-enter-from{
     opacity: 0;
-    /* transform: translateX(100px); */
   }
   .route-enter-to{
     opacity: 1;
-    /* transform: translateX(0); */
   }
   .route-enter-active{
     transition: all 0.3s ease-out;
   }
   .route-leave-from{
     opacity: 1;
-    /* transform: translateX(0); */
   }
   .route-leave-to{
     opacity: 0;
-    /* transform: translateX(-100px); */
   }
   .route-leave-active{
     transition: all 0.3s ease-in;

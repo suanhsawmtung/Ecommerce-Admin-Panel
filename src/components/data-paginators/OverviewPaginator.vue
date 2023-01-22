@@ -1,28 +1,37 @@
 <template>
     <div>
+
+        <!-- Pagination -->
         <div class="pagination">
 
+            <!-- Go To The Original Condition -->
             <button type="button" title="First Page" @click="onClickPreviousPage()" >
                 <i class="fa-solid fa-chevron-left"></i><i class="fa-solid fa-chevron-left"></i>
             </button>
 
+            <!-- Go To The Number 1 Page -->
             <div class="page-btn" >
                 <button @click="onClickPage(1)" >1</button>
             </div>
 
+            <!-- Go To The Number 2 Page -->
             <div class="page-btn" >
                 <button @click="onClickPage(2)"  >2</button>
             </div>
 
+            <!-- Go To The Number 3 Page -->
             <div class="page-btn" >
                 <button @click="onClickPage(3)" >3</button>
             </div>
 
+            <!-- Go To The Number 4 Page -->
             <div class="page-btn" >
                 <button @click="onClickPage(4)"  >4</button>
             </div>
             
         </div>
+        <!-- Pagination End -->
+
     </div>
 </template>
 
@@ -30,12 +39,17 @@
     export default {
         name: "OverviewPaginator",
         methods: {
+
+            /* Go To The Page That Represent Button */
             onClickPage(page){
                 this.$store.dispatch("overviewStatus", page);
             },
+
+            /* Go To The Original Condition Function */
             onClickPreviousPage(){
                 this.$store.dispatch("resetBoxes");
             }
+
         },
     }
 </script>

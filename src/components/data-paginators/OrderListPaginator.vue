@@ -1,16 +1,22 @@
 <template>
     <div>
+
+        <!-- Pagination -->
         <div class="pagination">
 
+            <!-- Go To The Number 1 Page -->
             <div class="page-btn">
                 <button @click="onClickPage(1)" >1</button>
             </div>
 
+            <!-- Go To The Number 2 Page -->
             <div class="page-btn">
                 <button @click="onClickPage(2)" >2</button>
             </div>
             
         </div>
+        <!-- Pagination End -->
+        
     </div>
 </template>
 
@@ -18,9 +24,12 @@
     export default {
         name: "OrderListPaginator",
         methods: {
+
+            /* Go To The Page That Represent Button */
             onClickPage(number){
                 this.$store.dispatch("changeSectionOfOrderList", number);
             },
+
         },
     }
 </script>
