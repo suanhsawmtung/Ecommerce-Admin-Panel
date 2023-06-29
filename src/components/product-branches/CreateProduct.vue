@@ -19,14 +19,14 @@
                     <label for="category">Product Category</label>
                     <select class="inputField" id="category" v-model="product.category">
                         <option  value="" class="opt" :selected="true">Choose category</option>
-                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id">{{ category.title }}</option>
+                        <option class="opt" v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.title }}</option>
                     </select>
                     <small style="color: red" v-show="categoryError">Product Category is required.</small>
                 </div>
                 
                 <div class="item item4">
-                    <label for="image"><i class="fa-solid fa-plus"></i>Choose a photo</label>
-                    <input type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
+                    <label for="image" v-show="product.image === null"><i class="fa-solid fa-plus"></i>Choose a photo</label>
+                    <input v-show="product.image" type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
                     <small style="color: red" v-show="imageError">Product image is required.</small>
                 </div>
 
@@ -68,6 +68,7 @@
 
             }
         },
+        props: ["categories"],
         computed: {
             ...mapGetters("Categories", ["getCategories"]),
         },
@@ -199,7 +200,7 @@
         opacity: 0.8;
     }
     .form-body .item4 .inputField[type="file"]{
-        display: none;
+        margin-top: 10px;
     }
     .form-body .item6 .btn{
         width : 100%;

@@ -1,35 +1,34 @@
 <template>
     <div class="branchTable">
 
-        <table v-if="getCustomers.length!==0">
+        <table v-if="getCustomers && getCustomers.length!==0">
             <tr style="background-color: teal;">
-                <th class="photo" style="color: #fff;">Photo</th>
                 <th class="name" style="color: #fff;">Name</th>
                 <th class="email" style="color: #fff;">Email</th>
-                <th class="address" style="color: #fff;">Address</th>
+                <th class="phone" style="color: #fff;">Phone</th>
                 <th class="date" style="color: #fff;">Joined Date</th>
                 <th class="control btns" style="color: #fff;"></th>
             </tr>
-            <tr v-for="(customer,index) in paginatedCustomers" :key="index">
-                <td class="photo" >
-                    <img :src="customer.image" alt="">
-                </td>
+            <tr v-for="(customer,index) in getCustomers" :key="index">
                 <td class="name" >{{ customer.name }}</td>
                 <td class="email" >{{ customer.email }}</td>
                 <td class="phone" >{{ customer.phone }}</td>
-                <td class="date" >{{ customer.createdAt }}</td>
+                <td class="date" >-</td>
                 <td class="control btns" >
-                    <button @click="showModalOne(customer.id)" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
-                    <button @click="$emit('detail', 'customer', customer.id)" title="details"><i class="fa-solid fa-info"></i></button>
-                    <button @click="showModalTwo(customer.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
+                    <button @click="$emit('showModal', 'role', customer.id)" title="add to admin list"><i class="fa-regular fa-plus"></i></button>
+                    <button @click="$emit('showModal', 'detail', customer.id)" title="details"><i class="fa-solid fa-info"></i></button>
+                    <button @click="$emit('showModal', 'delete', customer.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
                 </td>
             </tr>
         </table>
-        <div class="noData" v-else>
+        <div class="noData" v-else-if="getCustomers && getCustomers.length===0">
             <h1>There is no customer here.</h1>
         </div>
+        <div class="noData" v-else>
+            <h1>Loading</h1>
+        </div>
         <div class="paginator">
-            <Paginator v-show="getCustomers.length>perPage" @customerPageChanged="onCustomerPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCustomers.length/4) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+            <Paginator :maxVisibleButton="maxVisibleButton" ></Paginator>
         </div>
     </div>
  </template>
@@ -38,38 +37,16 @@
     import Paginator from "../data-paginators/CustomerPaginator.vue";
     import { mapGetters } from "vuex";
     export default {
-        name: "ProductTable",
+        name: "CustomerTable",
         data () {
             return {
-                currentPage: 1,
-                perPage: 4,
-                maxVisibleButton: 4,
+                maxVisibleButton: 3,
             }
         },
         components: { Paginator },
         computed: {
-            ...mapGetters([ "getCustomers", "paginatedCustomers", "getCustomerCurrentPage" ]),
+            ...mapGetters([ "getCustomers" ]),
         },
-        methods: {
-            showModalOne (id) {
-               this.$emit("showModal", "addAdmin", id); 
-            },
-            showModalTwo(id){
-                this.$emit("showModal", "deleteAcc", id)
-            },
-            onCustomerPageChange(currentPage){
-                this.currentPage = currentPage;
-                let page = {
-                    currentPage: this.currentPage,
-                    perPage: this.perPage
-                }
-
-                this.$store.dispatch("customerPaginator", page)
-            }
-        },
-        mounted () {
-            this.currentPage = this.getCustomerCurrentPage;
-        }
     }
  </script>
  
@@ -106,30 +83,26 @@
     table tr td {
         padding: 10px 7px;
     }
-    .photo{
-        width: 10%;
-        object-fit: contain;
-        text-align: center;
-    }
-    .photo img{
-        width: 50%;
-    }
 
     .name{
         width: 20%;
+        text-align: center;
     }
     .email{
         width: 20%;
+        text-align: center;
     }
     .phone{
         width: 20%;
+        text-align: center;
     }
     .date{
-        width: 15%;
+        width: 20%;
+        text-align: center;
     }
 
     .control{
-        width: 15%;
+        width: 20%;
         text-align: center;
     }
     .control button{

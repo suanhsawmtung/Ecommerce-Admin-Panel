@@ -42,10 +42,10 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/customer" active-class="active" class="side-btn">
+                    <router-link to="/user" active-class="active" class="side-btn">
                         <div class="link-container">
                             <div class="icon"><i class="fa-solid fa-users"></i></div>
-                            <div class="text-title">Customers</div>
+                            <div class="text-title">Users</div>
                         </div>
                     </router-link>
                 </li>

@@ -71,6 +71,7 @@ header h1 {
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    margin-left: 10px;
     transition: 0.5s;
 }
 

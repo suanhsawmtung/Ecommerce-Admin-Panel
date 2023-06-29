@@ -1,24 +1,18 @@
 <template>
-     <SearchBox v-show="searchKey!==''">
-      <div class="search-item" v-for="(product, index) in setSearchData" :key="index">
-        <span>{{ product.title }}</span>
-        <img :src="product.image" alt="">
-      </div>
-    </SearchBox>
     <transition name="top" appear>
       <div class="topBar" >
           <div class="toggle" @click="toggle(getToggleStatus)" >
               <i class="fa-solid fa-bars"></i>
           </div>
-          <div class="searchBox">
-            <input type="text" class="search" placeholder="Search here" v-model="searchKey">
+          <div class="searchBox" v-if="this.$route.path !== '/overview' && this.$route.path !== '/setting'">
+            <input type="text" class="search" placeholder="Search here" @input="getSearchResult(this.$route.name)" v-model="searchKey">
           </div>
           <div class="iconBox">
               <div class="user-icon">
                 <i class="fa-regular fa-user"></i>
               </div>
-              <div class="user-name">
-                {{ $store.getters.getMyProfileData.name }}
+              <div class="user-name" v-if="getMyData">
+                {{ getMyData.name }}
               </div>
           </div>
       </div>
@@ -26,27 +20,40 @@
    </template>
    
    <script>
-      import { mapGetters, mapActions } from "vuex";
-      import SearchBox from "./SearchBox.vue";
-      export default {
-          name : 'TopBar',
-          data () {
-            return {
-              searchKey: '',
+    import { mapGetters, mapActions } from "vuex";
+    export default {
+        name : 'TopBar',
+        data () {
+          return {
+            searchKey: '',
+            queryTimeout: null,
+          }
+        },
+        methods: {
+            ...mapActions(["toggle", "myProfile", "searchUser"]),
+            ...mapActions("Categories", ["searchCategory"]),
+            ...mapActions("Products", ["searchProduct"]),
+            getSearchResult(routeName){
+              clearTimeout(this.queryTimeout);
+              this.queryTimeout = setTimeout(async() => {
+                switch(routeName){
+                  case "category":
+                    await this.searchCategory(this.searchKey);
+                    break;
+                  case "product":
+                    await this.searchProduct(this.searchKey);
+                    break;
+                  case "user":
+                    await this.searchUser(this.searchKey);
+                    break;
+                }
+              }, 500);
             }
-          },
-          components: { SearchBox },
-          methods: {
-             ...mapActions(["toggle"]),
-          },
-          computed: {
-            ...mapGetters(["getToggleStatus"]),
-            ...mapGetters("Products", ["getProducts"]),
-            setSearchData(){
-                return this.getProducts.filter(product => product.title.toLowerCase().includes(this.searchKey.toLowerCase()));
-            }
-          },
-      }
+        },
+        computed: {
+          ...mapGetters(["getToggleStatus", "getMyData"]),
+        },
+    }
    </script>
    
    <style scoped>

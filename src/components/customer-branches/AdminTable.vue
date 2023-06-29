@@ -12,10 +12,10 @@
                 <td class="name" >{{ admin.name }}</td>
                 <td class="email" >{{ admin.email }}</td>
                 <td class="phone" >{{ admin.phone }}</td>
-                <td class="date" >{{ admin.createdAt }}</td>
+                <td class="date" >-</td>
                 <td class="control btns" >
-                    <button @click="showRemoveModal(admin.id)" title="delete"><i class="fa-solid fa-minus"></i></button>
-                    <button @click="$emit('detail', 'admin', admin.id)" title="details"><i class="fa-solid fa-info"></i></button>
+                    <button @click="$emit('showModal', 'role', admin.id)" title="Remove from admin List"><i class="fa-solid fa-minus"></i></button>
+                    <button @click="$emit('showModal', 'detail', admin.id)" title="details"><i class="fa-solid fa-info"></i></button>
                 </td>
             </tr>
         </table>
@@ -42,9 +42,6 @@
             ...mapGetters([ "getAdmins", "paginatedAdmins", "getAdminCurrentPage" ]),
         },
         methods: {
-            showRemoveModal(id){
-                this.$emit("showModal", "removeAdmin", id)
-            },
             onAdminPageChange(currentPage){
                 this.currentPage = currentPage;
                 let page = {
@@ -97,19 +94,23 @@
 
     .name{
         width: 20%;
+        text-align: center;
     }
     .email{
         width: 20%;
+        text-align: center;
     }
     .phone{
         width: 20%;
+        text-align: center;
     }
     .date{
-        width: 25%;
+        width: 20%;
+        text-align: center;
     }
 
     .control{
-        width: 15%;
+        width: 20%;
         text-align: center;
         /* background: red; */
     }

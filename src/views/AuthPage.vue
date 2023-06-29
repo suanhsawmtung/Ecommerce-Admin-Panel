@@ -35,7 +35,7 @@
 <script>
     import RegisterPage from "../components/auth-branches/RegisterPage.vue";
     import LoginPage from "../components/auth-branches/LoginPage.vue";
-    import setAuthHeader from "../utils/setAuthHeader";
+    import setAuthHeader from "../utils/setAuthHeader"; 
     import { mapActions, mapGetters } from "vuex";
     export default {
         name: 'AuthPage',
@@ -54,7 +54,7 @@
         },
         methods: {
             ...mapActions("Products", ["allProducts"]),
-            ...mapActions("Categories", ["allCategories"]),
+            
 
             /* Change Login and Register Form */
             changeForm (status) {
@@ -73,11 +73,11 @@
             },
 
              /* Login And Show Overview Page After Login */
-            showOverviewPage(){
+            async showOverviewPage(){
                 if(localStorage.getItem("TOKEN") !== null){
-                    setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
-                    this.getAllDatas();
-                    setTimeout(()=>this.$router.push({ path: '/overview' }), 2500);
+                    await setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
+                    await this.$store.dispatch("overviewData");
+                    this.$router.push({ path: '/overview' });
                 }else{
                     this.errorMessage = this.$store.getters.getError;
                     this.credentialsErrorStatus = true;
@@ -86,12 +86,12 @@
             },
 
              /* Get All Required Data */
-            getAllDatas(){
-                this.allProducts();
-                this.allCategories();
-                this.$store.dispatch("overviewData");
-                this.$store.dispatch("allCustomers");
-            },
+            // getAllDatas(){
+            //     this.allProducts();
+            //     this.allCategories();
+                
+            //     this.$store.dispatch("allCustomers");
+            // },
 
              /* Show Login Form */
             showLoginForm(){
@@ -113,10 +113,10 @@
             },
 
              /* Checking Already Login Or Not */
-            checkLogin(){
+            async checkLogin(){
                 if(localStorage.getItem("TOKEN") !== null){
-                    setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
-                    this.getAllDatas();
+                    // await setAuthHeader(localStorage.getItem("TOKEN"));  /* <- Add Token To Axios Header */
+                    await this.$store.dispatch("overviewData");
                     setTimeout(() => this.$router.push({ path: '/overview' }), 5000);
                 }else{
                     setTimeout(()=>{

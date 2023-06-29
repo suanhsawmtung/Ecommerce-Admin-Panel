@@ -1,5 +1,5 @@
-<template>
-    <div class="chart" v-show="saleHistory">
+<!-- <template>
+    <div class="chart" style="display: none;">
         <h3>Last 6 months sales </h3>
         <canvas id="myChart"></canvas>
     </div>
@@ -21,7 +21,7 @@
             }
         },
         computed: {
-            ...mapGetters(["saleHistory", "getOrderDetails"]),
+            ...mapGetters(["getOrderDetails"]),
         },
         methods: {
            setLabelsForChart (){
@@ -135,4 +135,4 @@
             margin: 0 auto;
         }
     } 
-</style>
+</style> -->

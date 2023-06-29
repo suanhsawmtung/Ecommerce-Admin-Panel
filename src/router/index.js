@@ -25,10 +25,10 @@ const routes = [{
             import ('../views/ProductPage.vue')
     },
     {
-        path: '/customer',
-        name: 'customer',
+        path: '/user',
+        name: 'user',
         component: () =>
-            import ('../views/CustomerPage.vue')
+            import ('../views/UserPage.vue')
     },
     {
         path: '/order',
@@ -41,6 +41,12 @@ const routes = [{
         name: 'setting',
         component: () =>
             import ('../views/SettingPage.vue')
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: '404',
+        component: () => 
+            import ('../views/404Page.vue')
     }
 ]
 
@@ -49,9 +55,9 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach(async(to) => {
-    if (localStorage.length === 0 && to.name !== 'auth') {
-        return { name: 'auth' }
+router.beforeEach((to) => {
+    if (!localStorage.getItem("TOKEN") && to.name !== 'auth') {
+        router.push({ name: 'auth' });
     }
 })
 

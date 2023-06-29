@@ -20,6 +20,7 @@ export default {
             emailError: false,
             phoneError: false,
             oldPasswordError: false,
+            oldPasswordNotMatchError: false,
             newPasswordError: false,
             newCountError: false,
             confirmationError: false,
@@ -40,18 +41,18 @@ export default {
     },
     components: { TopBar, Profile, Modal },
     computed: {
-        ...mapGetters(["getToggleStatus", "getMyProfileData"]),
+        ...mapGetters(["getToggleStatus", "getMyData"]),
     },
     methods: {
         ...mapActions(["updateUser"]),
 
         /* Change My Profile Name */
-        changeName() {
+        async changeName() {
             this.clearValidationMessage();
 
             if (this.name !== "") {
-                this.getMyProfileData.name = this.name;
-                this.updateUser(this.getMyProfileData);
+                this.getMyData.name = this.name;
+                await this.updateUser(this.getMyData);
             } else if (this.name === "") {
                 this.nameError = true;
                 return;
@@ -69,11 +70,11 @@ export default {
         },
 
         /* Change My Profile Email */
-        changeEmail() {
+        async changeEmail() {
             this.clearValidationMessage();
             if (this.email !== "") {
-                this.getMyProfileData.email = this.email;
-                this.updateUser(this.getMyProfileData);
+                this.getMyData.email = this.email;
+                await this.updateUser(this.getMyData);
             } else {
                 this.emailError = true;
                 return;
@@ -86,11 +87,11 @@ export default {
         },
 
         /* Change My Profile Phone Number */
-        changePhone() {
+        async changePhone() {
             this.clearValidationMessage();
             if (this.phone !== "") {
-                this.getMyProfileData.phone = this.phone;
-                this.updateUser(this.getMyProfileData);
+                this.getMyData.phone = this.phone;
+                await this.updateUser(this.getMyData);
             } else {
                 this.phoneError = true;
                 return;
@@ -103,20 +104,24 @@ export default {
         },
 
         /* Change New Password */
-        changePassword() {
+        async changePassword() {
             this.clearValidationMessage();
             this.passwordValidation();
             if (this.passwordChangeStatus) {
-                let data = {
-                    id: this.getMyProfileData.id,
+                let newPasswordData = {
+                    id: this.getMyData.id,
                     oldPassword: this.oldPassword,
                     newPassword: this.newPassword
                 }
-                axios.post("http://localhost:8000/api/user/changePassword", data);
-                this.modalToggle("password");
-                this.toastMessage = "Changed password successfully.";
-                setTimeout(() => this.toastStatus = true, 1000);
-                setTimeout(() => this.toastStatus = false, 3000);
+                let { data } = await axios.post("http://localhost:8000/api/user/changePassword", newPasswordData);
+                if(data.message !== "success"){
+                    this.oldPasswordNotMatchError = true;
+                }else{
+                    this.modalToggle("password");
+                    this.toastMessage = "Changed password successfully.";
+                    setTimeout(() => this.toastStatus = true, 1000);
+                    setTimeout(() => this.toastStatus = false, 3000);
+                }
             }
         },
 
@@ -182,6 +187,7 @@ export default {
             this.newCountError = false;
             this.confirmationError = false;
             this.passwordChangeStatus = false;
+            this.oldPasswordNotMatchError = false;
         }
     },
 }

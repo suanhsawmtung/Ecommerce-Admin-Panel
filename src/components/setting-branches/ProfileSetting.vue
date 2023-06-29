@@ -3,21 +3,21 @@
         <header>
             <h1>General Profile Setting</h1>
         </header>
-        <ul>
+        <ul v-if="getMyData">
             <li>
-                <h3><i class="fa-solid fa-user"></i>{{ getMyProfileData.name }}</h3>
+                <h3><i class="fa-solid fa-user"></i>{{ getMyData.name }}</h3>
                 <div class="btn-box">
                     <button @click="$emit('showModal', 'name')">Change</button>
                 </div>
             </li>
             <li>
-                <h3><i class="fa-solid fa-envelope"></i>{{ getMyProfileData.email }}</h3>
+                <h3><i class="fa-solid fa-envelope"></i>{{ getMyData.email }}</h3>
                 <div class="btn-box">
                     <button @click="$emit('showModal', 'email')">Change</button>
                 </div>
             </li>
             <li>
-                <h3><i class="fa-solid fa-phone"></i>{{ getMyProfileData.phone }}</h3>
+                <h3><i class="fa-solid fa-phone"></i>{{ getMyData.phone }}</h3>
                 <div class="btn-box">
                     <button @click="$emit('showModal', 'phone')">Change</button>
                 </div>
@@ -35,7 +35,7 @@
     export default {
         name: "ProfileSetting",
         computed: {
-            ...mapGetters(["getMyProfileData"]),
+            ...mapGetters(["getMyData"]),
         },
     }
 </script>

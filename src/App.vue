@@ -2,7 +2,7 @@
   <div>
     
     <!-- Side Bar Component -->
-    <SideBar v-show="this.$route.path !== '/' "></SideBar>
+    <SideBar v-if="this.$route.path !== '/' && this.$route.name !== '404'"></SideBar>
 
     <!-- All Route View -->
     <router-view v-slot = "{ Component }">
@@ -22,21 +22,21 @@
 </template>
 
 <script>
-  import SideBar from "./components/SideNavBar.vue";
+  import { mapActions, mapGetters } from "vuex";
+import SideBar from "./components/SideNavBar.vue";
   export default {
     components: {SideBar},
-    methods: {
-
-      /* Check Log In Or Not */
-      checkingLogIn(){
-          this.$router.push({ path: '/' }); 
-      }
-
+    computed: {
+      ...mapGetters(["getMyData"]),
     },
-
+    methods: {
+      ...mapActions(["myProfile"]),
+    },
     mounted () {
-      this.checkingLogIn();
-    }
+      if(localStorage.getItem("TOKEN") && !this.getMyData){
+        this.myProfile();
+      }
+    },
   }
 
 </script>

@@ -5,13 +5,18 @@ export default {
     namespaced: true,
     state: {
         /* All Products */
-        products: [],
+        products: null,
 
-        /* Start And End Point To Make Paginated Product Data */
-        productPaginationPoints: {
-            start: 0,
-            end: 4,
-        },
+        /* Pagination Data */
+        links: null,
+        currentPage: null,
+        lastPage: null,
+        firstPageUrl: null,
+        lastPageUrl: null,
+        previousPageUrl: null,
+        nextPageUrl: null,
+        perPage: null,
+        totalProduct: null,
 
     },
 
@@ -27,15 +32,35 @@ export default {
             return state.productPaginationPoints.end / (state.productPaginationPoints.end - state.productPaginationPoints.start);
         },
 
+        /* Get Pagination Data */
+        getLinks: state => state.links,
+        getCurrentPage: state => state.currentPage,
+        getLastPage: state => state.lastPage,
+        getFirstPageUrl: state => state.firstPageUrl,
+        getLastPageUrl: state => state.lastPageUrl,
+        getPreviousPageUrl: state => state.previousPageUrl,
+        getNextPageUrl: state => state.nextPageUrl,
+        getPerPage: state => state.perPage,
+        getTotalProduct: state => state.totalProduct,
+
     },
 
     mutations: {
         /* Set All Products Data */
-        setProducts: (state, products) => {
-            products.forEach(product => {
-                product.image = 'http://localhost:8000/storage/' + product.image;
+        setProducts: (state, data) => {
+            data.data.forEach(product => {
+                product.image = 'http://localhost:8000/storage/products/' + product.image;
             })
-            state.products = products.reverse();
+            state.products = data.data;
+            state.links = data.links;
+            state.firstPageUrl = data.first_page_url;
+            state.lastPageUrl = data.last_page_url;
+            state.currentPage = data.current_page;
+            state.lastPage = data.last_page;
+            state.perPage = data.per_page;
+            state.totalProduct = data.total;
+            state.previousPageUrl = data.prev_page_url;
+            state.nextPageUrl = data.next_page_url;
         },
 
         /* Remove Deleted Products Data From State */
@@ -45,21 +70,15 @@ export default {
             })
         },
 
-        /* Change Start And End Points Of Product Paginator */
-        setProductPaginationPoints: (state, points) => {
-            state.productPaginationPoints.start = points.start;
-            state.productPaginationPoints.end = points.end;
-        },
-
         /* Add New Product Data To State */
         addNewProduct: (state, newProduct) => {
-            newProduct.image = "http://localhost:8000/storage/" + newProduct.image;
+            newProduct.image = "http://localhost:8000/storage/products/" + newProduct.image;
             state.products.unshift(newProduct);
         },
 
         /* Add Updated Product Data To State */
         updateOldProduct: (state, updatedProduct) => {
-            updatedProduct.image = "http://localhost:8000/storage/" + updatedProduct.image;
+            updatedProduct.image = "http://localhost:8000/storage/products/" + updatedProduct.image;
             state.products = state.products.filter(product => {
                 return product.id !== updatedProduct.id
             });
@@ -70,8 +89,8 @@ export default {
 
     actions: {
         /* Get All Products Data */
-        allProducts: async({ commit }) => {
-            const { data } = await axios.get("http://localhost:8000/api/product/getAllProducts");
+        allProducts: async({ commit }, url) => {
+            const { data } = await axios.get(url);
             commit('setProducts', data);
         },
 
@@ -90,29 +109,23 @@ export default {
         /* Update Product */
         updateProduct: async({ commit }, updateData) => {
             try {
-                let { data } = await axios.post(`http://localhost:8000/api/product/updateProduct/${updateData.id}`, updateData);
+                let { data } = await axios.post(`http://localhost:8000/api/product/updateProduct`, updateData);
                 commit("updateOldProduct", data);
             } catch (error) {
                 console.log(error);
             }
         },
 
-        /* Change Category Title Of Product */
-        changeCategoryTitleOfProduct: ({ commit }, allProducts) => {
-            commit("setProducts", allProducts);
+        /* Search Products */
+        searchProduct: async({commit}, searchKey) => {
+            const { data } = await axios.get(`http://localhost:8000/api/product/getAllProducts/${searchKey}`);
+            commit('setProducts', data);
         },
 
-        /* Start Point And End Point To Slice Product Data For Pagination */
-        productPaginator: ({ commit }, page) => {
-            let start = (page.currentPage - 1) * page.perPage;
-            let end = start + page.perPage;
-            let points = {
-                start: start,
-                end: end
-            }
-            commit("setProductPaginationPoints", points);
-        },
-
-
+        /* Filter Products By Category */
+        filterProductsByCategory: async({commit}, id) => {
+            const { data } = await axios.get(`http://localhost:8000/api/product/filterProducts/${id}`);
+            commit('setProducts', data);
+        }
     }
 }

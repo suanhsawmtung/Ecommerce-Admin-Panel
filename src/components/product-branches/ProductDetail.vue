@@ -10,6 +10,7 @@
             <span>{{ product.price }} Ks</span>
             <span><i class="fa-regular fa-eye"></i> - {{ product.count }}</span>
             <span><i class="fa-solid fa-star"></i> - {{ product.rate }}</span>
+            <span><i class="fa-solid fa-star"></i> - {{ product.count }}</span>
         </div>
         <div class="box-three">
             <div class="img-box">
@@ -24,32 +25,10 @@
 </template>
 
 <script>
-    import { mapGetters } from "vuex"
-    export default {
-        name: "ProductDetail.vue",
-        props: ['id'],
-        data () {
-            return {
-                product: {}
-            }
-        },
-        computed: {
-            ...mapGetters("Products", ["getProducts"]),
-        },
-        methods: {
-            setProduct (id) {
-                if(id!==null){
-                    let productData = this.getProducts.filter(product=>{
-                        return product.id === id;
-                    });
-                    this.product = productData[0];
-                }
-            },
-        },
-        updated () {
-            this.setProduct(this.id);
-        }
-    }
+export default {
+    name: "ProductDetail.vue",
+    props: ['product'],
+}
 </script>
 
 <style scoped>

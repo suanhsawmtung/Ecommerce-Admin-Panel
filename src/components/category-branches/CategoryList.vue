@@ -1,58 +1,63 @@
 <template>
     <div class="category-box">
-        <header>
+        <header v-if="getCategories">
             <h1>Category</h1>
             <button @click="$emit('showModal', 'create', null)">Create Category</button>
         </header>
-        <ul v-if="getCategories.length!==0">
-            <li v-for="(category, index) in paginatedCategories" :key="index">
-                <h3>{{ category.title }}</h3>
-                <div class="btn-box">
-                    <button @click="$emit('showModal', 'update', category.id)">Edit Category</button>
-                    <button @click="$emit('showModal', 'delete', category.id)">Delete Category</button>
-                </div>
-            </li>
-        </ul>
-        <div class="noData" v-else>
-            <h1>There is no category here.</h1>
+        <div v-if="getCategories">
+            <ul v-if="getCategories.length !== 0">
+                <li v-for="(category, index) in paginatedCategories" :key="index">
+                    <h3>{{ category.title }}</h3>
+                    <div class="btn-box">
+                        <button @click="$emit('showModal', 'update', category.id)">Edit Category</button>
+                        <button @click="$emit('showModal', 'delete', category.id)">Delete Category</button>
+                    </div>
+                </li>
+            </ul>
+            <div class="noData" v-else>
+                <h1>There is no category here.</h1>
+            </div>
         </div>
-        <Paginator v-show="getCategories.length > perPage" @categoryPageChanged="onCategorytPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCategories.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+        <div class="noData" v-else>
+            <h1>Loading</h1>
+        </div>
+        <Paginator v-if="getCategories && getCategories.length > perPage" @categoryPageChanged="onCategorytPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getCategories.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
     </div>
 </template>
 
 <script>
-    import { mapGetters, mapActions } from 'vuex';
-    import Paginator from "../data-paginators/CategoryPaginator.vue";
+import { mapGetters, mapActions } from 'vuex';
+import Paginator from "../data-paginators/CategoryPaginator.vue";
 
-    export default {
-        name: "CategoryList",
-        data () {
-            return {
-                currentPage: 1,
-                perPage: 3,
-                maxVisibleButton: 3,
-            }
-           },
-        components: { Paginator },
-        computed: {
-            ...mapGetters("Categories", ["getCategories", "paginatedCategories", "getCategoryCurrentPage"]),
-        },
-        methods: {
-            ...mapActions("Categories", ["categoryPaginator"]),
-            onCategorytPageChange(currentPage){
-                this.currentPage = currentPage;
-                let page = {
-                    currentPage: this.currentPage,
-                    perPage: this.perPage
-                }
-                this.categoryPaginator(page);
-            },
-        },
-        mounted () {
-            this.currentPage=this.getCategoryCurrentPage;
+export default {
+    name: "CategoryList",
+    data () {
+        return {
+            currentPage: 1,
+            perPage: 3,
+            maxVisibleButton: 3,
         }
-        
+        },
+    components: { Paginator },
+    computed: {
+        ...mapGetters("Categories", ["getCategories", "paginatedCategories", "getCategoryCurrentPage"]),
+    },
+    methods: {
+        ...mapActions("Categories", ["categoryPaginator"]),
+        onCategorytPageChange(currentPage){
+            this.currentPage = currentPage;
+            let page = {
+                currentPage: this.currentPage,
+                perPage: this.perPage
+            }
+            this.categoryPaginator(page);
+        },
+    },
+    mounted () {
+        this.currentPage=this.getCategoryCurrentPage;
     }
+    
+}
 </script>
 
 <style scoped>
@@ -102,10 +107,11 @@
     }
     .noData{
         width: 100%;
-        height: 100%;
+        /* height: 80%; */
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-top: 100px;
     }
     .noData h1{
         color: teal;

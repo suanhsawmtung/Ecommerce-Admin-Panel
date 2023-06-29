@@ -9,7 +9,7 @@
             
             <!-- Top Four Boxes -->
             <transition-group tag="ul" name="cards" appear class="card-container" @before-enter="beforeEnter" @enter="enter">
-                <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index" v-show="boxStatus">
+                <li class="card" v-for="(info, index) in overviewInfo" :key="index" data-index="index">
                     <div class="number">
                         <h2>{{ info.value }}</h2>
                         <p>{{ info.title }}</p>
@@ -47,24 +47,24 @@
  </template>
  
  <script>
-    import { mapGetters, mapActions } from "vuex";
+    import { mapGetters } from "vuex";
     import gsap from "gsap";
-    import { ref, computed } from "vue";
+    import { computed } from "vue";
     import { useStore } from "vuex";
     import TopBar from "../components/TopBar.vue";
     import SaleChart from "../components/overview-branches/SaleChart.vue";
     import ProductChart from "../components/overview-branches/TopSaleProduct.vue";
     import Paginator from "../components/data-paginators/OverviewPaginator.vue";
-    import setAuthHeader from "../utils/setAuthHeader";
+    // import setAuthHeader from "../utils/setAuthHeader";
 
     export default {
         name : 'OverviewPage',
         components: {TopBar, SaleChart, ProductChart, Paginator},
         computed: {
-            ...mapGetters(["getToggleStatus", "paginatorStatus", "overviewCurrentPage", "boxStatus", "getMyProfileData"]),
+            ...mapGetters(["getToggleStatus", "overviewCurrentPage"]),
         },
         methods: {
-            ...mapActions(["showPaginator", "resetBoxes"]),
+            // ...mapActions(["showPaginator", "resetBoxes"]),
         },
         setup(){
             
@@ -74,10 +74,10 @@
             const getOrders = computed(()=>store.getters.getOrders);
             
             /* Get All Customers From Vuex */
-            const getCustomers = computed(()=>store.getters.getCustomers);
+            // const getCustomers = computed(()=>store.getters.getCustomers);
 
             /* Total Customers Count */
-            const totalCustomers = computed(()=>getCustomers.value.length);
+            // const totalCustomers = computed(()=>getCustomers.value.length);
 
             /* Computing And Get Total Revenue */
             const totalRevenue = computed(()=>{
@@ -95,12 +95,12 @@
             })
 
             /* Data To Display Overviews Boxes */
-            const overviewInfo = ref([
-                {value: totalCustomers, title: "Customer Counts", icon: "fa-solid fa-users"},
-                {value: "25,000 Ks", title: "Today's Income", icon: "fa-solid fa-dollar-sign"},
-                {value: totalRevenue , title: "Total Revenue", icon: "fa-solid fa-sack-dollar"},
-                {value: pendingOrders, title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
-            ]) 
+            // const overviewInfo = ref([
+            //     {value: totalCustomers, title: "Customer Counts", icon: "fa-solid fa-users"},
+            //     {value: "25,000 Ks", title: "Today's Income", icon: "fa-solid fa-dollar-sign"},
+            //     {value: totalRevenue , title: "Total Revenue", icon: "fa-solid fa-sack-dollar"},
+            //     {value: pendingOrders, title: "Pending Orders", icon: "fa-solid fa-cart-arrow-down"},
+            // ]) 
 
             /* Animation For Top Four Boxes, Before Enter */
             const beforeEnter = (el) => {
@@ -120,25 +120,25 @@
                 })  
             }
 
-            return { beforeEnter, enter, overviewInfo, getOrders, getCustomers, totalCustomers, totalRevenue, pendingOrders }
+            return { beforeEnter, enter, getOrders, totalRevenue, pendingOrders }
         },
         mounted () {
             /* Check My Role Is Admin Or Not */ 
-            if(this.getMyProfileData.role!=="admin"){
-                setAuthHeader(localStorage.getItem("TOKEN")); 
-                this.$store.dispatch("logout").then(() => {
-                    this.$router.push({ path: '/' });
-                });
-                return;
-            }
+            // if(this.getMyProfileData.role!=="admin"){
+            //     setAuthHeader(localStorage.getItem("TOKEN")); 
+            //     this.$store.dispatch("logout").then(() => {
+            //         this.$router.push({ path: '/' });
+            //     });
+            //     return;
+            // }
 
             /* Checking To Show Or Hide Paginator When Screen Size Change Or When Enter With Every Screen Size */
-            this.showPaginator();
-            window.addEventListener("resize", this.showPaginator);
+            // this.showPaginator();
+            // window.addEventListener("resize", this.showPaginator);
             
             /* Checking To Show Or Hide Boxes And Charts When Screen Size Change Or When Enter With Every Screen Size */
-            this.resetBoxes();
-            window.addEventListener("resize", this.resetBoxes);
+            // this.resetBoxes();
+            // window.addEventListener("resize", this.resetBoxes);
         }
     }
  </script>

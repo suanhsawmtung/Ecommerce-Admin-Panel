@@ -3,15 +3,11 @@ import axios from "axios";
 
 export default {
     state: {
-        myData: null,
-
         token: null,
 
         error: null
     },
     getters: {
-        getMyData: state => state.myData,
-
         getToken: state => state.token,
 
         /* Error Message */
@@ -24,16 +20,15 @@ export default {
                 state.error = data.message;
                 return;
             }
-            state.myData = data.user;
             state.token = data.token;
             localStorage.setItem("TOKEN", data.token);
-            localStorage.setItem("EMAIL", data.user.email);
+            localStorage.setItem("ID", data.user.id);
             state.error = null;
         },
 
         /* Clear State Data And LocalStorage Data After Logout */
         cleanMyData: state => {
-            state.myData = {};
+            state.myData = null;
             state.token = null;
             localStorage.clear();
         },
@@ -56,6 +51,6 @@ export default {
         logout: async({ commit }) => {
             await axios.post('http://localhost:8000/api/auth/logout');
             commit('cleanMyData');
-        }
+        },
     }
 }

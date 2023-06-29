@@ -1,31 +1,34 @@
 <template>
     <div class="productTable">
-        <table v-if="getProducts.length!==0">
+        <div class="noData" v-if="!getProducts">
+            <h1>Loading</h1>
+        </div>
+        <table v-if="getProducts && getProducts.length!==0">
             <thead>
                 <tr style="background-color: teal;">
                     <th class="photo pt" style="color: #fff;">Photo</th>
                     <th class="name" style="color: #fff;">Name</th>
                     <th class="category" style="color: #fff;">Category</th>
                     <th class="price" style="color: #fff;">Price</th>
-                    <th class="view" style="color: #fff;">View_count</th>
-                    <th class="rate" style="color: #fff;">Rate</th>
+                    <th class="view" style="color: #fff;">Rate</th>
+                    <th class="rate" style="color: #fff;">Count</th>
                     <th class="updated" style="color: #fff;">Latest_update</th>
                     <th class="control btns" style="color: #fff;"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr  v-for="(product,index) in paginatedProducts" :key="index">
+                <tr  v-for="(product,index) in getProducts" :key="index">
                     <td class="photo" ><img :src="product.image" alt=""></td>
                     <td class="name" >{{product.title}}</td>
                     <td class="category" >{{product.category_title}}</td>
                     <td class="price p" >{{product.price}} Ks</td>
-                    <td class="view vc" >{{product.count}}</td>
-                    <td class="rate re" >{{product.rate}}</td>
-                    <td class="updated" >{{ product.updatedAt }}</td>
+                    <td class="view vc" >{{product.rate}}</td>
+                    <td class="count re" >{{product.count}}</td>
+                    <td class="updated" >{{ product.createdAt }}</td>
                     <td class="control btns" >
-                        <button @click="showProductUpdatePage('productUpdate', product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                        <button @click="showProductUpdatePage(product.id)" title="edit"><i class="fa-regular fa-pen-to-square"></i></button>
                         <button @click="$emit('deleteProduct', product.id)" title="delete"><i class="fa-regular fa-trash-can"></i></button>
-                        <button @click="showProductBranch('productDetail', product.id)" title="info"><i class="fa-solid fa-info"></i></button>
+                        <button @click="showProductDetailPage(product.id)" title="info"><i class="fa-solid fa-info"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -34,7 +37,7 @@
             <h1>There is no product here.</h1>
         </div>
         <div class="paginator">
-            <Paginator v-show="getProducts.length>perPage" @productPageChanged="onProductPageChange" :currentPage="currentPage" :totalPages=Math.ceil(getProducts.length/perPage) :perPage="perPage" :maxVisibleButton="maxVisibleButton"></Paginator>
+            <Paginator :maxVisibleButton="maxVisibleButton"></Paginator>
         </div>
     </div>
  </template>
@@ -47,36 +50,23 @@
         name: "ProductTable",
         data () {
             return {
-                currentPage: 1,
-                perPage: 4,
                 maxVisibleButton: 3,
             }
         },
         components: { Paginator },
         computed: {
-            ...mapGetters("Products", ["getProducts", "paginatedProducts", "getProductCurrentPage"]),
+            ...mapGetters("Products", ["getProducts", "paginatedProducts", "getProductCurrentPage", "getPerPage"]),
         },
         methods: {
             ...mapActions("Products", ["productPaginator"]),
-            showProductBranch (status, id) {
-               this.$emit("showProductBranch", status, id); 
+            showProductDetailPage(id) {
+               this.$emit("productDetail", id); 
             },
-            onProductPageChange(currentPage){
-                this.currentPage = currentPage;
-                let page = {
-                    currentPage: this.currentPage,
-                    perPage: this.perPage
-                }
-                this.productPaginator(page);
-            },
-            async showProductUpdatePage(status, id){
+            async showProductUpdatePage(id){
                 let { data } = await axios.get(`http://localhost:8000/api/product/getProductDataForUpdate/${id}`);
                 this.$emit("productUpdate", data);
             }
         },
-        mounted () {
-            this.currentPage=this.getProductCurrentPage;
-        }
     }
  </script>
  
@@ -127,27 +117,29 @@
 
     .name{
         width: 25%;
+        text-align: center;
     }
     .category{
         width: 14%;
+        text-align: center;
     }
     .price{
         width: 13%;
     }
     .p{
-        text-align: right;
+        text-align: center;
     }
     .view{
         width: 8%;
     }
     .vc{
-        text-align: right;
+        text-align: center;
     }
-    .rate{
+    .count{
         width: 5%;
     }
     .re{
-        text-align: right;
+        text-align: center;
     }
     .control{
         width: 10%;
@@ -184,7 +176,7 @@
 
     /* make it responsive */
     @media (max-width: 991px) {
-        .view, .rate, .category{
+        .view, .count, .category{
             display : none;
         }
        .photo{

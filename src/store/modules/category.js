@@ -5,19 +5,23 @@ export default {
     namespaced: true,
     state: {
         /* All Categories */
-        categories: [],
+        categories: null,
+
+        simpleCategories: null,
 
         /* Start And End Point To Make Paginated Category Data */
         categoryPaginationPoints: {
             start: 0,
             end: 3,
-        }
+        }, 
 
     },
 
     getters: {
         /* Get All Categories */
         getCategories: state => state.categories,
+
+        getSimpleCategories: state => state.simpleCategories,
 
         /* Paginated Categories Data */
         paginatedCategories: state => state.categories.slice(state.categoryPaginationPoints.start, state.categoryPaginationPoints.end),
@@ -32,6 +36,9 @@ export default {
     mutations: {
         /* Set All Category Data */
         setCategories: (state, categories) => state.categories = categories.reverse(),
+
+        /* Set Taken Category Data */
+        setTakenCategories: (state, categories) => state.simpleCategories = categories,
 
         /* Set Start Point And End Point To Slice Category Data For Pagination */
         setCategoryPaginationPoints: (state, points) => {
@@ -63,26 +70,38 @@ export default {
     actions: {
         /* Get All Categories Data */
         allCategories: async({ commit }) => {
-            const { data } = await axios.get("http://localhost:8000/api/product/getAllCategories");
+            const { data } = await axios.get("http://localhost:8000/api/category/getAllCategories");
             commit('setCategories', data);
         },
 
         /* Delete Category When NO Products Exist */
         deleteCategory: async({ commit }, removeId) => {
-            await axios.delete(`http://localhost:8000/api/product/deleteCategory/${removeId}`);
+            await axios.delete(`http://localhost:8000/api/category/deleteCategory/${removeId}`);
             commit("removeCategory", removeId);
         },
 
         /* Create New Category */
         createCategory: async({ commit }, newCategory) => {
-            let { data } = await axios.post("http://localhost:8000/api/product/createCategory", newCategory);
+            let { data } = await axios.post("http://localhost:8000/api/category/createCategory", newCategory);
             commit("addNewCategory", data);
         },
 
         /* Update Category Data */
         updateCategory: async({ commit }, newCategory) => {
-            let { data } = await axios.post(`http://localhost:8000/api/product/updateCategory/${newCategory.id}`, newCategory);
+            let { data } = await axios.post(`http://localhost:8000/api/category/updateCategory/${newCategory.id}`, newCategory);
             commit("updatedCategory", data);
+        },
+
+        /* Take Id And Title Of All Categories */
+        takeCategories: async({ commit }) => {
+            const { data } = await axios.get("http://localhost:8000/api/category/takeCategories");
+            commit("setTakenCategories", data);
+        },
+
+        /* Search Category */
+        searchCategory: async({commit}, searchKey) => {
+            const { data } = await axios.get(`http://localhost:8000/api/category/getAllCategories/${searchKey}`);
+            commit("setCategories", data);
         },
 
         /* Start Point And End Point To Slice Category Data For Pagination */

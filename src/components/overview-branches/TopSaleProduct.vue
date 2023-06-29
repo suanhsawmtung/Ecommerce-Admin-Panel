@@ -1,12 +1,12 @@
 <template>
     <div class="parent-container">
-        <div class="chart-box" v-show="topCategory">
+        <div class="chart-box" >
             <h3>Best Selling Category</h3>
             <div class="chart">
                 <canvas id="categoryChart"></canvas>
             </div>
         </div>
-        <div class="table-box" v-show="topSaleItem">
+        <div class="table-box" >
             <h3 >Best Selling Items</h3>
             <div class="table">
                 <table>
@@ -39,7 +39,7 @@
         computed: {
             ...mapGetters("Products", ["getProducts"]),   
             ...mapGetters("Categories", ["getCategories"]), 
-            ...mapGetters(["topCategory", "topSaleItem", "getDataForTopSaleItem"])  
+            // ...mapGetters(["getDataForTopSaleItem"])  
         },
         methods: {
             setTopSellerItems(){
@@ -67,7 +67,7 @@
             // },
         },
         created () {
-            this.setTopSellerItems();
+            // this.setTopSellerItems();
             // this.setTopSaleCategories();
         },
         mounted () {
@@ -103,13 +103,18 @@
 
 <style scoped>
     .parent-container{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: auto;
+        /* height: 80% !important; */
+        /* grid-template-columns: 1fr 1fr; */
+        /* background: red; */
     }
     .parent-container .chart-box{
         box-shadow:  1px 1px 5px 0.2px #000;
         border-radius: 10px;
-        margin: 0 6px 0 8px;
+        margin-left: 8px;
         padding: 10px;
     }
     .parent-container .chart-box h3{
@@ -117,8 +122,8 @@
     }
     .parent-container .chart-box .chart{
         margin: 0 auto;
-        width: 250px;
-        height: 300px;
+        /* width: 250px; */
+        /* height: 80%; */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -129,31 +134,38 @@
     .parent-container .table-box{
         box-shadow:  1px 1px 5px 0.2px #000;
         border-radius: 10px;
-        margin: 0 0 0 15px;
+        /* margin: 0 0 0 15px; */
+        margin-left: 14px;
         padding: 10px;
+        width: 320px;
+        /* background-color: red; */
     }
     .parent-container .table-box h3{
         margin-bottom: 20px;
     }
     tbody tr{
-        height: 60px;
+        height: 20px;
     }
     tbody tr .image{
         object-fit: cover;
-        width: 20%;
+        width: 10%;
         overflow: hidden;
         padding: 5px;
         color: #777777;
+        /* background-color: blue; */
+        text-align: end;
     }
     tbody tr .image img{
-        width: 95%;
+        width: 100%;
+        height: auto;
     }
     .title{
-        width: 60%;
+        width: 50%;
         text-align: start;
         overflow: hidden;
         padding: 5px;
         color: #777777;
+        /* background-color: red; */
     }
     /* .count{
         width: 20%;
@@ -166,11 +178,11 @@
 
     /* now, make it responsive */
     @media (max-width : 1330px) {
-        .parent-container .chart-box{
+        /* .parent-container .chart-box{
             width: 1fr;
             height: 400px;
-        }
-        .parent-container .chart-box .chart{
+        } */
+        /* .parent-container .chart-box .chart{
             margin: 0 auto;
             width: 100%;
             height: 340px;
@@ -185,7 +197,7 @@
         }
         tbody tr .image img{
             width: 70%;
-        }
+        } */
     }
     @media (max-width: 860px) {
         tbody tr .image img{

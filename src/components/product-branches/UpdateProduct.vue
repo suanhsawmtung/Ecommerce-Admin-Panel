@@ -12,7 +12,7 @@
                 <div class="item item2">
                     <label for="category">Product Category</label>
                     <select class="inputField" id="category" v-model="productData.category">
-                        <option class="opt" v-for="(category, index) in getCategories" :key="index" :value="category.id" :selected="category.id === productData.category">{{ category.title }}</option>
+                        <option class="opt" v-for="(category, index) in categories" :key="index" :value="category.id" :selected="category.id === productData.category">{{ category.title }}</option>
                     </select>
                 </div>
                 
@@ -24,8 +24,8 @@
 
                 
                 <div class="item item4">
-                    <!-- <label for="image"><i class="fa-solid fa-plus"></i>Choose a photo</label>
-                    <input type="file" class="inputField" id="image"  @change="selectImage" > -->
+                    <label for="image" v-show="image === null"><i class="fa-solid fa-plus"></i>Choose a photo</label>
+                    <input v-show="image != null" type="file" class="inputField" id="image"  @change="selectImage" >
                 </div>
 
                 <div class="item item5">
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-    import { mapGetters, mapActions } from "vuex";
+    import { mapActions } from "vuex";
     export default {
         name : "UpdateProduct",
         data () {
@@ -54,15 +54,14 @@
                 descriptionError: false,
                 updateProductStatus: false,
 
-                // image: null
+                image: null
             }
         },
-        props: ["product"],
+        props: ["product", "categories"],
         computed: {
-            ...mapGetters("Categories", [ "getCategories" ]),
             productData(){
                 return {
-                    "id": this.product.id,
+                    // "id": this.product.id,
                     "title": this.product.title,
                     "category": this.product.category_id,
                     "price": this.product.price,
@@ -72,15 +71,23 @@
         },
         methods: {
             ...mapActions("Products", ["updateProduct"]),
-            // selectImage (event) {
-            //     // this.image = event.target.files[0];
-            //     console.log(event.target);
-            // },
+            selectImage (event) {
+                this.image = event.target.files[0];
+                // console.log(event.target.files[0]);
+            },
             async updateProductData () {
                 this.clearValidationMessage();
                 this.updateProductValidation();
                 if(this.updateProductStatus===true){
-                    await this.updateProduct(this.productData);
+                    let formData = new FormData();
+                    formData.append("id", this.product.id);
+                    formData.append("title", this.productData.title);
+                    formData.append("category", this.productData.category);
+                    formData.append("price", this.productData.price);
+                    formData.append("description", this.productData.description);
+                    formData.append("image", this.image);
+                    
+                    await this.updateProduct(formData);
                     this.$emit("previousPage", "productTable");
                     this.clearValidationMessage();
                     this.$emit("toastAlert", "update");
@@ -108,7 +115,6 @@
                 this.updateProductStatus = false
             }
         },
-
     }
 </script>
 
@@ -172,7 +178,7 @@
         opacity: 0.8;
     }
     .form-body .item4 .inputField[type="file"]{
-        display: none;
+        margin-top: 10px;
     }
     .form-body .item6 .btn{
         width : 100%;
