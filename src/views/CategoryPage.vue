@@ -157,7 +157,7 @@ export default {
 
         /* Take a category */
         async takeACategory(id){
-            let { data } = await axios.get(`http://localhost:8000/api/category/takeDataToEdit/${id}`);
+            let { data } = await axios.get(`http://localhost:8000/api/admin/category/takeDataToEdit/${id}`);
             this.category = data;
         }
     },

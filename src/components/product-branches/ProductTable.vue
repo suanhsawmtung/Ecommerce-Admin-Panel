@@ -22,7 +22,7 @@
                     <td class="name" >{{product.title}}</td>
                     <td class="category" >{{product.category_title}}</td>
                     <td class="price p" >{{product.price}} Ks</td>
-                    <td class="view vc" >{{product.rate}}</td>
+                    <td class="view vc" >-</td>
                     <td class="count re" >{{product.count}}</td>
                     <td class="updated" >{{ product.createdAt }}</td>
                     <td class="control btns" >
@@ -63,7 +63,7 @@
                this.$emit("productDetail", id); 
             },
             async showProductUpdatePage(id){
-                let { data } = await axios.get(`http://localhost:8000/api/product/getProductDataForUpdate/${id}`);
+                let { data } = await axios.get(`http://localhost:8000/api/admin/product/getProductDataForUpdate/${id}`);
                 this.$emit("productUpdate", data);
             }
         },

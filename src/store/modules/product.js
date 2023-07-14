@@ -96,20 +96,20 @@ export default {
 
         /* Delete Product  */
         deleteProduct: async({ commit }, removeId) => {
-            await axios.delete(`http://localhost:8000/api/product/deleteProduct/${removeId}`);
+            await axios.delete(`http://localhost:8000/api/admin/product/deleteProduct/${removeId}`);
             commit('removeProduct', removeId);
         },
 
         /* Create New Product */
         createProduct: async({ commit }, newProduct) => {
-            let { data } = await axios.post("http://localhost:8000/api/product/createProduct", newProduct);
+            let { data } = await axios.post("http://localhost:8000/api/admin/product/createProduct", newProduct);
             commit("addNewProduct", data);
         },
 
         /* Update Product */
         updateProduct: async({ commit }, updateData) => {
             try {
-                let { data } = await axios.post(`http://localhost:8000/api/product/updateProduct`, updateData);
+                let { data } = await axios.post(`http://localhost:8000/api/admin/product/updateProduct`, updateData);
                 commit("updateOldProduct", data);
             } catch (error) {
                 console.log(error);
@@ -118,13 +118,13 @@ export default {
 
         /* Search Products */
         searchProduct: async({commit}, searchKey) => {
-            const { data } = await axios.get(`http://localhost:8000/api/product/getAllProducts/${searchKey}`);
+            const { data } = await axios.get(`http://localhost:8000/api/admin/product/getAllProducts/${searchKey}`);
             commit('setProducts', data);
         },
 
         /* Filter Products By Category */
         filterProductsByCategory: async({commit}, id) => {
-            const { data } = await axios.get(`http://localhost:8000/api/product/filterProducts/${id}`);
+            const { data } = await axios.get(`http://localhost:8000/api/admin/product/filterProducts/${id}`);
             commit('setProducts', data);
         }
     }

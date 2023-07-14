@@ -70,37 +70,37 @@ export default {
     actions: {
         /* Get All Categories Data */
         allCategories: async({ commit }) => {
-            const { data } = await axios.get("http://localhost:8000/api/category/getAllCategories");
+            const { data } = await axios.get("http://localhost:8000/api/admin/category/getAllCategories");
             commit('setCategories', data);
         },
 
         /* Delete Category When NO Products Exist */
         deleteCategory: async({ commit }, removeId) => {
-            await axios.delete(`http://localhost:8000/api/category/deleteCategory/${removeId}`);
+            await axios.delete(`http://localhost:8000/api/admin/category/deleteCategory/${removeId}`);
             commit("removeCategory", removeId);
         },
 
         /* Create New Category */
         createCategory: async({ commit }, newCategory) => {
-            let { data } = await axios.post("http://localhost:8000/api/category/createCategory", newCategory);
+            let { data } = await axios.post("http://localhost:8000/api/admin/category/createCategory", newCategory);
             commit("addNewCategory", data);
         },
 
         /* Update Category Data */
         updateCategory: async({ commit }, newCategory) => {
-            let { data } = await axios.post(`http://localhost:8000/api/category/updateCategory/${newCategory.id}`, newCategory);
+            let { data } = await axios.post(`http://localhost:8000/api/admin/category/updateCategory/${newCategory.id}`, newCategory);
             commit("updatedCategory", data);
         },
 
         /* Take Id And Title Of All Categories */
         takeCategories: async({ commit }) => {
-            const { data } = await axios.get("http://localhost:8000/api/category/takeCategories");
+            const { data } = await axios.get("http://localhost:8000/api/admin/category/takeCategories");
             commit("setTakenCategories", data);
         },
 
         /* Search Category */
         searchCategory: async({commit}, searchKey) => {
-            const { data } = await axios.get(`http://localhost:8000/api/category/getAllCategories/${searchKey}`);
+            const { data } = await axios.get(`http://localhost:8000/api/admin/category/getAllCategories/${searchKey}`);
             commit("setCategories", data);
         },
 

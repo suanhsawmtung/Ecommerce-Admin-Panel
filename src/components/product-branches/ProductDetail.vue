@@ -9,7 +9,7 @@
         <div class="fact-box box-two">
             <span>{{ product.price }} Ks</span>
             <span><i class="fa-regular fa-eye"></i> - {{ product.count }}</span>
-            <span><i class="fa-solid fa-star"></i> - {{ product.rate }}</span>
+            <span><i class="fa-solid fa-star"></i> - *</span>
             <span><i class="fa-solid fa-star"></i> - {{ product.count }}</span>
         </div>
         <div class="box-three">

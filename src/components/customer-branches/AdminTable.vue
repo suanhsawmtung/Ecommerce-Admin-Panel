@@ -12,7 +12,7 @@
                 <td class="name" >{{ admin.name }}</td>
                 <td class="email" >{{ admin.email }}</td>
                 <td class="phone" >{{ admin.phone }}</td>
-                <td class="date" >-</td>
+                <td class="date" >{{ admin.createdAt }}</td>
                 <td class="control btns" >
                     <button @click="$emit('showModal', 'role', admin.id)" title="Remove from admin List"><i class="fa-solid fa-minus"></i></button>
                     <button @click="$emit('showModal', 'detail', admin.id)" title="details"><i class="fa-solid fa-info"></i></button>

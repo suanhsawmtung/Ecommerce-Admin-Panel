@@ -30,7 +30,6 @@ export default {
         deleteChosenCategory(id){
             this.deleteCategory(id);
             this.$emit("done", "Deleted-category.");
-            return;
         },
     }
 }

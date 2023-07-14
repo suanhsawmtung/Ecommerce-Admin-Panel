@@ -113,7 +113,7 @@ export default {
                     oldPassword: this.oldPassword,
                     newPassword: this.newPassword
                 }
-                let { data } = await axios.post("http://localhost:8000/api/user/changePassword", newPasswordData);
+                let { data } = await axios.post("http://localhost:8000/api/admin/user/changePassword", newPasswordData);
                 if(data.message !== "success"){
                     this.oldPasswordNotMatchError = true;
                 }else{

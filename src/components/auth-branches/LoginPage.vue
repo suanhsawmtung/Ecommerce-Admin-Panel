@@ -39,7 +39,8 @@
             return {
                 user: {
                     email: "",
-                    password: ""
+                    password: "",
+                    role: "admin",
                 },
                 validation: {
                     emailStatus: false,

@@ -20,8 +20,8 @@ export default {
                 state.error = data.message;
                 return;
             }
-            state.token = data.token;
-            localStorage.setItem("TOKEN", data.token);
+            state.token = data.user.token;
+            localStorage.setItem("TOKEN", data.user.token);
             localStorage.setItem("ID", data.user.id);
             state.error = null;
         },
@@ -37,7 +37,7 @@ export default {
     actions: {
         /* Register New Account */
         register: async({ commit }, userData) => {
-            let { data } = await axios.post('http://localhost:8000/api/auth/register', userData);
+            let { data } = await axios.post('http://localhost:8000/api/auth/admin/register', userData);
             commit("setMyData", data);
         },
 
@@ -49,7 +49,7 @@ export default {
 
         /* Logout Account */
         logout: async({ commit }) => {
-            await axios.post('http://localhost:8000/api/auth/logout');
+            await axios.get('http://localhost:8000/api/auth/logout');
             commit('cleanMyData');
         },
     }
