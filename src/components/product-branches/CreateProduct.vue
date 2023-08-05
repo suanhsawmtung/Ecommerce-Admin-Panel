@@ -6,13 +6,13 @@
                 <div class="item item3">
                     <label for="price">Product Price</label>
                     <input type="number" class="inputField" id="price" v-model="product.price" placeholder="Enter product price" >
-                    <small style="color: red" v-show="priceError">Product price is required.</small>
+                    <small style="color: red" v-if="priceError">Product price is required.</small>
                 </div>
 
                 <div class="item item1">
                     <label for="name">Product Name</label>
                     <input type="text" class="inputField" id="name" v-model="product.title" placeholder="Enter product name..."/>
-                    <small style="color: red" v-show="nameError">Product name is required.</small>
+                    <small style="color: red" v-if="nameError">Product name is required.</small>
                 </div>
                 
                 <div class="item item2">
@@ -21,22 +21,28 @@
                         <option  value="" class="opt" :selected="true">Choose category</option>
                         <option class="opt" v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.title }}</option>
                     </select>
-                    <small style="color: red" v-show="categoryError">Product Category is required.</small>
+                    <small style="color: red" v-if="categoryError">Product Category is required.</small>
                 </div>
                 
                 <div class="item item4">
-                    <label for="image" v-show="product.image === null"><i class="fa-solid fa-plus"></i>Choose a photo</label>
-                    <input v-show="product.image" type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
-                    <small style="color: red" v-show="imageError">Product image is required.</small>
+                    <label for="image" >Choose a photo</label>
+                    <input type="file" class="inputField" id="image" placeholder="Choose product image" @change="selectImage">
+                    <small style="color: red" v-if="imageError">Product image is required.</small>
                 </div>
 
                 <div class="item item5">
                     <label for="description">Product Description</label>
                     <textarea class="inputField" id="description" cols="30" rows="10" v-model="product.description" placeholder="Enter product description" ></textarea>
-                    <small style="color: red" v-show="descriptionError">Product description is required.</small>
+                    <small style="color: red" v-if="descriptionError">Product description is required.</small>
                 </div>
 
-                <div class="item6">
+                <div class="item item6">
+                    <label for="count">Product Count</label>
+                    <input type="number" class="inputField" id="count" v-model="product.count" placeholder="Enter product count" >
+                    <small style="color: red" v-if="countError">Product count is required.</small>
+                </div>
+
+                <div class="item7">
                      <button type="button" class="btn" @click="createNewProduct()">Create</button>
                 </div>
             </div>
@@ -55,12 +61,14 @@
                     title : "",
                     category : "",
                     price : null,
+                    count: null,
                     image : null,
                     description : ""
                 },
 
                 nameError: false,
                 priceError: false,
+                countError: false,
                 categoryError: false,
                 imageError: false,
                 descriptionError: false,
@@ -86,6 +94,7 @@
                     formData.append("title", this.product.title);
                     formData.append("category", this.product.category);
                     formData.append("price", this.product.price);
+                    formData.append("count", this.product.count);
                     formData.append("image", this.product.image);
                     formData.append("description", this.product.description);
                 
@@ -101,6 +110,7 @@
                     title : "",
                     category : "",
                     price : null,
+                    count: null,
                     image : null,
                     description : ""
                 }
@@ -126,11 +136,18 @@
                     this.descriptionError = true;
                     return;
                 }
+
+                if(this.product.count === null){
+                    this.countError = true;
+                    return;
+                }
+
                 this.createProductStatus = true;
             },
             clearValidationMessage(){
                 this.nameError = false,
                 this.priceError = false,
+                this.countError = false,
                 this.categoryError = false,
                 this.imageError = false,
                 this.descriptionErrorf = false,
@@ -164,10 +181,11 @@
     .item3{grid-area: three; }
     .item4{grid-area: four;}
     .item5{grid-area: five ; }
-    .item6{grid-area: six; }
+    .item6{grid-area: six;}
+    .item7{grid-area: seven; }
     .form-body{
         display: grid;
-        grid-template-areas: 'three three five five' 'one one five five' 'two two five five' 'four four six six' ;
+        grid-template-areas: 'one one five five' 'two two five five' 'three three five five' 'four four six six' '. . seven seven' ;
         grid-template-columns: auto auto auto auto;
         gap: 10px;
     }
@@ -189,7 +207,7 @@
         color: teal;
         font-size: 1rem;
     }
-    .form-body .item4 label{
+    /* .form-body .item4 label{
         margin-top : 15px;
         padding : 10px 8px;
         border-radius: 6px;
@@ -201,8 +219,8 @@
     }
     .form-body .item4 .inputField[type="file"]{
         margin-top: 10px;
-    }
-    .form-body .item6 .btn{
+    } */
+    .form-body .item7 .btn{
         width : 100%;
         margin : 15px 8px 0 8px;
         padding : 10px 0;
@@ -217,7 +235,7 @@
     .form-body .item .inputField:focus{
         border : 2px solid #4fb9af;
     }
-    .form-body .item6 .btn:active{
+    .form-body .item7 .btn:active{
         transform : scale(0.95);
         background: #4fb9af;
     }
@@ -239,10 +257,10 @@
         }
         .form-body .item label,
         .form-body .item4 label,
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             font-size: 0.9rem;
         }
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             width : 96%;
             margin : 12px 8px 0 8px;
             padding : 7px 0;
@@ -260,17 +278,17 @@
         }
         .form-body .item label,
         .form-body .item4 label,
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             font-size: 0.8rem;
         }
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             width : 96%;
             padding : 7px 0;
         }
     }
     @media (max-width : 650px) {
         .form-body{
-            grid-template-areas: 'three three' 'one one' 'two two' 'four four' 'five five' '. six' ;
+            grid-template-areas: 'one one' 'two two' 'three three' 'four four' 'five five' 'six six' '. seven' ;
             grid-template-columns: auto auto;
             gap: 7px;
         }

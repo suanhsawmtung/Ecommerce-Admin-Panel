@@ -34,7 +34,13 @@
                     <small style="color: red" v-show="descriptionError">Product description is required.</small>
                 </div>
 
-                <div class="item6">
+                <div class="item item6">
+                    <label for="count">Product Count</label>
+                    <input type="number" class="inputField" id="count" v-model="productData.count" /> 
+                    <small style="color: red" v-show="countError">Product count is required.</small>
+                </div>
+
+                <div class="item7">
                      <button  type="button" class="btn" @click="updateProductData()">Update</button>
                 </div>
             </div>
@@ -51,6 +57,7 @@
             return {
                 nameError: false,
                 priceError: false,
+                countError: false,
                 descriptionError: false,
                 updateProductStatus: false,
 
@@ -65,6 +72,7 @@
                     "title": this.product.title,
                     "category": this.product.category_id,
                     "price": this.product.price,
+                    "count": this.product.count,
                     "description": this.product.description,
                 }
             },
@@ -84,6 +92,7 @@
                     formData.append("title", this.productData.title);
                     formData.append("category", this.productData.category);
                     formData.append("price", this.productData.price);
+                    formData.append("count", this.productData.count);
                     formData.append("description", this.productData.description);
                     formData.append("image", this.image);
                     
@@ -106,11 +115,16 @@
                     this.descriptionError = true;
                     return;
                 }
+                if(this.productData.count === ""){
+                    this.countError = true;
+                    return;
+                }
                 this.updateProductStatus = true;
             },
             clearValidationMessage(){
                 this.nameError = false,
                 this.priceError = false,
+                this.countError = false,
                 this.descriptionErrorf = false,
                 this.updateProductStatus = false
             }
@@ -142,10 +156,11 @@
     .item3{grid-area: three; }
     .item4{grid-area: four;}
     .item5{grid-area: five ; }
-    .item6{grid-area: six; }
+    .item6{grid-area: six;}
+    .item7{grid-area: seven; }
     .form-body{
         display: grid;
-        grid-template-areas: 'one one five five' 'two two five five' 'three three five five' 'four four six six' ;
+        grid-template-areas: 'one one five five' 'two two five five' 'three three five five' 'four four six six' '. . seven seven' ;
         grid-template-columns: auto auto auto auto;
         gap: 10px;
     }
@@ -180,7 +195,7 @@
     .form-body .item4 .inputField[type="file"]{
         margin-top: 10px;
     }
-    .form-body .item6 .btn{
+    .form-body .item7 .btn{
         width : 100%;
         margin : 15px 8px 0 8px;
         padding : 10px 0;
@@ -195,7 +210,7 @@
     .form-body .item .inputField:focus{
         border : 2px solid #4fb9af;
     }
-    .form-body .item6 .btn:active{
+    .form-body .item7 .btn:active{
         transform : scale(0.95);
         background: #4fb9af;
     }
@@ -217,10 +232,10 @@
         }
         .form-body .item label,
         .form-body .item4 label,
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             font-size: 0.9rem;
         }
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             width : 96%;
             margin : 12px 8px 0 8px;
             padding : 7px 0;
@@ -238,17 +253,17 @@
         }
         .form-body .item label,
         .form-body .item4 label,
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             font-size: 0.8rem;
         }
-        .form-body .item6 .btn{
+        .form-body .item7 .btn{
             width : 96%;
             padding : 7px 0;
         }
     }
     @media (max-width : 650px) {
         .form-body{
-            grid-template-areas: 'three three' 'two two' 'one one' 'four four' 'five five' '. six' ;
+            grid-template-areas: 'one one' 'two two' 'three three'  'four four' 'five five' 'six six' '. seven' ;
             grid-template-columns: auto auto;
             gap: 7px;
         }

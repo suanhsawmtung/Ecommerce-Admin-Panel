@@ -155,7 +155,7 @@ export default {
   },
   async mounted () {
     if(!this.getCustomerCurrentPage) await this.allCustomers();
-    else await this.allCustomers("http://localhost:8000/api/admin/user/getAllCustomers?page="+this.getCustomerCurrentPage);
+    else await this.allCustomers("http://165.22.48.33/api/admin/user/getAllCustomers?page="+this.getCustomerCurrentPage);
     await this.allAdmins();
   },
 }

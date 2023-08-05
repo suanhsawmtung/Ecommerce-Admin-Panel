@@ -37,19 +37,19 @@ export default {
     actions: {
         /* Register New Account */
         register: async({ commit }, userData) => {
-            let { data } = await axios.post('http://localhost:8000/api/auth/admin/register', userData);
+            let { data } = await axios.post('http://165.22.48.33/api/auth/admin/register', userData);
             commit("setMyData", data);
         },
 
         /* Login Account */
         login: async({ commit }, userData) => {
-            let { data } = await axios.post('http://localhost:8000/api/auth/login', userData);
+            let { data } = await axios.post('http://165.22.48.33/api/auth/login', userData);
             commit("setMyData", data);
         },
 
         /* Logout Account */
         logout: async({ commit }) => {
-            await axios.get('http://localhost:8000/api/auth/logout');
+            await axios.get('http://165.22.48.33/api/auth/logout');
             commit('cleanMyData');
         },
     }

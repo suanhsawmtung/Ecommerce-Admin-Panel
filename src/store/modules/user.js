@@ -91,38 +91,38 @@ export default {
     actions: {
         /* Get All User Data */
         allAdmins: async({ commit }) => {
-            let { data } = await axios.get("http://localhost:8000/api/admin/user/getAllAdmins");
+            let { data } = await axios.get("http://165.22.48.33/api/admin/user/getAllAdmins");
             commit("setAdmins", data);
         },
 
         /* Get Paginated Customer Data */
         allCustomers: async({commit}, url) => {
-            let URL = url? url : "http://localhost:8000/api/admin/user/getAllCustomers";
+            let URL = url? url : "http://165.22.48.33/api/admin/user/getAllCustomers";
             let { data } = await axios.get(URL);
             commit("setCustomers", data);
         },
 
         /* Delete Customer Account */
         deleteUser: async({ commit }, removeId) => {
-            await axios.delete(`http://localhost:8000/api/admin/user/deleteUser/${removeId}`);
+            await axios.delete(`http://165.22.48.33/api/admin/user/deleteUser/${removeId}`);
             commit("removeUser", removeId);
         },
 
         /* Update My Account Data */
         updateUser: async({ commit }, updateUserData) => {
-            let { data } = await axios.post(`http://localhost:8000/api/admin/user/updateUser/${updateUserData.id}`, updateUserData);
+            let { data } = await axios.post(`http://165.22.48.33/api/admin/user/updateUser/${updateUserData.id}`, updateUserData);
             commit("updateUserData", data);
         },
 
         /* Change User Account Role Admin to User Or User To Admin As An Admin */
         changeUserRole: async({ commit }, newRoleData) => {
-            let { data } = await axios.post('http://localhost:8000/api/admin/user/changeRole', newRoleData);
+            let { data } = await axios.post('http://165.22.48.33/api/admin/user/changeRole', newRoleData);
             commit("addChangedRole", data);
         },
 
         /* Search Users */
         searchUser: async({ commit }, searchKey) => {
-            const { data } = await axios.get(`http://localhost:8000/api/admin/user/getAllCustomers/${searchKey}`);
+            const { data } = await axios.get(`http://165.22.48.33/api/admin/user/getAllCustomers/${searchKey}`);
             data.data = await data.data.filter(customer => customer.role === 'customer');
             commit("setCustomers", data);
         },
@@ -141,7 +141,7 @@ export default {
 
         /* Get My Profile Data */
         myProfile: async({commit}) => {
-            let { data } = await axios.get('http://localhost:8000/api/admin/user/getMyProfile/'+localStorage.getItem('ID'));
+            let { data } = await axios.get('http://165.22.48.33/api/admin/user/getMyProfile/'+localStorage.getItem('ID'));
             commit('setMyProfile', data);
         },
 
