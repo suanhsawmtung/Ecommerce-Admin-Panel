@@ -63,7 +63,7 @@
                this.$emit("productDetail", id); 
             },
             async showProductUpdatePage(id){
-                let { data } = await axios.get(`http://165.22.48.33/api/admin/product/getProductDataForUpdate/${id}`);
+                let { data } = await axios.get(`https://nooneuse.shop/api/admin/product/getProductDataForUpdate/${id}`);
                 this.$emit("productUpdate", data);
             }
         },

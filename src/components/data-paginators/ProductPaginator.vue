@@ -119,9 +119,9 @@ export default {
     },
     async mounted () {
         if (this.getCurrentPage === null) {
-            await this.allProducts("http://localhost:8000/api/admin/product/getAllProducts");
+            await this.allProducts("https://nooneuse.shop/api/admin/product/getAllProducts");
         }else {
-            await this.allProducts(`http://localhost:8000/api/admin/product/getAllProducts?page=`+this.getCurrentPage);
+            await this.allProducts(`https://nooneuse.shop/api/admin/product/getAllProducts?page=`+this.getCurrentPage);
         }
     },
 }

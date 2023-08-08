@@ -200,7 +200,7 @@ export default {
 
         /* Show Product Filter Modal */
         async filterModalToggle(){
-            const { data } = await axios.get("http://165.22.48.33/api/admin/category/getAllCategories");
+            const { data } = await axios.get("https://nooneuse.shop/api/admin/category/getAllCategories");
             this.categories = data;
             this.filterProductStatus = !this.filterProductStatus;
         },

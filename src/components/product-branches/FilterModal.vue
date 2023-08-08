@@ -30,7 +30,7 @@ export default {
             this.$emit("close");
         },
         async filterAllProducts() {
-            await this.allProducts('http://165.22.48.33/api/admin/product/getAllProducts');
+            await this.allProducts('https://nooneuse.shop/api/admin/product/getAllProducts');
             this.$emit("close");
         },
     },
